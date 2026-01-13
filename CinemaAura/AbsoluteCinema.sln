@@ -1,12 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaAura.Presentation", "CinemaAura.Presentation\CinemaAura.Presentation.csproj", "{8A79BFF1-4592-4E6D-B668-12FE38F1938D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbsoluteCinema.Presentation", "AbsoluteCinema.Presentation\AbsoluteCinema.Presentation.csproj", "{8A79BFF1-4592-4E6D-B668-12FE38F1938D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaAura.Domain", "CinemaAura.Domain\CinemaAura.Domain.csproj", "{64B60313-351C-4F62-A211-FDC431838EFD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbsoluteCinema.Domain", "AbsoluteCinema.Domain\AbsoluteCinema.Domain.csproj", "{64B60313-351C-4F62-A211-FDC431838EFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaAura.Infrastructure", "CinemaAura.Infrastructure\CinemaAura.Infrastructure.csproj", "{A12E955F-8FFD-4CB0-BB04-B9E5C4374D8F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbsoluteCinema.Infrastructure", "AbsoluteCinema.Infrastructure\AbsoluteCinema.Infrastructure.csproj", "{A12E955F-8FFD-4CB0-BB04-B9E5C4374D8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaAura.Application", "CinemaAura.Application\CinemaAura.Application.csproj", "{39062B20-6623-4B1A-A030-7353D067A3CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbsoluteCinema.Application", "AbsoluteCinema.Application\AbsoluteCinema.Application.csproj", "{39062B20-6623-4B1A-A030-7353D067A3CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -10,7 +10,8 @@ public class Role : AggregateRoot<RoleId>
     private readonly HashSet<PermissionCode> _permissions = new HashSet<PermissionCode>();
     public IReadOnlyCollection<PermissionCode> Permissions => _permissions;
     
-    //public List<User> Users { get; private set; }
+    //DELATE
+    public List<User> Users { get; private set; }
     private Role(RoleId id, string name)
     {
         Id = id;

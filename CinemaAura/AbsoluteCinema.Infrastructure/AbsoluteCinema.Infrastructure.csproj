@@ -4,10 +4,11 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>CinemaAura.Infrastructure</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CinemaAura.Application\CinemaAura.Application.csproj" />
+      <ProjectReference Include="..\AbsoluteCinema.Application\AbsoluteCinema.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>
