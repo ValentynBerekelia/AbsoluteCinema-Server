@@ -4,10 +4,11 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>CinemaAura.Domain</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CinemaAura.Domain\CinemaAura.Domain.csproj" />
+      <PackageReference Include="MediatR" Version="14.0.0" />
     </ItemGroup>
 
 </Project>

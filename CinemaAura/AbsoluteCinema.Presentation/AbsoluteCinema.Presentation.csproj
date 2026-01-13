@@ -13,8 +13,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CinemaAura.Application\CinemaAura.Application.csproj" />
-      <ProjectReference Include="..\CinemaAura.Infrastructure\CinemaAura.Infrastructure.csproj" />
+      <ProjectReference Include="..\AbsoluteCinema.Application\AbsoluteCinema.Application.csproj" />
+      <ProjectReference Include="..\AbsoluteCinema.Infrastructure\AbsoluteCinema.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
