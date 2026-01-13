@@ -1,7 +1,7 @@
 using CinemaAura.Domain.Primitives;
 using CinemaAura.Domain.ValueObjects;
 
-namespace IdentityService.Domain.Entities;
+namespace AbsoluteCinema.Domain.Entities;
 
 public class User : AggregateRoot<UserId>
 {
@@ -22,7 +22,7 @@ public class User : AggregateRoot<UserId>
 
     public static User Create(string userName, PasswordHash passwordHash, string email)
     {
-        return new User(new UserId(Guid.NewGuid()), userName, passwordHash, email);
+        return new User(UserId.New(), userName, passwordHash, email);
     }
 
     public void ChangePassword(PasswordHash passwordHash)

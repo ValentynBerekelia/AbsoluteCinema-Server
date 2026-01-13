@@ -1,7 +1,7 @@
 using CinemaAura.Domain.Primitives;
 using CinemaAura.Domain.ValueObjects;
 
-namespace IdentityService.Domain.Entities;
+namespace AbsoluteCinema.Domain.Entities;
 
 public class Role : AggregateRoot<RoleId>
 {
@@ -10,7 +10,6 @@ public class Role : AggregateRoot<RoleId>
     private readonly HashSet<PermissionCode> _permissions = new HashSet<PermissionCode>();
     public IReadOnlyCollection<PermissionCode> Permissions => _permissions;
     
-    //DELATE
     public List<User> Users { get; private set; }
     private Role(RoleId id, string name)
     {
