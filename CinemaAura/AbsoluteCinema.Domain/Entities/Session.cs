@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using CinemaAura.Domain.Primitives;
 
-namespace IdentityService.Domain.Entities;
+namespace AbsoluteCinema.Domain.Entities;
 
-public class Session : Entity<SessionId>
+public class Session : AggregateRoot<SessionId>
 {
     public MovieId MovieId { get; private set; }
     public HallId HallId { get; private set; }

@@ -1,45 +1,50 @@
-﻿using CinemaAura.Domain.Entities;
-using IdentityService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using AbsoluteCinema.Domain.Entities;
 
-namespace IdentityService.Persistence.Configurations;
+namespace CinemaAura.Infrastructure.Presistence.Configurations;
 
-public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
+public class SessionConfiguration : IEntityTypeConfiguration<Session>
 {
-    public void Configure(EntityTypeBuilder<Ticket> builder)
+    public void Configure(EntityTypeBuilder<Session> builder)
     {
-        builder.ToTable("Tickets");
-        builder.HasKey(t => t.Id);
+        builder.ToTable("Sessions");
 
-        builder.Property(t => t.Id)
+        builder.HasKey(s => s.Id);
+
+        builder.Property(s => s.Id)
             .HasConversion(
                 id => id.Id,
-                value => new TicketId(value));
+                value => new SessionId(value));
 
-        builder.Property(t => t.UserId)
-            .HasColumnName("user")
+        builder.Property(s => s.MovieId)
+            .HasColumnName("movie")
             .HasConversion(
                 id => id.Id,
-                value => new UserId(value))
+                value => new MovieId(value))
             .IsRequired();
 
-        builder.Property(t => t.SessionId)
-            .HasColumnName("session")
+        builder.Property(s => s.HallId)
+            .HasColumnName("hall")
             .HasConversion(
                 id => id.Id,
-                value => new SessionId(value))
+                value => new HallId(value))
             .IsRequired();
 
-        builder.Property(t => t.SeatId)
-            .HasColumnName("seat")
-            .HasConversion(
-                id => id.Id,
-                value => new SeatId(value))
-            .IsRequired();
-
-        builder.Property(t => t.Date)
+        builder.Property(s => s.Date)
             .HasColumnName("date")
             .IsRequired();
+
+        builder.HasOne<Movie>()
+            .WithMany()
+            .HasForeignKey(s => s.MovieId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne<Hall>()
+            .WithMany()
+            .HasForeignKey(s => s.HallId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Ignore(s => s.TicketIds);
     }
 }

@@ -1,5 +1,5 @@
 using CinemaAura.Infrastructure.Presistence.Configurations.LinkObjects;
-using IdentityService.Domain.Entities;
+using AbsoluteCinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,10 +25,9 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder.Property(x => x.Rate)
             .IsRequired();
 
-        builder.Property(x => x.Age_limit)
+        builder.Property(x => x.AgeLimit)
             .IsRequired();
 
-        // ===== Movie - Genre =====
         builder.OwnsMany<MovieGenreLink>("_genreIds", b =>
         {
             b.ToTable("MovieGenres");
@@ -43,7 +42,6 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
             b.HasIndex(x => new { x.MovieId, x.GenreId });
         });
 
-        // ===== Movie - Actor =====
         builder.OwnsMany<MovieActorLink>("_actorIds", b =>
         {
             b.ToTable("MovieActors");
@@ -63,7 +61,6 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ===== Movie - Media =====
         builder.OwnsMany<MovieMediaLink>("_mediaIds", b =>
         {
             b.ToTable("MovieMedia");

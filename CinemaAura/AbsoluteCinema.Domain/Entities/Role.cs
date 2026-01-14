@@ -1,7 +1,7 @@
 using CinemaAura.Domain.Primitives;
 using CinemaAura.Domain.ValueObjects;
 
-namespace IdentityService.Domain.Entities;
+namespace AbsoluteCinema.Domain.Entities;
 
 public class Role : AggregateRoot<RoleId>
 {
@@ -10,8 +10,8 @@ public class Role : AggregateRoot<RoleId>
     private readonly HashSet<PermissionCode> _permissions = new HashSet<PermissionCode>();
     public IReadOnlyCollection<PermissionCode> Permissions => _permissions;
     
-    //DELATE
-    public List<User> Users { get; private set; }
+    private readonly HashSet<UserId> _userIds = new HashSet<UserId>();
+    public IReadOnlyCollection<UserId> UserIds => _userIds;
     private Role(RoleId id, string name)
     {
         Id = id;
@@ -20,11 +20,19 @@ public class Role : AggregateRoot<RoleId>
 
     public static Role Create(string roleName)
     {
+        if (string.IsNullOrWhiteSpace(roleName))
+        {
+            throw new ArgumentException("Role name cannot be null or empty.", nameof(roleName));
+        }
         return new Role(RoleId.New(), roleName);
     }
     
-    public void Raname(string name)
+    public void Rename(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Role name cannot be null or empty.", nameof(name));
+        }
         Name = name;
     }
     
@@ -48,6 +56,15 @@ public class Role : AggregateRoot<RoleId>
         return _permissions.Contains(permission);
     }
 
+    public void AddUser(UserId userId)
+    {
+        _userIds.Add(userId);
+    }
+
+    public void RemoveUser(UserId userId)
+    {
+        _userIds.Remove(userId);
+    }
 }
 
 public record RoleId(Guid Id)
