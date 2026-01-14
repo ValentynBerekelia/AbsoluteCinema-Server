@@ -1,0 +1,67 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using CinemaAura.Domain.Primitives;
+
+namespace IdentityService.Domain.Entities;
+
+public class Session : Entity<SessionId>
+{
+    public MovieId MovieId { get; private set; }
+    public HallId HallId { get; private set; }
+    public DateTime Date { get; private set; }
+
+    private readonly HashSet<TicketId> _ticketIds = new HashSet<TicketId>();
+    public IReadOnlyCollection<TicketId> TicketIds => _ticketIds;
+
+    private Session(SessionId id, MovieId movieId, HallId hallId, DateTime date)
+    {
+        Id = id;
+        MovieId = movieId;
+        HallId = hallId;
+        Date = date;
+    }
+    public static Session Create(MovieId movieId, HallId hallId, DateTime date)
+    {
+        if (date < DateTime.UtcNow)
+        {
+            throw new ArgumentException("Session date cannot be in the past.");
+        }
+
+        return new Session(SessionId.New(), movieId, hallId, date);
+    }
+    public void Reschedule(DateTime newDate)
+    {
+        if (newDate < DateTime.UtcNow)
+        {
+            throw new ArgumentException("New session date cannot be in the past.");
+        }
+        Date = newDate;
+    }
+
+    public void ChangeHall(HallId newHallId)
+    {
+        HallId = newHallId;
+    }
+
+    public void ChangeMovie(MovieId newMovieId)
+    {
+        MovieId = newMovieId;
+    }
+    public void AddTicket(TicketId ticketId)
+    {
+        _ticketIds.Add(ticketId);
+    }
+    public void CancelTicket(TicketId ticketId)
+    {
+        _ticketIds.Remove(ticketId);
+    }
+}
+
+public record SessionId(Guid Id)
+{
+    public static SessionId New() => new SessionId(Guid.NewGuid());
+}
