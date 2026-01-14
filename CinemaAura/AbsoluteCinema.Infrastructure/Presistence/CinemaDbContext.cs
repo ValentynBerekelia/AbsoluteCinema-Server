@@ -11,6 +11,12 @@ public class CinemaDbContext : DbContext
     public DbSet<Genre> Genres => Set<Genre>();
     public DbSet<Actor> Actors => Set<Actor>();
     public DbSet<Media> Medias => Set<Media>();
+    public DbSet<Hall> Halls => Set<Hall>();
+    public DbSet<Session> Sessions => Set<Session>();
+    public DbSet<Ticket> Tickets => Set<Ticket>();
+    public DbSet<Seat> Seats => Set<Seat>();
+    public DbSet<SeatType> SeatTypes => Set<SeatType>();
+    public DbSet<TypePrice> TypePrices => Set<TypePrice>();
     
     public CinemaDbContext(DbContextOptions<CinemaDbContext> options) : base(options) { }
     

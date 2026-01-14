@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using IdentityService.Domain.Entities;
+using AbsoluteCinema.Domain.Entities;
 
-namespace IdentityService.Persistence.Configurations;
+namespace CinemaAura.Infrastructure.Presistence.Configurations;
 
 public class HallConfiguration : IEntityTypeConfiguration<Hall>
 {

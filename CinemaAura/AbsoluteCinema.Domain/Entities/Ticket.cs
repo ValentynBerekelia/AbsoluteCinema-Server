@@ -1,7 +1,7 @@
 ﻿using CinemaAura.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
-{
+
     public class Ticket : Entity<TicketId>
     {
         public UserId? UserId { get; private set; }
@@ -41,7 +41,6 @@ namespace AbsoluteCinema.Domain.Entities;
             Date = newDate;
         }
     }
-}
 public record TicketId(Guid Id)
 {
     public static TicketId New() => new TicketId(Guid.NewGuid());

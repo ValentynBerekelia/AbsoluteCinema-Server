@@ -1,39 +1,59 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AbsoluteCinema.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using IdentityService.Domain.Entities;
 
-namespace IdentityService.Persistence.Configurations;
+namespace CinemaAura.Infrastructure.Presistence.Configurations;
 
-public class SessionConfiguration : IEntityTypeConfiguration<Session>
+public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
 {
-    public void Configure(EntityTypeBuilder<Session> builder)
+    public void Configure(EntityTypeBuilder<Ticket> builder)
     {
-        builder.ToTable("Sessions");
+        builder.ToTable("Tickets");
+        builder.HasKey(t => t.Id);
 
-        builder.HasKey(s => s.Id);
-
-        builder.Property(s => s.Id)
+        builder.Property(t => t.Id)
             .HasConversion(
                 id => id.Id,
-                value => new SessionId(value));
+                value => new TicketId(value));
 
-        builder.Property(s => s.MovieId)
-            .HasColumnName("movie")
+        builder.Property(t => t.UserId)
+            .HasColumnName("user_id")
+            .HasConversion(
+                id => id != null ? id.Id : (Guid?)null,
+                value => value != null ? new UserId(value.Value) : null)
+            .IsRequired(false);
+
+        builder.Property(t => t.SessionId)
+            .HasColumnName("session")
             .HasConversion(
                 id => id.Id,
-                value => new MovieId(value))
+                value => new SessionId(value))
             .IsRequired();
 
-        builder.Property(s => s.HallId)
-            .HasColumnName("hall")
+        builder.Property(t => t.SeatId)
+            .HasColumnName("seat")
             .HasConversion(
                 id => id.Id,
-                value => new HallId(value))
+                value => new SeatId(value))
             .IsRequired();
 
-        builder.Property(s => s.Date)
+        builder.Property(t => t.Date)
             .HasColumnName("date")
             .IsRequired();
-        builder.Ignore(s => s.TicketIds);
+
+        builder.HasOne<Session>()
+            .WithMany()
+            .HasForeignKey(t => t.SessionId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne<Seat>()
+            .WithMany()
+            .HasForeignKey(t => t.SeatId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
