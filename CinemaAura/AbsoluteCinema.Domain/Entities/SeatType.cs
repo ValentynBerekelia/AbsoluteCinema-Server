@@ -12,13 +12,21 @@ public class SeatType : AggregateRoot<SeatTypeId>
         TypeName = name;
     }
 
-    public SeatType Create(string name)
+    public static SeatType Create(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Seat type name cannot be null or empty.", nameof(name));
+        }
         return new SeatType(name);
     }
 
     public void ChangeTypeName(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Seat type name cannot be null or empty.", nameof(name));
+        }
         TypeName = name;
     }
 }

@@ -1,20 +1,14 @@
 ﻿using CinemaAura.Domain.Primitives;
-using IdentityService.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CinemaAura.Domain.Entities
+namespace AbsoluteCinema.Domain.Entities;
 {
     public class Ticket : Entity<TicketId>
     {
-        public UserId UserId { get; private set; }
+        public UserId? UserId { get; private set; }
         public SessionId SessionId { get; private set; }
         public SeatId SeatId { get; private set; }
         public DateTime Date { get; private set; }
-        private Ticket(TicketId id, UserId userId, SessionId sessionId, SeatId seatId, DateTime date)
+        private Ticket(TicketId id, UserId? userId, SessionId sessionId, SeatId seatId, DateTime date)
         {
             Id = id;
             UserId = userId;
@@ -22,8 +16,13 @@ namespace CinemaAura.Domain.Entities
             SeatId = seatId;
             Date = date;
         }
-        public static Ticket Create(UserId userId, SessionId sessionId, SeatId seatId, DateTime date)
+        
+        public static Ticket Create(UserId? userId, SessionId sessionId, SeatId seatId, DateTime date)
         {
+            if (date < DateTime.UtcNow)
+            {
+                throw new ArgumentException("Ticket date cannot be in the past.", nameof(date));
+            }
             return new Ticket(TicketId.New(), userId, sessionId, seatId, date);
         }
 

@@ -1,6 +1,6 @@
 using CinemaAura.Domain.Primitives;
 
-namespace IdentityService.Domain.Entities;
+namespace AbsoluteCinema.Domain.Entities;
 
 public class Genre:  Entity<GenreId>
 {
@@ -14,11 +14,19 @@ public class Genre:  Entity<GenreId>
 
     public static Genre Create(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Genre name cannot be null or empty.", nameof(name));
+        }
         return new Genre(GenreId.New(), name);
     }
 
     public void ChangeName(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Genre name cannot be null or empty.", nameof(name));
+        }
         Name = name;
     }
     

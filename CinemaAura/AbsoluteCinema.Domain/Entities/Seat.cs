@@ -4,22 +4,23 @@ namespace AbsoluteCinema.Domain.Entities;
 
 public class Seat : Entity<SeatId>
 {
-    //TODO : hallId
     public short Number { get; private set; }
     public SeatTypeId SeatTypeId { get; private set; }
 
-    //TODO : HallId
-    private Seat(Guid hallId, short number, SeatTypeId seatTypeId)
+    private Seat(short number, SeatTypeId seatTypeId)
     {
         Id = SeatId.New();
         Number = number;
         SeatTypeId = seatTypeId;
     }
 
-    //TODO : HallId
-    public Seat Create(Guid hallId, short number, SeatTypeId seatTypeId)
+    public static Seat Create(short number, SeatTypeId seatTypeId)
     {
-        return new Seat(hallId, number, seatTypeId);
+        if (number <= 0)
+        {
+            throw new ArgumentException("Seat number must be positive.", nameof(number));
+        }
+        return new Seat(number, seatTypeId);
     }
 
     public void ChangeNumber(short number)

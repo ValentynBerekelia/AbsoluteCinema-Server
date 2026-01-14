@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CinemaAura.Domain.Primitives;
 
-using CinemaAura.Domain.Primitives;
+namespace AbsoluteCinema.Domain.Entities;
 
-namespace IdentityService.Domain.Entities;
-
-public class Hall : Entity<HallId>
+public class Hall : AggregateRoot<HallId>
 {
+    public string HallName { get; private set; }
     public int VerticalSize { get; private set; }
     public int HorizontalSize { get; private set; }
 
@@ -18,28 +13,37 @@ public class Hall : Entity<HallId>
     private readonly HashSet<SessionId> _sessionIds = new HashSet<SessionId>();
     public IReadOnlyCollection<SessionId> SessionIds => _sessionIds;
 
-    private Hall(HallId id, int verticalSize, int horizontalSize)
+    private Hall(HallId id, string name, int verticalSize, int horizontalSize)
     {
         Id = id;
+        HallName = name;
         VerticalSize = verticalSize;
         HorizontalSize = horizontalSize;
     }
-    public static Hall Create(int verticalSize, int horizontalSize)
+    public static Hall Create(string name, int verticalSize, int horizontalSize)
     {
         if (verticalSize <= 0 || horizontalSize <= 0)
         {
             throw new ArgumentException("Hall dimensions must be positive.");
         }
-        return new Hall(HallId.New(), verticalSize, horizontalSize);
+        return new Hall(HallId.New(), name, verticalSize, horizontalSize);
     }
-    public void Resize(int verticalSize, int horizontalSize)
+
+    public void ChangeHallName(string name)
     {
-        if (verticalSize <= 0 || horizontalSize <= 0)
+        HallName = name;
+    }
+    
+    public void Resize(int? verticalSize, int? horizontalSize)
+    {
+        if (verticalSize is not null && verticalSize > 0)
         {
-            throw new ArgumentException("Hall dimensions must be positive.");
+            VerticalSize = (int)verticalSize;
         }
-        VerticalSize = verticalSize;
-        HorizontalSize = horizontalSize;
+        if (horizontalSize is not null && horizontalSize > 0)
+        {
+            HorizontalSize = (int)horizontalSize;
+        }
     }
     public void AddSeat(SeatId seatId)
     {
