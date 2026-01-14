@@ -1,6 +1,6 @@
 using CinemaAura.Domain.Primitives;
 
-namespace IdentityService.Domain.Entities;
+namespace AbsoluteCinema.Domain.Entities;
 
 public class Media: Entity<MediaId>
 {
@@ -16,6 +16,14 @@ public class Media: Entity<MediaId>
 
     public static Media Create(string type, string url)
     {
+        if (string.IsNullOrWhiteSpace(type))
+        {
+            throw new ArgumentException("Media type cannot be null or empty.", nameof(type));
+        }
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            throw new ArgumentException("Media URL cannot be null or empty.", nameof(url));
+        }
         return new Media(MediaId.New(), type, url);
     }
     

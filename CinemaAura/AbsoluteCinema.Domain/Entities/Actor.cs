@@ -1,6 +1,6 @@
 using CinemaAura.Domain.Primitives;
 
-namespace IdentityService.Domain.Entities;
+namespace AbsoluteCinema.Domain.Entities;
 
 public class Actor: Entity<ActorId>
 {
@@ -18,11 +18,23 @@ public class Actor: Entity<ActorId>
 
     public static Actor Create(string name, string bio, DateTime birthDate)
     {
-        return new Actor(ActorId.New(), name,  bio, birthDate);
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Actor name cannot be null or empty.", nameof(name));
+        }
+        if (birthDate > DateTime.UtcNow)
+        {
+            throw new ArgumentException("Birth date cannot be in the future.", nameof(birthDate));
+        }
+        return new Actor(ActorId.New(), name, bio, birthDate);
     }
     
     public void ChangeName(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Actor name cannot be null or empty.", nameof(name));
+        }
         Name = name;
     }
 
@@ -32,6 +44,10 @@ public class Actor: Entity<ActorId>
     }
     public void ChangeBirthDate(DateTime birthDate)
     {
+        if (birthDate > DateTime.UtcNow)
+        {
+            throw new ArgumentException("Birth date cannot be in the future.", nameof(birthDate));
+        }
         BirthDate = birthDate;
     }
     

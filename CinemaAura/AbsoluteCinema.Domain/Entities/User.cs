@@ -1,7 +1,7 @@
 using CinemaAura.Domain.Primitives;
 using CinemaAura.Domain.ValueObjects;
 
-namespace IdentityService.Domain.Entities;
+namespace AbsoluteCinema.Domain.Entities;
 
 public class User : AggregateRoot<UserId>
 {
@@ -22,7 +22,19 @@ public class User : AggregateRoot<UserId>
 
     public static User Create(string userName, PasswordHash passwordHash, string email)
     {
-        return new User(new UserId(Guid.NewGuid()), userName, passwordHash, email);
+        if (string.IsNullOrWhiteSpace(userName))
+        {
+            throw new ArgumentException("Username cannot be null or empty.", nameof(userName));
+        }
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new ArgumentException("Email cannot be null or empty.", nameof(email));
+        }
+        if (!email.Contains("@"))
+        {
+            throw new ArgumentException("Invalid email format.", nameof(email));
+        }
+        return new User(UserId.New(), userName, passwordHash, email);
     }
 
     public void ChangePassword(PasswordHash passwordHash)
@@ -32,11 +44,23 @@ public class User : AggregateRoot<UserId>
 
     public void ChangeEmail(string email)
     {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new ArgumentException("Email cannot be null or empty.", nameof(email));
+        }
+        if (!email.Contains("@"))
+        {
+            throw new ArgumentException("Invalid email format.", nameof(email));
+        }
         Email = email;
     }
 
     public void ChangeUserName(string userName)
     {
+        if (string.IsNullOrWhiteSpace(userName))
+        {
+            throw new ArgumentException("Username cannot be null or empty.", nameof(userName));
+        }
         UserName = userName;
     }
     

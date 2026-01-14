@@ -1,5 +1,5 @@
 using CinemaAura.Infrastructure.Presistence.Configurations.LinkObjects;
-using IdentityService.Domain.Entities;
+using AbsoluteCinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
