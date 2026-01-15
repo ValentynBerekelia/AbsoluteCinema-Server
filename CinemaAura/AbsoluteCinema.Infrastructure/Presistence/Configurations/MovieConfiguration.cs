@@ -8,33 +8,50 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 {
     public void Configure(EntityTypeBuilder<Movie> builder)
     {
+        builder.ToTable("movies", tableBuilder =>
+        {
+            tableBuilder.HasCheckConstraint("ck_movies_rate_range", "rate >= 0 AND rate <= 10");
+            tableBuilder.HasCheckConstraint("ck_movies_age_limit_positive", "age_limit >= 0");
+        });
+
         builder.HasKey(x => x.Id);
-        
+
         builder.Property(x => x.Id)
+            .HasColumnName("id")
             .HasConversion(id => id.Id, v => new MovieId(v))
             .ValueGeneratedNever();
-
-        builder.Property(x => x.Id)
-            .HasConversion(
-                id => id.Id,
-                value => new MovieId(value));
+        /* ??
+                builder.Property(x => x.Id)
+                    .HasConversion(
+                        id => id.Id,
+                        value => new MovieId(value));*/
 
         builder.Property(x => x.Name)
+            .HasColumnName("name")
+            .HasMaxLength(200)
             .IsRequired();
 
         builder.Property(x => x.Description)
+            .HasColumnName("description")
+            .HasColumnType("text")
             .IsRequired();
 
         builder.Property(x => x.Rate)
+            .HasColumnName("rate")
+            .HasPrecision(3, 2)
             .IsRequired();
 
         builder.Property(x => x.AgeLimit)
+            .HasColumnName("age_limit")
             .IsRequired();
+
+        builder.HasIndex(x => x.Rate)
+            .HasDatabaseName("ix_movies_rate");
 
         builder.Ignore(m => m.ActorIds);
         builder.Ignore(m => m.GenreIds);
         builder.Ignore(m => m.MediaIds);
-        
+
         builder.OwnsMany<MovieGenre>("_genreIds", b =>
         {
             b.ToTable("movie_genres");

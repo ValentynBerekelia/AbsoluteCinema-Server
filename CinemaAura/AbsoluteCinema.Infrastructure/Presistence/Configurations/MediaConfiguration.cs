@@ -8,17 +8,23 @@ public class MediaConfiguration : IEntityTypeConfiguration<Media>
 {
     public void Configure(EntityTypeBuilder<Media> builder)
     {
+        builder.ToTable("medias");
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)
+            .HasColumnName("id")
             .HasConversion(
                 id => id.Id,
                 value => new MediaId(value));
 
         builder.Property(x => x.Type)
+            .HasColumnName("type")
+            .HasMaxLength(100)
             .IsRequired();
 
         builder.Property(x => x.Url)
+            .HasColumnName("url")
+            .HasMaxLength(1000)
             .IsRequired();
     }
 }
