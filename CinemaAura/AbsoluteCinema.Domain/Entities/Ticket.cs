@@ -1,4 +1,4 @@
-﻿using CinemaAura.Domain.Primitives;
+using CinemaAura.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
 
