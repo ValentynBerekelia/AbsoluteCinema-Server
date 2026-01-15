@@ -19,8 +19,8 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         builder.Property(t => t.UserId)
             .HasColumnName("user_id")
             .HasConversion(
-                id => id != null ? id.Id : (Guid?)null,
-                value => value != null ? new UserId(value.Value) : null)
+                id => id.HasValue ? id.Value.Id : (Guid?)null,
+                value => value.HasValue ? new UserId(value.Value) : (UserId?)null)
             .IsRequired(false);
 
         builder.Property(t => t.SessionId)

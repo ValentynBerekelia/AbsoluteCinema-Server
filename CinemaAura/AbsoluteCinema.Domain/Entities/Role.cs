@@ -12,6 +12,7 @@ public class Role : AggregateRoot<RoleId>
     
     private readonly HashSet<UserId> _userIds = new HashSet<UserId>();
     public IReadOnlyCollection<UserId> UserIds => _userIds;
+    private Role() { }
     private Role(RoleId id, string name)
     {
         Id = id;
@@ -67,7 +68,7 @@ public class Role : AggregateRoot<RoleId>
     }
 }
 
-public record RoleId(Guid Id)
+public record struct RoleId(Guid Id)
 {
     public static RoleId New() => new RoleId(Guid.NewGuid());
 } 

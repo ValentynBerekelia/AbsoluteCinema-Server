@@ -9,8 +9,10 @@ public class User : AggregateRoot<UserId>
     public PasswordHash  PasswordHash { get; private set; }
     public string Email { get; private set; }
     
-    private readonly HashSet<RoleId> _roleIds = new HashSet<RoleId>();
-    public IReadOnlyCollection<RoleId> RoleIds => _roleIds;
+    private readonly HashSet<UserRole> _roleIds = new HashSet<UserRole>();
+    public IReadOnlyCollection<UserRole> RoleIds => _roleIds;
+
+    private User() { }
 
     private User(UserId id, string userName, PasswordHash passwordHash, string email)
     {
@@ -66,17 +68,20 @@ public class User : AggregateRoot<UserId>
     
     public void AddRole(RoleId roleId)
     {
-        _roleIds.Add(roleId);
+        _roleIds.Add(new UserRole(roleId));
     }
     
     public void RemoveRole(RoleId roleId)
     {
-        _roleIds.Remove(roleId);
+        _roleIds.Remove(new UserRole(roleId));
     }
     
 }
 
-public record UserId(Guid Id)
+public record struct UserId(Guid Id)
 {
     public static UserId New() => new UserId(Guid.NewGuid());
 }
+
+//For many-to-many
+public record UserRole(RoleId RoleId);

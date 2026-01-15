@@ -8,6 +8,7 @@ public class TypePrice : Entity<TypePriceId>
     public SeatTypeId SeatTypeId { get; private set; }
     public decimal Price { get; private set; }
 
+    private TypePrice() { }
     private TypePrice(TypePriceId id, SessionId sessionId, SeatTypeId seatTypeId, decimal price)
     {
         Id = id;
@@ -45,7 +46,7 @@ public class TypePrice : Entity<TypePriceId>
     }
 }
 
-public record TypePriceId(Guid Id)
+public record struct TypePriceId(Guid Id)
 {
     public static TypePriceId New() => new TypePriceId(Guid.NewGuid());
 }

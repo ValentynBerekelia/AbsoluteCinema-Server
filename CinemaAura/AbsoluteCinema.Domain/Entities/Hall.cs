@@ -12,6 +12,7 @@ public class Hall : AggregateRoot<HallId>
     public IReadOnlyCollection<SeatId> SeatIds => _seatIds;
     private readonly HashSet<SessionId> _sessionIds = new HashSet<SessionId>();
     public IReadOnlyCollection<SessionId> SessionIds => _sessionIds;
+    private Hall() { }
 
     private Hall(HallId id, string name, int verticalSize, int horizontalSize)
     {
@@ -54,7 +55,7 @@ public class Hall : AggregateRoot<HallId>
         _seatIds.Remove(seatId);
     }
 }
-public record HallId(Guid Id)
+public record struct HallId(Guid Id)
 {
     public static HallId New() => new HallId(Guid.NewGuid());
 }

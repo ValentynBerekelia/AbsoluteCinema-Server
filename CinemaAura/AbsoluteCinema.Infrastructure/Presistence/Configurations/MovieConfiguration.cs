@@ -1,4 +1,3 @@
-using CinemaAura.Infrastructure.Presistence.Configurations.LinkObjects;
 using AbsoluteCinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,6 +9,10 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
     public void Configure(EntityTypeBuilder<Movie> builder)
     {
         builder.HasKey(x => x.Id);
+        
+        builder.Property(x => x.Id)
+            .HasConversion(id => id.Id, v => new MovieId(v))
+            .ValueGeneratedNever();
 
         builder.Property(x => x.Id)
             .HasConversion(
@@ -28,55 +31,72 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder.Property(x => x.AgeLimit)
             .IsRequired();
 
-        builder.OwnsMany<MovieGenreLink>("_genreIds", b =>
+        builder.Ignore(m => m.ActorIds);
+        builder.Ignore(m => m.GenreIds);
+        builder.Ignore(m => m.MediaIds);
+        
+        builder.OwnsMany<MovieGenre>("_genreIds", b =>
         {
-            b.ToTable("MovieGenres");
+            b.ToTable("movie_genres");
 
-            b.WithOwner()
-                .HasForeignKey("MovieId");
+            b.WithOwner().HasForeignKey("movie_id");
+            b.Property<MovieId>("movie_id");
 
-            b.Property(p => p.MovieId);
-            b.Property(p => p.GenreId);
+            b.Property(p => p.GenreId)
+                .HasColumnName("genre_id")
+                .HasConversion(
+                    id => id.Id,
+                    value => new GenreId(value))
+                .IsRequired();
 
-            b.HasKey(x => new { x.MovieId, x.GenreId });
-            b.HasIndex(x => new { x.MovieId, x.GenreId });
-        });
+            b.HasKey("movie_id", nameof(MovieGenre.GenreId));
 
-        builder.OwnsMany<MovieActorLink>("_actorIds", b =>
-        {
-            b.ToTable("MovieActors");
-
-            b.WithOwner()
-                .HasForeignKey("MovieId");
-
-            b.Property(p => p.MovieId);
-            b.Property(p => p.ActorId);
-
-            b.HasKey(x => new { x.MovieId, x.ActorId });
-            b.HasIndex(x => new { x.MovieId, x.ActorId });
-
-            b.HasOne<Actor>()
+            b.HasOne<Genre>()
                 .WithMany()
-                .HasForeignKey("ActorId")
+                .HasForeignKey(nameof(MovieGenre.GenreId))
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        builder.OwnsMany<MovieMediaLink>("_mediaIds", b =>
+        builder.OwnsMany<MovieActor>("_actorIds", b =>
         {
-            b.ToTable("MovieMedia");
+            b.ToTable("movie_actors");
 
-            b.WithOwner()
-                .HasForeignKey("MovieId");
+            b.WithOwner().HasForeignKey("movie_id");
+            b.Property<MovieId>("movie_id");
 
-            b.Property(p => p.MovieId);
-            b.Property(p => p.MediaId);
+            b.Property(p => p.ActorId)
+                .HasColumnName("actor_id")
+                .HasConversion(
+                    id => id.Id,
+                    value => new ActorId(value))
+                .IsRequired();
 
-            b.HasKey(x => new { x.MovieId, x.MediaId });
-            b.HasIndex(x => new { x.MovieId, x.MediaId });
+            b.HasKey("movie_id", nameof(MovieActor.ActorId));
+
+            b.HasOne<Actor>()
+                .WithMany()
+                .HasForeignKey(nameof(MovieActor.ActorId))
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.OwnsMany<MovieMedia>("_mediaIds", b =>
+        {
+            b.ToTable("movie_media");
+
+            b.WithOwner().HasForeignKey("movie_id");
+            b.Property<MovieId>("movie_id");
+            b.Property(p => p.MediaId)
+                .HasColumnName("media_id")
+                .HasConversion(
+                    id => id.Id,
+                    value => new MediaId(value))
+                .IsRequired();
+
+            b.HasKey("movie_id", nameof(MovieMedia.MediaId));
 
             b.HasOne<Media>()
                 .WithMany()
-                .HasForeignKey("MediaId")
+                .HasForeignKey(nameof(MovieMedia.MediaId))
                 .OnDelete(DeleteBehavior.Restrict);
         });
 

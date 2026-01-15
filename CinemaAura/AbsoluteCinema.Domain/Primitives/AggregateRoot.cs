@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace CinemaAura.Domain.Primitives;
 
 public abstract class AggregateRoot<TId> :Entity<TId> where TId : notnull
@@ -9,6 +11,7 @@ public abstract class AggregateRoot<TId> :Entity<TId> where TId : notnull
     }
 
     private readonly List<IDomainEvent> _domainEvents = new();
+    [NotMapped]
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents;
 
     public void Raise(IDomainEvent domainEvent)
