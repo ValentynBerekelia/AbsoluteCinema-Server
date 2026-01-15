@@ -57,4 +57,3 @@ nunit-*.xml
 .vs
 CinemaAura/.idea
 CinemaAura/.vs
-CinemaAura\AbsoluteCinema.Presentation\appsettings.Development.json
