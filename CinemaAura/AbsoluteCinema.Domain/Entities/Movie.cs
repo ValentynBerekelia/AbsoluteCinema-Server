@@ -9,15 +9,16 @@ public class Movie:  AggregateRoot<MovieId>
     public float Rate{get; private set;}
     public int AgeLimit{get; private set;}
     
-    private readonly HashSet<GenreId> _genreIds = new HashSet<GenreId>();
-    public IReadOnlyCollection<GenreId> GenreIds => _genreIds;
+    private readonly HashSet<MovieGenre> _genreIds = new HashSet<MovieGenre>();
+    public IReadOnlyCollection<MovieGenre> GenreIds => _genreIds;
     
-    private readonly HashSet<MediaId> _mediaIds = new HashSet<MediaId>();
-    public IReadOnlyCollection<MediaId> MediaIds => _mediaIds;
-    
-    private readonly HashSet<ActorId> _actorIds = new HashSet<ActorId>();
-    public IReadOnlyCollection<ActorId> ActorIds => _actorIds;
+    private readonly HashSet<MovieMedia> _mediaIds = new HashSet<MovieMedia>();
+    public IReadOnlyCollection<MovieMedia> MediaIds => _mediaIds;
 
+    private readonly HashSet<MovieActor> _actorIds = new HashSet<MovieActor>();
+    public IReadOnlyCollection<MovieActor> ActorIds => _actorIds;
+
+    private Movie() { }
     private Movie(MovieId movieId, string name,  string description, float rate, int age_limit)
     {
         Id = movieId;
@@ -79,12 +80,12 @@ public class Movie:  AggregateRoot<MovieId>
 
     public void AddGenre(GenreId genreId)
     {
-        _genreIds.Add(genreId);
+        _genreIds.Add(new MovieGenre(genreId));
     }
 
     public void RemoveGenre(GenreId genreId)
     {
-        _genreIds.Remove(genreId);
+        _genreIds.Remove(new MovieGenre(genreId));
     }
     
     public void ClearGenres()
@@ -94,12 +95,12 @@ public class Movie:  AggregateRoot<MovieId>
     
     public void AddMedia(MediaId mediaId)
     {
-        _mediaIds.Add(mediaId);
+        _mediaIds.Add(new MovieMedia(mediaId));
     }
 
     public void RemoveMedia(MediaId mediaId)
     {
-        _mediaIds.Remove(mediaId);
+        _mediaIds.Remove(new MovieMedia(mediaId));
     }
     
     public void ClearMedias()
@@ -109,12 +110,12 @@ public class Movie:  AggregateRoot<MovieId>
     
     public void AddActor(ActorId actorId)
     {
-        _actorIds.Add(actorId);
+        _actorIds.Add(new MovieActor(actorId));
     }
 
     public void RemoveActor(ActorId actorId)
     {
-        _actorIds.Remove(actorId);
+        _actorIds.Remove(new MovieActor(actorId));
     }
     
     public void ClearActors()
@@ -124,7 +125,13 @@ public class Movie:  AggregateRoot<MovieId>
 
 }
 
-public record MovieId(Guid Id)
+public record struct MovieId(Guid Id)
 {
     public static MovieId New() => new MovieId(Guid.NewGuid());
 }
+
+public record MovieGenre(GenreId GenreId);
+
+public record MovieMedia(MediaId MediaId);
+
+public record MovieActor(ActorId ActorId);

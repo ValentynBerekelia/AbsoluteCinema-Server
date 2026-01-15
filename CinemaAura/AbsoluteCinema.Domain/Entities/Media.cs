@@ -7,6 +7,7 @@ public class Media: Entity<MediaId>
     public string Type { get; private set; }
     public string Url { get; private set; }
 
+    private Media() { }
     private Media(MediaId id, string type, string url)
     {
         Id = id;
@@ -39,7 +40,7 @@ public class Media: Entity<MediaId>
     
 }
 
-public record MediaId(Guid Id)
+public record struct MediaId(Guid Id)
 {
     public static MediaId New() => new MediaId(Guid.NewGuid());
 }

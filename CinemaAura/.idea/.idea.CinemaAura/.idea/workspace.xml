@@ -14,6 +14,9 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DpaMonitoringSettings">
+    <option name="autoShow" value="false" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -59,6 +62,9 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ],
     &quot;rider.external.source.directories&quot;: [
       &quot;/Users/oleh/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache&quot;,
       &quot;/Users/oleh/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache&quot;,

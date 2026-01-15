@@ -7,6 +7,7 @@ public class PasswordHash
     public byte[] Value { get; init; }
     public byte[] Salt { get; init; }
 
+    private PasswordHash() {}
     private PasswordHash(byte[] value, byte[] salt)
     {
         Value = value;
