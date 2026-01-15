@@ -11,6 +11,7 @@ public class Session : AggregateRoot<SessionId>
     private readonly HashSet<TicketId> _ticketIds = new HashSet<TicketId>();
     public IReadOnlyCollection<TicketId> TicketIds => _ticketIds;
 
+    private Session() { }
     private Session(SessionId id, MovieId movieId, HallId hallId, DateTime date)
     {
         Id = id;
@@ -55,7 +56,7 @@ public class Session : AggregateRoot<SessionId>
     }
 }
 
-public record SessionId(Guid Id)
+public record struct SessionId(Guid Id)
 {
     public static SessionId New() => new SessionId(Guid.NewGuid());
 }

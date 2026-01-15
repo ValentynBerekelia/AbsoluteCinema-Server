@@ -7,6 +7,7 @@ public class Actor: Entity<ActorId>
     public string Name { get; private set; }
     public string Bio{ get; private set; }
     public DateTime BirthDate { get; private set; }
+    private Actor() { } 
 
     private Actor(ActorId id, string name, string bio, DateTime birthDate)
     {
@@ -53,7 +54,7 @@ public class Actor: Entity<ActorId>
     
 }
 
-public record ActorId(Guid Id)
+public record struct ActorId(Guid Id)
 {
     public static ActorId New() => new ActorId(Guid.NewGuid());
 }

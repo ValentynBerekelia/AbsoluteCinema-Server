@@ -6,6 +6,7 @@ public class SeatType : AggregateRoot<SeatTypeId>
 {
     public string TypeName { get; private set; }
 
+    private SeatType() { }
     private SeatType(string name)
     {
         Id = SeatTypeId.New();
@@ -31,7 +32,7 @@ public class SeatType : AggregateRoot<SeatTypeId>
     }
 }
 
-public record SeatTypeId(Guid Id)
+public record struct SeatTypeId(Guid Id)
 {
     public static SeatTypeId New() => new SeatTypeId(Guid.NewGuid());
 }

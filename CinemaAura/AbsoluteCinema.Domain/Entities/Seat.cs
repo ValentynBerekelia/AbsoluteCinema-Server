@@ -1,3 +1,4 @@
+using System.Formats.Tar;
 using CinemaAura.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
@@ -7,6 +8,7 @@ public class Seat : Entity<SeatId>
     public short Number { get; private set; }
     public SeatTypeId SeatTypeId { get; private set; }
 
+    private Seat() { }
     private Seat(short number, SeatTypeId seatTypeId)
     {
         Id = SeatId.New();
@@ -35,7 +37,7 @@ public class Seat : Entity<SeatId>
     
 }
 
-public record SeatId(Guid Id)
+public record struct SeatId(Guid Id)
 {
     public static SeatId New() => new SeatId(Guid.NewGuid());
 }

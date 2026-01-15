@@ -5,6 +5,7 @@ namespace AbsoluteCinema.Domain.Entities;
 public class Genre:  Entity<GenreId>
 {
     public string Name { get; private set; }
+    private Genre() { }
 
     private Genre(GenreId genreId, string name)
     {
@@ -33,7 +34,7 @@ public class Genre:  Entity<GenreId>
     
 }
 
-public record GenreId(Guid Id)
+public record struct GenreId(Guid Id)
 {
     public static GenreId New() => new GenreId(Guid.NewGuid());
 }

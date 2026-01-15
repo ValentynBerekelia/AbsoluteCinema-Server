@@ -1,4 +1,3 @@
-using CinemaAura.Infrastructure.Presistence.Configurations.LinkObjects;
 using AbsoluteCinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -19,20 +18,32 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(x => x.Email)
             .IsUnique();
 
-        builder.OwnsMany<UserRoleLink>("_roleIds", b =>
+        builder.Ignore(r => r.RoleIds);
+
+        builder.OwnsMany<UserRole>("_roleIds", b =>
         {
-            b.ToTable("UserRoles");
-            
-            b.WithOwner().HasForeignKey("UserId");
-            b.Property(p => p.UserId);
-            b.Property(p => p.RoleId);
-            
-            b.HasKey(x=> new { x.UserId, x.RoleId });
-            b.HasIndex(x => new { x.UserId, x.RoleId });
-            
+            b.ToTable("user_roles");
+
+            b.WithOwner().HasForeignKey("user_id");
+            b.Property<UserId>("user_id");
+
+            b.Property(x => x.RoleId)
+                .HasConversion(id => id.Id, v => new RoleId(v))
+                .HasColumnName("role_id")
+                .IsRequired();
+
+            b.HasKey("user_id", nameof(UserRole.RoleId));
+            builder.OwnsOne(u => u.PasswordHash, b =>
+            {
+                b.Property(x => x.Value)
+                    .HasColumnName("password_hash")
+                    .HasMaxLength(512)
+                    .IsRequired();
+            });
+
             b.HasOne<Role>()
                 .WithMany()
-                .HasForeignKey("RoleId")
+                .HasForeignKey(nameof(UserRole.RoleId))
                 .OnDelete(DeleteBehavior.Restrict);
         });
         

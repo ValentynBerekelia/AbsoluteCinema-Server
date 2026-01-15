@@ -7,7 +7,6 @@ namespace CinemaAura.Infrastructure.Presistence.Configurations;
 
 public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
-    private IEntityTypeConfiguration<Role> _entityTypeConfigurationImplementation;
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         builder.ToTable("Role")
@@ -19,24 +18,31 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
         
         builder.HasIndex(x => x.Name);
 
-        builder.OwnsMany<PermissionCode>("_permission", b =>
+        builder.OwnsMany<PermissionCode>("_permissions", b =>
         {
-            b.ToTable("RolePermission");
+            b.ToTable("role_permissions");
+            
+            builder.Property(r => r.Id)
+                .HasConversion(
+                    id => id.Id,
+                    value => new RoleId(value))
+                .ValueGeneratedNever();
 
-            b.WithOwner().HasForeignKey("RoleId");
-            b.Property<Guid>("RoleId");
+            builder.Ignore(r => r.Permissions);
+            
+            b.WithOwner().HasForeignKey("role_id");
+            b.Property<RoleId>("role_id");
 
             b.Property(p => p.Value)
-                .HasColumnName("PermissionCode")
+                .HasColumnName("permission_code")
                 .HasMaxLength(128)
                 .IsRequired();
 
-            b.HasKey("RoleId", nameof(PermissionCode.Value));
-
-            b.HasIndex("RoleId", "PermissionCode").IsUnique();
+            b.HasKey("role_id", nameof(PermissionCode.Value));
+            b.HasIndex("role_id", nameof(PermissionCode.Value)).IsUnique();
         });
         
-        builder.Navigation("_permission")
+        builder.Navigation("_permissions")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
     }

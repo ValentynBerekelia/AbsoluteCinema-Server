@@ -8,6 +8,7 @@ namespace AbsoluteCinema.Domain.Entities;
         public SessionId SessionId { get; private set; }
         public SeatId SeatId { get; private set; }
         public DateTime Date { get; private set; }
+        private Ticket() { }
         private Ticket(TicketId id, UserId? userId, SessionId sessionId, SeatId seatId, DateTime date)
         {
             Id = id;
@@ -41,7 +42,7 @@ namespace AbsoluteCinema.Domain.Entities;
             Date = newDate;
         }
     }
-public record TicketId(Guid Id)
+public record struct TicketId(Guid Id)
 {
     public static TicketId New() => new TicketId(Guid.NewGuid());
 }
