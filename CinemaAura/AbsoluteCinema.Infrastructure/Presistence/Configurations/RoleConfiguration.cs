@@ -13,10 +13,10 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
             .HasKey(x => x.Id);
 
         builder.Property(r => r.Id)
-           .HasColumnName("id")
-           .HasConversion(
-               id => id.Id,
-               value => new RoleId(value));
+            .HasColumnName("id")
+            .HasConversion(
+                id => id.Id,
+                value => new RoleId(value));
 
         builder.Property(x => x.Name)
             .HasColumnName("name")
@@ -27,31 +27,32 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
             .IsUnique()
             .HasDatabaseName("uq_roles_name");
 
-        builder.Ignore(r => r.Permissions);
+        builder.Ignore(r => r.PermissionsIds);
         builder.Ignore(r => r.UserIds);
 
-        builder.OwnsMany<PermissionCode>("_permissions", b =>
+        builder.OwnsMany<RolePermission>("_permissionsIds", b =>
         {
             b.ToTable("role_permissions");
 
             b.WithOwner().HasForeignKey("role_id");
+            b.Property<RoleId>("role_id");
 
-            b.Property<RoleId>("role_id")
-                .HasConversion(i => i.Id, v => new RoleId(v));
-
-            b.Property(p => p.Value)
-                .HasColumnName("permission_code")
-                .HasMaxLength(128)
+            b.Property(p => p.PermissionId)
+                .HasColumnName("permission_id")
+                .HasConversion(
+                    id => id.Id,
+                    value => new PermissionId(value))
                 .IsRequired();
 
-            b.HasKey("role_id", nameof(PermissionCode.Value));
+            b.HasKey("role_id", nameof(RolePermission.PermissionId));
 
-            b.HasIndex("role_id", nameof(PermissionCode.Value))
-                .IsUnique()
-                .HasDatabaseName("uq_role_permissions_role_permission");
+            b.HasOne<Permission>()
+                .WithMany()
+                .HasForeignKey(nameof(RolePermission.PermissionId))
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
-        builder.Navigation("_permissions")
+        builder.Navigation("_permissionsIds")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }
