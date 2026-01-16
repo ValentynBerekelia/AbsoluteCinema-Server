@@ -6,7 +6,7 @@ public class Session : AggregateRoot<SessionId>
 {
     public MovieId MovieId { get; private set; }
     public HallId HallId { get; private set; }
-    public DateTime Date { get; private set; }
+    public DateTime StartDateTime { get; private set; }
 
     private readonly HashSet<TicketId> _ticketIds = new HashSet<TicketId>();
     public IReadOnlyCollection<TicketId> TicketIds => _ticketIds;
@@ -17,7 +17,7 @@ public class Session : AggregateRoot<SessionId>
         Id = id;
         MovieId = movieId;
         HallId = hallId;
-        Date = date;
+        StartDateTime = date;
     }
     public static Session Create(MovieId movieId, HallId hallId, DateTime date)
     {
@@ -34,7 +34,7 @@ public class Session : AggregateRoot<SessionId>
         {
             throw new ArgumentException("New session date cannot be in the past.");
         }
-        Date = newDate;
+        StartDateTime = newDate;
     }
 
     public void ChangeHall(HallId newHallId)

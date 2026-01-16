@@ -2,9 +2,9 @@ using CinemaAura.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
 
-public class Media: Entity<MediaId>
+public class Media : Entity<MediaId>
 {
-    public string Type { get; private set; }
+    public string Type { get; private set; } // mb use enum later
     public string Url { get; private set; }
 
     private Media() { }
@@ -27,17 +27,17 @@ public class Media: Entity<MediaId>
         }
         return new Media(MediaId.New(), type, url);
     }
-    
+
     public void ChangeUrl(string url)
     {
         Url = url;
     }
-    
+
     public void ChangeType(string type)
     {
         Type = type;
     }
-    
+
 }
 
 public record struct MediaId(Guid Id)
