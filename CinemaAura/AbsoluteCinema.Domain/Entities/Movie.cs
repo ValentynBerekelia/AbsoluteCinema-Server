@@ -2,16 +2,17 @@ using CinemaAura.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
 
-public class Movie:  AggregateRoot<MovieId>
+public class Movie : AggregateRoot<MovieId>
 {
     public string Name { get; private set; }
     public string Description { get; private set; }
-    public float Rate{get; private set;}
-    public int AgeLimit{get; private set;}
-    
+    public decimal Rate { get; private set; }
+    public int AgeLimit { get; private set; }
+    // mb add release date, duration, director, etc.
+
     private readonly HashSet<MovieGenre> _genreIds = new HashSet<MovieGenre>();
     public IReadOnlyCollection<MovieGenre> GenreIds => _genreIds;
-    
+
     private readonly HashSet<MovieMedia> _mediaIds = new HashSet<MovieMedia>();
     public IReadOnlyCollection<MovieMedia> MediaIds => _mediaIds;
 
@@ -19,17 +20,17 @@ public class Movie:  AggregateRoot<MovieId>
     public IReadOnlyCollection<MovieActor> ActorIds => _actorIds;
 
     private Movie() { }
-    private Movie(MovieId movieId, string name,  string description, float rate, int age_limit)
+    private Movie(MovieId movieId, string name, string description, decimal rate, int age_limit)
     {
         Id = movieId;
         Name = name;
         Description = description;
         Rate = rate;
         AgeLimit = age_limit;
-        
+
     }
 
-    public static Movie Create(string name, string description, float rate, int age_limit)
+    public static Movie Create(string name, string description, decimal rate, int age_limit)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -60,7 +61,7 @@ public class Movie:  AggregateRoot<MovieId>
         Description = description;
     }
 
-    public void ChangeRate(float rate)
+    public void ChangeRate(decimal rate)
     {
         if (rate < 0 || rate > 10)
         {
@@ -87,12 +88,12 @@ public class Movie:  AggregateRoot<MovieId>
     {
         _genreIds.Remove(new MovieGenre(genreId));
     }
-    
+
     public void ClearGenres()
     {
         _genreIds.Clear();
     }
-    
+
     public void AddMedia(MediaId mediaId)
     {
         _mediaIds.Add(new MovieMedia(mediaId));
@@ -102,12 +103,12 @@ public class Movie:  AggregateRoot<MovieId>
     {
         _mediaIds.Remove(new MovieMedia(mediaId));
     }
-    
+
     public void ClearMedias()
     {
         _mediaIds.Clear();
     }
-    
+
     public void AddActor(ActorId actorId)
     {
         _actorIds.Add(new MovieActor(actorId));
@@ -117,7 +118,7 @@ public class Movie:  AggregateRoot<MovieId>
     {
         _actorIds.Remove(new MovieActor(actorId));
     }
-    
+
     public void ClearActors()
     {
         _actorIds.Clear();

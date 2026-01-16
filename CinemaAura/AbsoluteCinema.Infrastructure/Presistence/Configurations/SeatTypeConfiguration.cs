@@ -8,10 +8,11 @@ public class SeatTypeConfiguration : IEntityTypeConfiguration<SeatType>
 {
     public void Configure(EntityTypeBuilder<SeatType> builder)
     {
-        builder.ToTable("SeatTypes");
+        builder.ToTable("seat_types");
         builder.HasKey(st => st.Id);
 
         builder.Property(st => st.Id)
+            .HasColumnName("id")
             .HasConversion(
                 id => id.Id,
                 value => new SeatTypeId(value));
@@ -21,7 +22,10 @@ public class SeatTypeConfiguration : IEntityTypeConfiguration<SeatType>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.HasIndex(st => st.TypeName);
+        // UNIQUE constraint
+        builder.HasIndex(st => st.TypeName)
+            .IsUnique()
+            .HasDatabaseName("uq_seat_types_type_name");
     }
 }
 
