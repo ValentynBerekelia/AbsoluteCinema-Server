@@ -161,6 +161,29 @@ namespace CinemaAura.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("code");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("permissions", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_permission_has_not_whitespaces", "code NOT LIKE '% %'");
+                        });
+                });
+
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -487,29 +510,32 @@ namespace CinemaAura.Infrastructure.Migrations
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Role", b =>
                 {
-                    b.OwnsMany("CinemaAura.Domain.ValueObjects.PermissionCode", "_permissions", b1 =>
+                    b.OwnsMany("AbsoluteCinema.Domain.Entities.RolePermission", "_permissionsIds", b1 =>
                         {
                             b1.Property<Guid>("role_id")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Value")
-                                .HasMaxLength(128)
-                                .HasColumnType("character varying(128)")
-                                .HasColumnName("permission_code");
+                            b1.Property<Guid>("PermissionId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("permission_id");
 
-                            b1.HasKey("role_id", "Value");
+                            b1.HasKey("role_id", "PermissionId");
 
-                            b1.HasIndex("role_id", "Value")
-                                .IsUnique()
-                                .HasDatabaseName("uq_role_permissions_role_permission");
+                            b1.HasIndex("PermissionId");
 
                             b1.ToTable("role_permissions", (string)null);
+
+                            b1.HasOne("AbsoluteCinema.Domain.Entities.Permission", null)
+                                .WithMany()
+                                .HasForeignKey("PermissionId")
+                                .OnDelete(DeleteBehavior.Restrict)
+                                .IsRequired();
 
                             b1.WithOwner()
                                 .HasForeignKey("role_id");
                         });
 
-                    b.Navigation("_permissions");
+                    b.Navigation("_permissionsIds");
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Seat", b =>
