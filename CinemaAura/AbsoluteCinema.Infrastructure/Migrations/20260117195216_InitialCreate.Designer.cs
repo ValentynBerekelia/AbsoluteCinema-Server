@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CinemaAura.Infrastructure.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20260115004747_InitialCreate")]
+    [Migration("20260117195216_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -28,46 +28,61 @@ namespace CinemaAura.Infrastructure.Migrations
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Actor", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("Bio")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("bio");
 
                     b.Property<DateTime>("BirthDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("birth_date");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("name");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Actors");
+                    b.HasIndex("Name")
+                        .HasDatabaseName("ix_actors_name");
+
+                    b.ToTable("actors", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Genre", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("name");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("uq_genres_name");
+
+                    b.ToTable("genres", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Hall", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("HallName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("hall_name");
 
                     b.Property<int>("HorizontalSize")
                         .HasColumnType("integer")
@@ -79,76 +94,137 @@ namespace CinemaAura.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Halls", (string)null);
+                    b.ToTable("halls", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_halls_horizontal_size_positive", "horizontal_size > 0");
+
+                            t.HasCheckConstraint("ck_halls_vertical_size_positive", "vertical_size > 0");
+                        });
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Media", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("type");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("url");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Medias");
+                    b.ToTable("medias", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Movie", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<int>("AgeLimit")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("age_limit");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
 
-                    b.Property<float>("Rate")
-                        .HasColumnType("real");
+                    b.Property<decimal>("Rate")
+                        .HasPrecision(3, 2)
+                        .HasColumnType("numeric(3,2)")
+                        .HasColumnName("rate");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Movies");
+                    b.HasIndex("Rate")
+                        .HasDatabaseName("ix_movies_rate");
+
+                    b.ToTable("movies", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_movies_age_limit_positive", "age_limit >= 0");
+
+                            t.HasCheckConstraint("ck_movies_rate_range", "rate >= 0 AND rate <= 10");
+                        });
+                });
+
+            modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("code");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("permissions", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_permission_has_not_whitespaces", "code NOT LIKE '% %'");
+                        });
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("uq_roles_name");
 
-                    b.ToTable("Role", (string)null);
+                    b.ToTable("roles", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Seat", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("HallId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("hall_id");
 
                     b.Property<short>("Number")
                         .HasColumnType("smallint")
                         .HasColumnName("number");
+
+                    b.Property<short>("Row")
+                        .HasColumnType("smallint")
+                        .HasColumnName("row");
 
                     b.Property<Guid>("SeatTypeId")
                         .HasColumnType("uuid")
@@ -156,13 +232,24 @@ namespace CinemaAura.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Seats", (string)null);
+                    b.HasIndex("HallId")
+                        .HasDatabaseName("ix_seats_hall_id");
+
+                    b.HasIndex("SeatTypeId")
+                        .HasDatabaseName("ix_seats_seat_type_id");
+
+                    b.HasIndex("HallId", "Row", "Number")
+                        .IsUnique()
+                        .HasDatabaseName("uq_seats_position");
+
+                    b.ToTable("seats", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.SeatType", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("TypeName")
                         .IsRequired()
@@ -172,53 +259,77 @@ namespace CinemaAura.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TypeName");
+                    b.HasIndex("TypeName")
+                        .IsUnique()
+                        .HasDatabaseName("uq_seat_types_type_name");
 
-                    b.ToTable("SeatTypes", (string)null);
+                    b.ToTable("seat_types", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Session", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<Guid>("HallId")
                         .HasColumnType("uuid")
-                        .HasColumnName("hall");
+                        .HasColumnName("hall_id");
 
                     b.Property<Guid>("MovieId")
                         .HasColumnType("uuid")
-                        .HasColumnName("movie");
+                        .HasColumnName("movie_id");
+
+                    b.Property<DateTime>("StartDateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_time");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HallId");
+                    b.HasIndex("HallId")
+                        .HasDatabaseName("ix_sessions_hall_id");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex("MovieId")
+                        .HasDatabaseName("ix_sessions_movie_id");
 
-                    b.ToTable("Sessions", (string)null);
+                    b.HasIndex("StartDateTime")
+                        .HasDatabaseName("ix_sessions_start_time");
+
+                    b.ToTable("sessions", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Ticket", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<decimal>("PricePaid")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("price_paid");
+
+                    b.Property<DateTime>("PurchasedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date");
+                        .HasColumnName("purchased_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<Guid>("SeatId")
                         .HasColumnType("uuid")
-                        .HasColumnName("seat");
+                        .HasColumnName("seat_id");
 
                     b.Property<Guid>("SessionId")
                         .HasColumnType("uuid")
-                        .HasColumnName("session");
+                        .HasColumnName("session_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("Pending")
+                        .HasColumnName("status");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid")
@@ -226,19 +337,37 @@ namespace CinemaAura.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PurchasedAt")
+                        .HasDatabaseName("ix_tickets_purchased_at");
+
                     b.HasIndex("SeatId");
 
-                    b.HasIndex("SessionId");
+                    b.HasIndex("SessionId")
+                        .HasDatabaseName("ix_tickets_session_id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("Status")
+                        .HasDatabaseName("ix_tickets_status");
 
-                    b.ToTable("Tickets", (string)null);
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_tickets_user_id");
+
+                    b.HasIndex("SessionId", "SeatId")
+                        .IsUnique()
+                        .HasDatabaseName("uq_tickets_session_seat");
+
+                    b.ToTable("tickets", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_tickets_price_positive", "price_paid >= 0");
+
+                            t.HasCheckConstraint("ck_tickets_status_valid", "status IN ('Pending', 'Confirmed', 'Cancelled', 'Refunded')");
+                        });
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.TypePrice", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
@@ -255,32 +384,47 @@ namespace CinemaAura.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SessionId", "SeatTypeId");
+                    b.HasIndex("SeatTypeId")
+                        .HasDatabaseName("ix_type_prices_seat_type_id");
 
-                    b.ToTable("TypePrices", (string)null);
+                    b.HasIndex("SessionId")
+                        .HasDatabaseName("ix_type_prices_session_id");
+
+                    b.HasIndex("SessionId", "SeatTypeId")
+                        .IsUnique()
+                        .HasDatabaseName("uq_type_prices_session_seat_type");
+
+                    b.ToTable("type_prices", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_type_prices_price_positive", "price >= 0");
+                        });
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("email");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text")
-                        .HasDefaultValue("Unknown");
+                        .HasDefaultValue("Unknown")
+                        .HasColumnName("user_name");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_email");
 
-                    b.ToTable("Users");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Movie", b =>
@@ -369,28 +513,49 @@ namespace CinemaAura.Infrastructure.Migrations
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Role", b =>
                 {
-                    b.OwnsMany("CinemaAura.Domain.ValueObjects.PermissionCode", "_permissions", b1 =>
+                    b.OwnsMany("AbsoluteCinema.Domain.Entities.RolePermission", "_permissionsIds", b1 =>
                         {
                             b1.Property<Guid>("role_id")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Value")
-                                .HasMaxLength(128)
-                                .HasColumnType("character varying(128)")
-                                .HasColumnName("permission_code");
+                            b1.Property<Guid>("PermissionId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("permission_id");
 
-                            b1.HasKey("role_id", "Value");
+                            b1.HasKey("role_id", "PermissionId");
 
-                            b1.HasIndex("role_id", "Value")
-                                .IsUnique();
+                            b1.HasIndex("PermissionId");
 
                             b1.ToTable("role_permissions", (string)null);
+
+                            b1.HasOne("AbsoluteCinema.Domain.Entities.Permission", null)
+                                .WithMany()
+                                .HasForeignKey("PermissionId")
+                                .OnDelete(DeleteBehavior.Restrict)
+                                .IsRequired();
 
                             b1.WithOwner()
                                 .HasForeignKey("role_id");
                         });
 
-                    b.Navigation("_permissions");
+                    b.Navigation("_permissionsIds");
+                });
+
+            modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Seat", b =>
+                {
+                    b.HasOne("AbsoluteCinema.Domain.Entities.Hall", null)
+                        .WithMany()
+                        .HasForeignKey("HallId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_seats_halls_hall_id");
+
+                    b.HasOne("AbsoluteCinema.Domain.Entities.SeatType", null)
+                        .WithMany()
+                        .HasForeignKey("SeatTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_seats_seat_types_seat_type_id");
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Session", b =>
@@ -399,13 +564,15 @@ namespace CinemaAura.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("HallId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_sessions_halls_hall_id");
 
                     b.HasOne("AbsoluteCinema.Domain.Entities.Movie", null)
                         .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_sessions_movies_movie_id");
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Ticket", b =>
@@ -414,18 +581,38 @@ namespace CinemaAura.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("SeatId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_tickets_seats_seat_id");
 
                     b.HasOne("AbsoluteCinema.Domain.Entities.Session", null)
                         .WithMany()
                         .HasForeignKey("SessionId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_tickets_sessions_session_id");
 
                     b.HasOne("AbsoluteCinema.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_tickets_users_user_id");
+                });
+
+            modelBuilder.Entity("AbsoluteCinema.Domain.Entities.TypePrice", b =>
+                {
+                    b.HasOne("AbsoluteCinema.Domain.Entities.SeatType", null)
+                        .WithMany()
+                        .HasForeignKey("SeatTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_type_prices_seat_types_seat_type_id");
+
+                    b.HasOne("AbsoluteCinema.Domain.Entities.Session", null)
+                        .WithMany()
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_type_prices_sessions_session_id");
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.User", b =>
@@ -437,7 +624,8 @@ namespace CinemaAura.Infrastructure.Migrations
 
                             b1.Property<byte[]>("Salt")
                                 .IsRequired()
-                                .HasColumnType("bytea");
+                                .HasColumnType("bytea")
+                                .HasColumnName("password_salt");
 
                             b1.Property<byte[]>("Value")
                                 .IsRequired()
@@ -447,7 +635,7 @@ namespace CinemaAura.Infrastructure.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("Users");
+                            b1.ToTable("users");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
