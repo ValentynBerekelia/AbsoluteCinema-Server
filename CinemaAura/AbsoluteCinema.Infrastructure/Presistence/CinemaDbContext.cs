@@ -17,8 +17,7 @@ public class CinemaDbContext : DbContext
     public DbSet<Seat> Seats => Set<Seat>();
     public DbSet<SeatType> SeatTypes => Set<SeatType>();
     public DbSet<TypePrice> TypePrices => Set<TypePrice>();
-    public DbSet<Permission> permissions => Set<Permission>();
-    
+    public DbSet<Permission> Permissions => Set<Permission>();
     public CinemaDbContext(DbContextOptions<CinemaDbContext> options) : base(options) { }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
