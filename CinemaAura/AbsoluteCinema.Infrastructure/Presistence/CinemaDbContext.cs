@@ -9,7 +9,7 @@ public class CinemaDbContext : DbContext
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Movie> Movies => Set<Movie>();
     public DbSet<Genre> Genres => Set<Genre>();
-    public DbSet<Actor> Actors => Set<Actor>();
+    public DbSet<Person> Actors => Set<Person>();
     public DbSet<Media> Medias => Set<Media>();
     public DbSet<Hall> Halls => Set<Hall>();
     public DbSet<Session> Sessions => Set<Session>();

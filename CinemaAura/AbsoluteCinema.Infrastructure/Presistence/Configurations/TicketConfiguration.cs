@@ -15,8 +15,7 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
                 "ck_tickets_status_valid",
                 "status IN ('Pending', 'Confirmed', 'Cancelled', 'Refunded')");
         });
-
-        // PK
+        
         builder.HasKey(t => t.Id);
 
         builder.Property(t => t.Id)
@@ -48,15 +47,8 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
 
         builder.Property(t => t.Status)
             .HasColumnName("status")
-            .HasMaxLength(20)
-            .HasConversion<string>() // for enum in entity
             .IsRequired()
             .HasDefaultValue(TicketStatus.Pending);
-
-        builder.Property(t => t.PricePaid)
-            .HasColumnName("price_paid")
-            .HasPrecision(10, 2)
-            .IsRequired();
 
         builder.Property(t => t.PurchasedAt)
             .HasColumnName("purchased_at")

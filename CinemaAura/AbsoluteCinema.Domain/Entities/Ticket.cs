@@ -9,18 +9,16 @@ public class Ticket : Entity<TicketId>
     public SeatId SeatId { get; private set; }
 
     // NOTE: UNIQUE constraint (SessionId, SeatId) setup in configuration to prevent double booking
-
+    
     public TicketStatus Status { get; private set; }
-    public decimal PricePaid { get; private set; }
     public DateTime PurchasedAt { get; private set; }
     private Ticket() { }
-    private Ticket(TicketId id, UserId? userId, SessionId sessionId, SeatId seatId, decimal pricePaid, DateTime purchasedAt)
+    private Ticket(TicketId id, UserId? userId, SessionId sessionId, SeatId seatId,  DateTime purchasedAt)
     {
         Id = id;
         UserId = userId;
         SessionId = sessionId;
         SeatId = seatId;
-        PricePaid = pricePaid;
         Status = TicketStatus.Pending;
         PurchasedAt = purchasedAt;
     }
@@ -35,7 +33,6 @@ public class Ticket : Entity<TicketId>
             userId,
             sessionId,
             seatId,
-            pricePaid,
             DateTime.UtcNow
         );
     }

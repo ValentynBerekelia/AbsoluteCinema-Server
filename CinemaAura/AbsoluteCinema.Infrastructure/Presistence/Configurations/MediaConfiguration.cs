@@ -19,7 +19,7 @@ public class MediaConfiguration : IEntityTypeConfiguration<Media>
 
         builder.Property(x => x.Type)
             .HasColumnName("type")
-            .HasMaxLength(100)
+            .HasConversion<int>()
             .IsRequired();
 
         builder.Property(x => x.Url)
