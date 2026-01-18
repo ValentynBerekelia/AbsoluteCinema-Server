@@ -26,11 +26,11 @@ public class Person: Entity<PersonId>
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentException("Actor name cannot be null or empty.", nameof(name));
+            throw new DomainException("Person name is required.");
         }
         if (birthDate > DateTime.UtcNow)
         {
-            throw new ArgumentException("Birth date cannot be in the future.", nameof(birthDate));
+            throw new DomainException("Person birth date cannot be in the future.");
         }
         return new Person(PersonId.New(), name, bio, birthDate);
     }
@@ -39,7 +39,7 @@ public class Person: Entity<PersonId>
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentException("Actor name cannot be null or empty.", nameof(name));
+            throw new DomainException("Person name is required.");
         }
         Name = name;
     }
@@ -52,7 +52,7 @@ public class Person: Entity<PersonId>
     {
         if (birthDate > DateTime.UtcNow)
         {
-            throw new ArgumentException("Birth date cannot be in the future.", nameof(birthDate));
+            throw new DomainException("Person birth date cannot be in the future.");
         }
         BirthDate = birthDate;
     }
@@ -61,7 +61,7 @@ public class Person: Entity<PersonId>
     {
         if (media.Type != MediaType.Image)
         {
-            throw new DomainException("Incorrect media type for person. It supposed to be image.");
+            throw new DomainException("Media type must be an image.");
         }
         Media = media;
     }

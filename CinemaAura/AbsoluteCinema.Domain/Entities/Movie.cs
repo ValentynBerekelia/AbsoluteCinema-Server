@@ -41,34 +41,33 @@ public class Movie : AggregateRoot<MovieId>
 
     public static Movie Create(string name, string description, decimal rate, int ageLimit, TimeSpan duration, string country, string studio, string language)
     {
-        //TODO: Make logical exceptions
         if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentException("Movie name cannot be null or empty.", nameof(name));
+            throw new DomainException("Movie name is required.");
         }
         if (string.IsNullOrWhiteSpace(language))
         {
-            throw new ArgumentException("Movie name cannot be null or empty.", nameof(name));
+            throw new DomainException("Movie language is required.");
         }
         if (string.IsNullOrWhiteSpace(country))
         {
-            throw new ArgumentException("Movie name cannot be null or empty.", nameof(name));
+            throw new DomainException("Movie country is required.");
         }
         if (string.IsNullOrWhiteSpace(studio))
         {
-            throw new ArgumentException("Movie name cannot be null or empty.", nameof(name));
+            throw new DomainException("Movie studio is required.");
         }
         if (rate < 0 || rate > 10)
         {
-            throw new ArgumentException("Rate must be between 0 and 10.", nameof(rate));
+            throw new DomainException("Movie rating must be between 0 and 10.");
         }
         if (duration <= TimeSpan.Zero)
         {
-            throw new DomainException("Duration must be greater than zero.");
+            throw new DomainException("Movie duration must be greater than zero.");
         }
         if (ageLimit < 0)
         {
-            throw new ArgumentException("Age limit cannot be negative.", nameof(ageLimit));
+            throw new DomainException("Movie age limit cannot be negative.");
         }
         return new Movie(MovieId.New(), name, description, rate, ageLimit, duration, country, studio, language);
     }
@@ -77,7 +76,7 @@ public class Movie : AggregateRoot<MovieId>
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentException("Movie name cannot be null or empty.", nameof(name));
+            throw new DomainException("Movie name is required.");
         }
         Name = name;
     }
@@ -86,25 +85,25 @@ public class Movie : AggregateRoot<MovieId>
     {
         if (string.IsNullOrWhiteSpace(country))
         {
-            throw new ArgumentException("Movie name cannot be null or empty.", nameof(country));
+            throw new DomainException("Movie country is required.");
         }
         Country = country;
     }
-    public void ChangeCity(string city)
+    public void ChangeLanguage(string language)
     {
-        if (string.IsNullOrWhiteSpace(city))
+        if (string.IsNullOrWhiteSpace(language))
         {
-            throw new ArgumentException("Movie name cannot be null or empty.", nameof(city));
+            throw new DomainException("Movie language is required.");
         }
-        Name = city;
+        Language = language;
     }
     public void ChangeStudio(string studio)
     {
         if (string.IsNullOrWhiteSpace(studio))
         {
-            throw new ArgumentException("Movie name cannot be null or empty.", nameof(studio));
+            throw new DomainException("Movie studio is required.");
         }
-        Name = studio;
+        Studio = studio;
     }
 
     public void ChangeDescription(string description)
@@ -116,7 +115,7 @@ public class Movie : AggregateRoot<MovieId>
     {
         if (rate < 0 || rate > 10)
         {
-            throw new ArgumentException("Rate must be between 0 and 10.", nameof(rate));
+            throw new DomainException("Movie rating must be between 0 and 10.");
         }
         Rate = rate;
     }
@@ -125,7 +124,7 @@ public class Movie : AggregateRoot<MovieId>
     {
         if (age_limit < 0)
         {
-            throw new ArgumentException("Age limit cannot be negative.", nameof(age_limit));
+            throw new DomainException("Movie age limit cannot be negative.");
         }
         AgeLimit = age_limit;
     }

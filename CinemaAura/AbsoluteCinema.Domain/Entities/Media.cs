@@ -1,4 +1,5 @@
 using CinemaAura.Domain.Enums;
+using CinemaAura.Domain.Exceptions;
 using CinemaAura.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
@@ -20,7 +21,7 @@ public class Media : Entity<MediaId>
     {
         if (string.IsNullOrWhiteSpace(url))
         {
-            throw new ArgumentException("Media URL cannot be null or empty.", nameof(url));
+            throw new DomainException("Media URL is required.");
         }
         return new Media(MediaId.New(), type, url);
     }
