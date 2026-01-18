@@ -5,8 +5,6 @@ namespace AbsoluteCinema.Domain.Entities;
 public class Hall : AggregateRoot<HallId>
 {
     public string HallName { get; private set; }
-    public int VerticalSize { get; private set; }
-    public int HorizontalSize { get; private set; }
 
     private readonly HashSet<SeatId> _seatIds = new HashSet<SeatId>();
     public IReadOnlyCollection<SeatId> SeatIds => _seatIds;
@@ -14,12 +12,10 @@ public class Hall : AggregateRoot<HallId>
     public IReadOnlyCollection<SessionId> SessionIds => _sessionIds;
     private Hall() { }
 
-    private Hall(HallId id, string name, int verticalSize, int horizontalSize)
+    private Hall(HallId id, string name)
     {
         Id = id;
         HallName = name;
-        VerticalSize = verticalSize;
-        HorizontalSize = horizontalSize;
     }
     public static Hall Create(string name, int verticalSize, int horizontalSize)
     {
@@ -27,7 +23,7 @@ public class Hall : AggregateRoot<HallId>
         {
             throw new ArgumentException("Hall dimensions must be positive.");
         }
-        return new Hall(HallId.New(), name, verticalSize, horizontalSize);
+        return new Hall(HallId.New(), name);
     }
 
     public void ChangeHallName(string name)
@@ -35,17 +31,6 @@ public class Hall : AggregateRoot<HallId>
         HallName = name;
     }
     
-    public void Resize(int? verticalSize, int? horizontalSize)
-    {
-        if (verticalSize is not null && verticalSize > 0)
-        {
-            VerticalSize = (int)verticalSize;
-        }
-        if (horizontalSize is not null && horizontalSize > 0)
-        {
-            HorizontalSize = (int)horizontalSize;
-        }
-    }
     public void AddSeat(SeatId seatId)
     {
         _seatIds.Add(seatId);

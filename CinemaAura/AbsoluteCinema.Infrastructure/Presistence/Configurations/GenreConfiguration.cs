@@ -21,7 +21,6 @@ public class GenreConfiguration : IEntityTypeConfiguration<Genre>
             .HasColumnName("name")
             .IsRequired();
 
-        // NOTE: UNIQUE constraint - only one genre with the same name
         builder.HasIndex(x => x.Name)
             .IsUnique()
             .HasDatabaseName("uq_genres_name");

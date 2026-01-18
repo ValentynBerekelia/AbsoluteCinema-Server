@@ -44,8 +44,7 @@ public class SeatConfigurations : IEntityTypeConfiguration<Seat>
             .WithMany()
             .HasForeignKey(s => s.HallId)
             .HasConstraintName("fk_seats_halls_hall_id")
-            .OnDelete(DeleteBehavior.Restrict);
-        //.OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<SeatType>()
             .WithMany()
