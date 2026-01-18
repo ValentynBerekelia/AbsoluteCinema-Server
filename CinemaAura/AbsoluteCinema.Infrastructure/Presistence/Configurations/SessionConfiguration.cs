@@ -40,13 +40,13 @@ public class SessionConfiguration : IEntityTypeConfiguration<Session>
             .WithMany()
             .HasForeignKey(s => s.MovieId)
             .HasConstraintName("fk_sessions_movies_movie_id")
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Hall>()
             .WithMany()
             .HasForeignKey(s => s.HallId)
             .HasConstraintName("fk_sessions_halls_hall_id")
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(s => s.MovieId)
             .HasDatabaseName("ix_sessions_movie_id");

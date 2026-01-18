@@ -9,7 +9,7 @@ public class CinemaDbContext : DbContext
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Movie> Movies => Set<Movie>();
     public DbSet<Genre> Genres => Set<Genre>();
-    public DbSet<Actor> Actors => Set<Actor>();
+    public DbSet<Person> Persons => Set<Person>();
     public DbSet<Media> Medias => Set<Media>();
     public DbSet<Hall> Halls => Set<Hall>();
     public DbSet<Session> Sessions => Set<Session>();
@@ -18,6 +18,10 @@ public class CinemaDbContext : DbContext
     public DbSet<SeatType> SeatTypes => Set<SeatType>();
     public DbSet<TypePrice> TypePrices => Set<TypePrice>();
     public DbSet<Permission> Permissions => Set<Permission>();
+<<<<<<< HEAD
+=======
+    
+>>>>>>> e605872fd5311715984f08888d25332943dc5d2b
     public CinemaDbContext(DbContextOptions<CinemaDbContext> options) : base(options) { }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

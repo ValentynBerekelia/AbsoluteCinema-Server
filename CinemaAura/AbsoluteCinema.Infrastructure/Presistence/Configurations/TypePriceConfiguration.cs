@@ -48,14 +48,13 @@ public class TypePriceConfiguration : IEntityTypeConfiguration<TypePrice>
             .WithMany()
             .HasForeignKey(tp => tp.SessionId)
             .HasConstraintName("fk_type_prices_sessions_session_id")
-            .OnDelete(DeleteBehavior.Restrict);
-        // .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<SeatType>()
             .WithMany()
             .HasForeignKey(tp => tp.SeatTypeId)
             .HasConstraintName("fk_type_prices_seat_types_seat_type_id")
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(tp => tp.SessionId)
             .HasDatabaseName("ix_type_prices_session_id");

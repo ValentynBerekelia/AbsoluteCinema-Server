@@ -10,13 +10,11 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
     {
         builder.ToTable("tickets", tableBuilder =>
         {
-            tableBuilder.HasCheckConstraint("ck_tickets_price_positive", "price_paid >= 0");
             tableBuilder.HasCheckConstraint(
                 "ck_tickets_status_valid",
-                "status IN ('Pending', 'Confirmed', 'Cancelled', 'Refunded')");
+                "status IN (0, 1, 2, 3)");
         });
-
-        // PK
+        
         builder.HasKey(t => t.Id);
 
         builder.Property(t => t.Id)
@@ -48,15 +46,8 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
 
         builder.Property(t => t.Status)
             .HasColumnName("status")
-            .HasMaxLength(20)
-            .HasConversion<string>() // for enum in entity
             .IsRequired()
             .HasDefaultValue(TicketStatus.Pending);
-
-        builder.Property(t => t.PricePaid)
-            .HasColumnName("price_paid")
-            .HasPrecision(10, 2)
-            .IsRequired();
 
         builder.Property(t => t.PurchasedAt)
             .HasColumnName("purchased_at")
@@ -73,7 +64,7 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .WithMany()
             .HasForeignKey(t => t.SessionId)
             .HasConstraintName("fk_tickets_sessions_session_id")
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Seat>()
             .WithMany()

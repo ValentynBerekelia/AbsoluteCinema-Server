@@ -60,7 +60,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             b.HasOne<Role>()
                 .WithMany()
                 .HasForeignKey(nameof(UserRole.RoleId))
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Navigation("_roleIds")
