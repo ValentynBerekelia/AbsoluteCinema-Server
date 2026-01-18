@@ -1,3 +1,4 @@
+using CinemaAura.Domain.Exceptions;
 using CinemaAura.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
@@ -21,7 +22,7 @@ public class TypePrice : Entity<TypePriceId>
     {
         if (price < 0)
         {
-            throw new ArgumentException("Price cannot be negative.", nameof(price));
+            throw new DomainException("Price must not be negative.");
         }
         return new TypePrice(TypePriceId.New(), sessionId, seatTypeId, price);
     }
@@ -30,7 +31,7 @@ public class TypePrice : Entity<TypePriceId>
     {
         if (newPrice < 0)
         {
-            throw new ArgumentException("Price cannot be negative.", nameof(newPrice));
+            throw new DomainException("Price must not be negative.");
         }
         Price = newPrice;
     }

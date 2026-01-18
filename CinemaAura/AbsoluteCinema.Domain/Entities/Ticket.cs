@@ -9,33 +9,27 @@ public class Ticket : Entity<TicketId>
     public SeatId SeatId { get; private set; }
 
     // NOTE: UNIQUE constraint (SessionId, SeatId) setup in configuration to prevent double booking
-
+    
     public TicketStatus Status { get; private set; }
-    public decimal PricePaid { get; private set; }
     public DateTime PurchasedAt { get; private set; }
     private Ticket() { }
-    private Ticket(TicketId id, UserId? userId, SessionId sessionId, SeatId seatId, decimal pricePaid, DateTime purchasedAt)
+    private Ticket(TicketId id, UserId? userId, SessionId sessionId, SeatId seatId, DateTime purchasedAt)
     {
         Id = id;
         UserId = userId;
         SessionId = sessionId;
         SeatId = seatId;
-        PricePaid = pricePaid;
         Status = TicketStatus.Pending;
         PurchasedAt = purchasedAt;
     }
 
-    public static Ticket Create(UserId? userId, SessionId sessionId, SeatId seatId, decimal pricePaid)
+    public static Ticket Create(UserId? userId, SessionId sessionId, SeatId seatId)
     {
-        if (pricePaid < 0)
-            throw new ArgumentException("Price cannot be negative.", nameof(pricePaid));
-
         return new Ticket(
             TicketId.New(),
             userId,
             sessionId,
             seatId,
-            pricePaid,
             DateTime.UtcNow
         );
     }
@@ -78,10 +72,10 @@ public class Ticket : Entity<TicketId>
 
 public enum TicketStatus
 {
-    Pending,    // in basket, wait for payment
-    Confirmed,  // paid
-    Cancelled,  // cancelled by user
-    Refunded    // refunded money (only after being confirmed)
+    Pending = 0,    // in basket, wait for payment
+    Confirmed = 1,  // paid
+    Cancelled = 2,  // cancelled by user
+    Refunded = 3   // refunded money (only after being confirmed)
 }
 
 public record struct TicketId(Guid Id)

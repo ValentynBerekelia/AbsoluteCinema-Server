@@ -1,3 +1,4 @@
+using CinemaAura.Domain.Exceptions;
 using CinemaAura.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
@@ -23,7 +24,7 @@ public class Session : AggregateRoot<SessionId>
     {
         if (date < DateTime.UtcNow)
         {
-            throw new ArgumentException("Session date cannot be in the past.");
+            throw new DomainException("Session start date must be in the future.");
         }
 
         return new Session(SessionId.New(), movieId, hallId, date);
@@ -32,7 +33,7 @@ public class Session : AggregateRoot<SessionId>
     {
         if (newDate < DateTime.UtcNow)
         {
-            throw new ArgumentException("New session date cannot be in the past.");
+            throw new DomainException("New session date must be in the future.");
         }
         StartDateTime = newDate;
     }

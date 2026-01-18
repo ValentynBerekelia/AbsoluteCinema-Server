@@ -20,11 +20,6 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
             .HasColumnName("id")
             .HasConversion(id => id.Id, v => new MovieId(v))
             .ValueGeneratedNever();
-        /* ??
-                builder.Property(x => x.Id)
-                    .HasConversion(
-                        id => id.Id,
-                        value => new MovieId(value));*/
 
         builder.Property(x => x.Name)
             .HasColumnName("name")
@@ -47,8 +42,28 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 
         builder.HasIndex(x => x.Rate)
             .HasDatabaseName("ix_movies_rate");
+        
+        builder.Property(x => x.Duration)
+            .HasConversion(
+                v => v.TotalSeconds,
+                v => TimeSpan.FromSeconds(v))
+            .HasColumnType("bigint");
+        
+        builder.Property(m=> m.Country)
+            .HasColumnName("country_name")
+            .IsRequired();
+        builder.Property(m=> m.Studio)
+            .HasColumnName("studio")
+            .IsRequired();
+        builder.Property(m=> m.Language)
+            .HasColumnName("language")
+            .IsRequired();
+        
+        builder.Property(m=> m.Country)
+            .HasColumnName("country_name")
+            .IsRequired();
 
-        builder.Ignore(m => m.ActorIds);
+        builder.Ignore(m => m.PersonIds);
         builder.Ignore(m => m.GenreIds);
         builder.Ignore(m => m.MediaIds);
 
@@ -71,29 +86,29 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
             b.HasOne<Genre>()
                 .WithMany()
                 .HasForeignKey(nameof(MovieGenre.GenreId))
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
-        builder.OwnsMany<MovieActor>("_actorIds", b =>
+        builder.OwnsMany<MoviePerson>("_personIds", b =>
         {
-            b.ToTable("movie_actors");
+            b.ToTable("movie_persons");
 
             b.WithOwner().HasForeignKey("movie_id");
             b.Property<MovieId>("movie_id");
 
-            b.Property(p => p.ActorId)
+            b.Property(p => p.PersonId)
                 .HasColumnName("actor_id")
                 .HasConversion(
                     id => id.Id,
-                    value => new ActorId(value))
+                    value => new PersonId(value))
                 .IsRequired();
 
-            b.HasKey("movie_id", nameof(MovieActor.ActorId));
+            b.HasKey("movie_id", nameof(MoviePerson.PersonId));
 
-            b.HasOne<Actor>()
+            b.HasOne<Person>()
                 .WithMany()
-                .HasForeignKey(nameof(MovieActor.ActorId))
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(nameof(MoviePerson.PersonId))
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.OwnsMany<MovieMedia>("_mediaIds", b =>
@@ -114,13 +129,13 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
             b.HasOne<Media>()
                 .WithMany()
                 .HasForeignKey(nameof(MovieMedia.MediaId))
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Navigation("_genreIds")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Navigation("_actorIds")
+        builder.Navigation("_personIds")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
         builder.Navigation("_mediaIds")

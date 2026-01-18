@@ -49,7 +49,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
             b.HasOne<Permission>()
                 .WithMany()
                 .HasForeignKey(nameof(RolePermission.PermissionId))
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Navigation("_permissionsIds")
