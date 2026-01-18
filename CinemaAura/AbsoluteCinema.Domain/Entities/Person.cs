@@ -11,18 +11,20 @@ public class Person: Entity<PersonId>
     public DateTime BirthDate { get; private set; }
     public MediaId? MediaId { get; private set; }  
     public Media? Media { get; private set; }  
+    public PersonRole PersonRole { get; private set; }
     
     private Person() { } 
 
-    private Person(PersonId id, string name, string bio, DateTime birthDate)
+    private Person(PersonId id, string name, string bio, DateTime birthDate, PersonRole personRole)
     {
         Id = id;
         Name = name;
         Bio = bio;
         BirthDate = birthDate;
+        PersonRole = personRole;
     }
 
-    public static Person Create(string name, string bio, DateTime birthDate)
+    public static Person Create(string name, string bio, DateTime birthDate, PersonRole personRole)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -32,7 +34,7 @@ public class Person: Entity<PersonId>
         {
             throw new DomainException("Person birth date cannot be in the future.");
         }
-        return new Person(PersonId.New(), name, bio, birthDate);
+        return new Person(PersonId.New(), name, bio, birthDate, personRole);
     }
     
     public void ChangeName(string name)
@@ -64,6 +66,11 @@ public class Person: Entity<PersonId>
             throw new DomainException("Media type must be an image.");
         }
         Media = media;
+    }
+
+    public void ChangePersonRole(PersonRole personRole)
+    {
+        PersonRole = personRole;
     }
     
 }

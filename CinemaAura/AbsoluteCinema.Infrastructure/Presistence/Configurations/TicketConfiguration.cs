@@ -64,7 +64,7 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .WithMany()
             .HasForeignKey(t => t.SessionId)
             .HasConstraintName("fk_tickets_sessions_session_id")
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Seat>()
             .WithMany()

@@ -8,6 +8,12 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
 {
     public void Configure(EntityTypeBuilder<Person> builder)
     {
+        builder.ToTable("persons", tableBuilder =>
+        {
+            tableBuilder.HasCheckConstraint(
+                "ck_persons_status_valid",
+                "person_role IN (1, 2)");
+        });
         builder.ToTable("persons");
 
         builder.HasKey(x => x.Id);
@@ -22,6 +28,10 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
             .WithMany()
             .HasForeignKey(p => p.MediaId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Property(p => p.PersonRole)
+            .HasColumnName("person_role")
+            .IsRequired();
 
         builder.Property(x => x.Id)
             .HasColumnName("id")

@@ -8,12 +8,6 @@ public class HallConfiguration : IEntityTypeConfiguration<Hall>
 {
     public void Configure(EntityTypeBuilder<Hall> builder)
     {
-        builder.ToTable("halls", t =>
-        {
-            t.HasCheckConstraint("ck_halls_vertical_size_positive", "vertical_size > 0");
-            t.HasCheckConstraint("ck_halls_horizontal_size_positive", "horizontal_size > 0");
-        });
-
         builder.HasKey(h => h.Id);
 
         builder.Property(h => h.Id)

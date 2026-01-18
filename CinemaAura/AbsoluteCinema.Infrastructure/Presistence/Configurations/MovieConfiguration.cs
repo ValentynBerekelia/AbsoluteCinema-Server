@@ -86,7 +86,7 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
             b.HasOne<Genre>()
                 .WithMany()
                 .HasForeignKey(nameof(MovieGenre.GenreId))
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.OwnsMany<MoviePerson>("_personIds", b =>
@@ -108,7 +108,7 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
             b.HasOne<Person>()
                 .WithMany()
                 .HasForeignKey(nameof(MoviePerson.PersonId))
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.OwnsMany<MovieMedia>("_mediaIds", b =>
@@ -129,7 +129,7 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
             b.HasOne<Media>()
                 .WithMany()
                 .HasForeignKey(nameof(MovieMedia.MediaId))
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Navigation("_genreIds")
