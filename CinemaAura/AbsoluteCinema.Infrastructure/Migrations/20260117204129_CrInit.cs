@@ -6,25 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CinemaAura.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class CrInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "actors",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    bio = table.Column<string>(type: "text", nullable: true),
-                    birth_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_actors", x => x.id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "genres",
                 columns: table => new
@@ -58,7 +44,7 @@ namespace CinemaAura.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    type = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    type = table.Column<int>(type: "integer", nullable: false),
                     url = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false)
                 },
                 constraints: table =>
@@ -74,7 +60,8 @@ namespace CinemaAura.Infrastructure.Migrations
                     name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
                     rate = table.Column<decimal>(type: "numeric(3,2)", precision: 3, scale: 2, nullable: false),
-                    age_limit = table.Column<int>(type: "integer", nullable: false)
+                    age_limit = table.Column<int>(type: "integer", nullable: false),
+                    Duration = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -136,27 +123,24 @@ namespace CinemaAura.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "movie_actors",
+                name: "persons",
                 columns: table => new
                 {
-                    actor_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    movie_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    bio = table.Column<string>(type: "text", nullable: true),
+                    birth_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    media_id = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_movie_actors", x => new { x.movie_id, x.actor_id });
+                    table.PrimaryKey("PK_persons", x => x.id);
                     table.ForeignKey(
-                        name: "FK_movie_actors_actors_actor_id",
-                        column: x => x.actor_id,
-                        principalTable: "actors",
+                        name: "FK_persons_medias_media_id",
+                        column: x => x.media_id,
+                        principalTable: "medias",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_movie_actors_movies_movie_id",
-                        column: x => x.movie_id,
-                        principalTable: "movies",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -309,6 +293,30 @@ namespace CinemaAura.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "movie_persons",
+                columns: table => new
+                {
+                    actor_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    movie_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_movie_persons", x => new { x.movie_id, x.actor_id });
+                    table.ForeignKey(
+                        name: "FK_movie_persons_movies_movie_id",
+                        column: x => x.movie_id,
+                        principalTable: "movies",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_movie_persons_persons_actor_id",
+                        column: x => x.actor_id,
+                        principalTable: "persons",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "type_prices",
                 columns: table => new
                 {
@@ -343,15 +351,15 @@ namespace CinemaAura.Infrastructure.Migrations
                     user_id = table.Column<Guid>(type: "uuid", nullable: true),
                     session_id = table.Column<Guid>(type: "uuid", nullable: false),
                     seat_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Pending"),
-                    price_paid = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    price_paid = table.Column<decimal>(type: "numeric", nullable: false),
+                    status = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     purchased_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tickets", x => x.id);
                     table.CheckConstraint("ck_tickets_price_positive", "price_paid >= 0");
-                    table.CheckConstraint("ck_tickets_status_valid", "status IN ('Pending', 'Confirmed', 'Cancelled', 'Refunded')");
+                    table.CheckConstraint("ck_tickets_status_valid", "status IN (0, 1, 2, 3)");
                     table.ForeignKey(
                         name: "fk_tickets_seats_seat_id",
                         column: x => x.seat_id,
@@ -373,20 +381,10 @@ namespace CinemaAura.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_actors_name",
-                table: "actors",
-                column: "name");
-
-            migrationBuilder.CreateIndex(
                 name: "uq_genres_name",
                 table: "genres",
                 column: "name",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_movie_actors_actor_id",
-                table: "movie_actors",
-                column: "actor_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_movie_genres_genre_id",
@@ -399,6 +397,11 @@ namespace CinemaAura.Infrastructure.Migrations
                 column: "media_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_movie_persons_actor_id",
+                table: "movie_persons",
+                column: "actor_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_movies_rate",
                 table: "movies",
                 column: "rate");
@@ -408,6 +411,16 @@ namespace CinemaAura.Infrastructure.Migrations
                 table: "permissions",
                 column: "code",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_actors_name",
+                table: "persons",
+                column: "name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_persons_media_id",
+                table: "persons",
+                column: "media_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_role_permissions_permission_id",
@@ -520,13 +533,13 @@ namespace CinemaAura.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "movie_actors");
-
-            migrationBuilder.DropTable(
                 name: "movie_genres");
 
             migrationBuilder.DropTable(
                 name: "movie_media");
+
+            migrationBuilder.DropTable(
+                name: "movie_persons");
 
             migrationBuilder.DropTable(
                 name: "role_permissions");
@@ -541,13 +554,10 @@ namespace CinemaAura.Infrastructure.Migrations
                 name: "user_roles");
 
             migrationBuilder.DropTable(
-                name: "actors");
-
-            migrationBuilder.DropTable(
                 name: "genres");
 
             migrationBuilder.DropTable(
-                name: "medias");
+                name: "persons");
 
             migrationBuilder.DropTable(
                 name: "permissions");
@@ -563,6 +573,9 @@ namespace CinemaAura.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "users");
+
+            migrationBuilder.DropTable(
+                name: "medias");
 
             migrationBuilder.DropTable(
                 name: "seat_types");

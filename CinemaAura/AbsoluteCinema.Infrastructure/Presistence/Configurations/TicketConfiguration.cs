@@ -10,10 +10,9 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
     {
         builder.ToTable("tickets", tableBuilder =>
         {
-            tableBuilder.HasCheckConstraint("ck_tickets_price_positive", "price_paid >= 0");
             tableBuilder.HasCheckConstraint(
                 "ck_tickets_status_valid",
-                "status IN ('Pending', 'Confirmed', 'Cancelled', 'Refunded')");
+                "status IN (0, 1, 2, 3)");
         });
         
         builder.HasKey(t => t.Id);

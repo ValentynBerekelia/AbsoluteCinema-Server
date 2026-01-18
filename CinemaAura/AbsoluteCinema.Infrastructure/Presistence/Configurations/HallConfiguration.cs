@@ -27,14 +27,6 @@ public class HallConfiguration : IEntityTypeConfiguration<Hall>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.Property(h => h.VerticalSize)
-            .HasColumnName("vertical_size")
-            .IsRequired();
-
-        builder.Property(h => h.HorizontalSize)
-            .HasColumnName("horizontal_size")
-            .IsRequired();
-
         builder.Ignore(h => h.SeatIds);
         builder.Ignore(h => h.SessionIds);
     }

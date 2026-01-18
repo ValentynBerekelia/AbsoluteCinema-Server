@@ -10,6 +10,11 @@ public class Movie : AggregateRoot<MovieId>
     public decimal Rate { get; private set; }
     public int AgeLimit { get; private set; }
     public TimeSpan Duration { get; private set; }
+    
+    //In my opinion, creating new entities for the fields below is too much.
+    public string Country { get; private set; }
+    public string Studio { get; private set; }
+    public string Language { get; private set; }
 
     private readonly HashSet<MovieGenre> _genreIds = new HashSet<MovieGenre>();
     public IReadOnlyCollection<MovieGenre> GenreIds => _genreIds;
@@ -21,7 +26,7 @@ public class Movie : AggregateRoot<MovieId>
     public IReadOnlyCollection<MoviePerson> PersonIds => _personIds;
 
     private Movie() { }
-    private Movie(MovieId movieId, string name, string description, decimal rate, int ageLimit, TimeSpan duration)
+    private Movie(MovieId movieId, string name, string description, decimal rate, int ageLimit, TimeSpan duration, string country, string studio, string language)
     {
         Id = movieId;
         Name = name;
@@ -29,11 +34,27 @@ public class Movie : AggregateRoot<MovieId>
         Rate = rate;
         AgeLimit = ageLimit;
         Duration = duration;
+        Language = language;
+        Studio = studio;
+        Country = country;
     }
 
-    public static Movie Create(string name, string description, decimal rate, int ageLimit, TimeSpan duration)
+    public static Movie Create(string name, string description, decimal rate, int ageLimit, TimeSpan duration, string country, string studio, string language)
     {
+        //TODO: Make logical exceptions
         if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Movie name cannot be null or empty.", nameof(name));
+        }
+        if (string.IsNullOrWhiteSpace(language))
+        {
+            throw new ArgumentException("Movie name cannot be null or empty.", nameof(name));
+        }
+        if (string.IsNullOrWhiteSpace(country))
+        {
+            throw new ArgumentException("Movie name cannot be null or empty.", nameof(name));
+        }
+        if (string.IsNullOrWhiteSpace(studio))
         {
             throw new ArgumentException("Movie name cannot be null or empty.", nameof(name));
         }
@@ -49,7 +70,7 @@ public class Movie : AggregateRoot<MovieId>
         {
             throw new ArgumentException("Age limit cannot be negative.", nameof(ageLimit));
         }
-        return new Movie(MovieId.New(), name, description, rate, ageLimit, duration);
+        return new Movie(MovieId.New(), name, description, rate, ageLimit, duration, country, studio, language);
     }
 
     public void ChangeName(string name)
@@ -59,6 +80,31 @@ public class Movie : AggregateRoot<MovieId>
             throw new ArgumentException("Movie name cannot be null or empty.", nameof(name));
         }
         Name = name;
+    }
+    
+    public void ChangeCountry(string country)
+    {
+        if (string.IsNullOrWhiteSpace(country))
+        {
+            throw new ArgumentException("Movie name cannot be null or empty.", nameof(country));
+        }
+        Country = country;
+    }
+    public void ChangeCity(string city)
+    {
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            throw new ArgumentException("Movie name cannot be null or empty.", nameof(city));
+        }
+        Name = city;
+    }
+    public void ChangeStudio(string studio)
+    {
+        if (string.IsNullOrWhiteSpace(studio))
+        {
+            throw new ArgumentException("Movie name cannot be null or empty.", nameof(studio));
+        }
+        Name = studio;
     }
 
     public void ChangeDescription(string description)

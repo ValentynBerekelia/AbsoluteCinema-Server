@@ -13,7 +13,7 @@ public class Ticket : Entity<TicketId>
     public TicketStatus Status { get; private set; }
     public DateTime PurchasedAt { get; private set; }
     private Ticket() { }
-    private Ticket(TicketId id, UserId? userId, SessionId sessionId, SeatId seatId,  DateTime purchasedAt)
+    private Ticket(TicketId id, UserId? userId, SessionId sessionId, SeatId seatId, DateTime purchasedAt)
     {
         Id = id;
         UserId = userId;
@@ -23,11 +23,8 @@ public class Ticket : Entity<TicketId>
         PurchasedAt = purchasedAt;
     }
 
-    public static Ticket Create(UserId? userId, SessionId sessionId, SeatId seatId, decimal pricePaid)
+    public static Ticket Create(UserId? userId, SessionId sessionId, SeatId seatId)
     {
-        if (pricePaid < 0)
-            throw new ArgumentException("Price cannot be negative.", nameof(pricePaid));
-
         return new Ticket(
             TicketId.New(),
             userId,
@@ -75,10 +72,10 @@ public class Ticket : Entity<TicketId>
 
 public enum TicketStatus
 {
-    Pending,    // in basket, wait for payment
-    Confirmed,  // paid
-    Cancelled,  // cancelled by user
-    Refunded    // refunded money (only after being confirmed)
+    Pending = 0,    // in basket, wait for payment
+    Confirmed = 1,  // paid
+    Cancelled = 2,  // cancelled by user
+    Refunded = 3   // refunded money (only after being confirmed)
 }
 
 public record struct TicketId(Guid Id)

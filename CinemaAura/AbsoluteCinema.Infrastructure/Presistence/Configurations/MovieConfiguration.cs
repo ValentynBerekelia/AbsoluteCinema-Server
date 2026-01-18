@@ -48,6 +48,20 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
                 v => v.TotalSeconds,
                 v => TimeSpan.FromSeconds(v))
             .HasColumnType("bigint");
+        
+        builder.Property(m=> m.Country)
+            .HasColumnName("country_name")
+            .IsRequired();
+        builder.Property(m=> m.Studio)
+            .HasColumnName("studio")
+            .IsRequired();
+        builder.Property(m=> m.Language)
+            .HasColumnName("language")
+            .IsRequired();
+        
+        builder.Property(m=> m.Country)
+            .HasColumnName("country_name")
+            .IsRequired();
 
         builder.Ignore(m => m.PersonIds);
         builder.Ignore(m => m.GenreIds);
