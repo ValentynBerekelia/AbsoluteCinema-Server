@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using AbsoluteCinema.Domain.Entities;
 
-namespace CinemaAura.Infrastructure.Presistence.Configurations;
+namespace CinemaAura.Infrastructure.Persistence.Configurations;
 
 public class SessionConfiguration : IEntityTypeConfiguration<Session>
 {

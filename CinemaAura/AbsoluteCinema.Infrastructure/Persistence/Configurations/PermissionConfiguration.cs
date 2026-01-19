@@ -3,7 +3,7 @@ using CinemaAura.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CinemaAura.Infrastructure.Presistence.Configurations;
+namespace CinemaAura.Infrastructure.Persistence.Configurations;
 
 public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
 {
