@@ -31,7 +31,7 @@ public class MediaConfiguration : IEntityTypeConfiguration<Media>
 
         builder.Property(x => x.Url)
             .HasColumnName("url")
-            .HasMaxLength(1000)
+            .HasMaxLength(2048)
             .IsRequired();
     }
 }
