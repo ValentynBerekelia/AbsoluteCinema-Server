@@ -145,12 +145,22 @@ public static class InitialDataSeeder
         // --------------------
         // Permissions + Roles (без юзерів)
         // --------------------
-        var pManageMovies = Permission.Create(PermissionCode.Create("ManageMovies"));
-        var pReadMovies   = Permission.Create(PermissionCode.Create("ReadMovies"));
-        var pReadSessions = Permission.Create(PermissionCode.Create("ReadSessions"));
-        var pManageHalls  = Permission.Create(PermissionCode.Create("ManageHalls"));
+        var pCreateMovies = Permission.Create(PermissionCode.Create("movies.create"));
+        var pReadMovies   = Permission.Create(PermissionCode.Create("movies.read"));
+        var pUpdateMovies = Permission.Create(PermissionCode.Create("movies.update"));
+        var pDeleteMovies = Permission.Create(PermissionCode.Create("movies.delete"));
+        
+        var pCreateSessions = Permission.Create(PermissionCode.Create("sessions.create"));
+        var pReadSessions   = Permission.Create(PermissionCode.Create("sessions.read"));
+        var pUpdateSessions = Permission.Create(PermissionCode.Create("sessions.update"));
+        var pDeleteSessions = Permission.Create(PermissionCode.Create("sessions.delete"));
 
-        context.Permissions.AddRange(pManageMovies, pReadMovies, pReadSessions, pManageHalls);
+        var pCreateHalls = Permission.Create(PermissionCode.Create("halls.create"));
+        var pReadHalls   = Permission.Create(PermissionCode.Create("halls.read"));
+        var pUpdateHalls = Permission.Create(PermissionCode.Create("halls.update"));
+        var pDeleteHalls = Permission.Create(PermissionCode.Create("halls.delete"));
+
+        context.Permissions.AddRange(pCreateMovies, pReadMovies, pUpdateMovies, pDeleteMovies,  pCreateSessions, pReadSessions, pUpdateSessions, pDeleteSessions, pCreateHalls, pReadHalls, pUpdateHalls, pDeleteHalls);
 
         var adminRole = Role.Create("Admin");
         adminRole.Grant(pManageMovies.Id);
