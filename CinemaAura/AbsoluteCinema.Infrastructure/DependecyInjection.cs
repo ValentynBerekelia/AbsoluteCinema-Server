@@ -1,4 +1,4 @@
-using CinemaAura.Infrastructure.Presistence;
+using CinemaAura.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

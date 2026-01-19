@@ -2,7 +2,7 @@ namespace CinemaAura.Domain.Exceptions;
 
 public class DomainException : Exception
 {
-    protected DomainException(string message)
+    public DomainException(string message)
         : base(message)
     {
     }

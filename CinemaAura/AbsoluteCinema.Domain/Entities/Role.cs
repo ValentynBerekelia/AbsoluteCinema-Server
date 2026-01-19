@@ -1,17 +1,17 @@
 using CinemaAura.Domain.Primitives;
-using CinemaAura.Domain.ValueObjects;
 
-namespace IdentityService.Domain.Entities;
+namespace AbsoluteCinema.Domain.Entities;
 
 public class Role : AggregateRoot<RoleId>
 {
     public string Name { get; private set; }
-    
-    private readonly HashSet<PermissionCode> _permissions = new HashSet<PermissionCode>();
-    public IReadOnlyCollection<PermissionCode> Permissions => _permissions;
-    
-    //DELATE
-    public List<User> Users { get; private set; }
+
+    private readonly HashSet<RolePermission> _permissionsIds = new HashSet<RolePermission>();
+    public IReadOnlyCollection<RolePermission> PermissionsIds => _permissionsIds;
+
+    private readonly HashSet<UserId> _userIds = new HashSet<UserId>();
+    public IReadOnlyCollection<UserId> UserIds => _userIds;
+    private Role() { }
     private Role(RoleId id, string name)
     {
         Id = id;
@@ -20,37 +20,56 @@ public class Role : AggregateRoot<RoleId>
 
     public static Role Create(string roleName)
     {
+        if (string.IsNullOrWhiteSpace(roleName))
+        {
+            throw new ArgumentException("Role name cannot be null or empty.", nameof(roleName));
+        }
         return new Role(RoleId.New(), roleName);
     }
-    
-    public void Raname(string name)
+
+    public void Rename(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Role name cannot be null or empty.", nameof(name));
+        }
         Name = name;
     }
-    
-    public void Grant(PermissionCode permission)
+
+    public void Grant(PermissionId permissionId)
     {
-        _permissions.Add(permission);
+        _permissionsIds.Add(new RolePermission(permissionId));
     }
-    
-    public void Revoke(PermissionCode permission)
+
+    public void Revoke(PermissionId permissionId)
     {
-        _permissions.Remove(permission);
+        _permissionsIds.Remove(new RolePermission(permissionId));
     }
 
     public void RevokeAll()
     {
-        _permissions.Clear();
+        _permissionsIds.Clear();
     }
 
-    public bool HasPermission(PermissionCode permission)
+    public bool HasPermission(PermissionId permissionId)
     {
-        return _permissions.Contains(permission);
+        return _permissionsIds.Contains(new RolePermission(permissionId));
     }
 
+    public void AddUser(UserId userId)
+    {
+        _userIds.Add(userId);
+    }
+
+    public void RemoveUser(UserId userId)
+    {
+        _userIds.Remove(userId);
+    }
 }
 
-public record RoleId(Guid Id)
+public record struct RoleId(Guid Id)
 {
     public static RoleId New() => new RoleId(Guid.NewGuid());
-} 
+}
+
+public record RolePermission(PermissionId PermissionId);
