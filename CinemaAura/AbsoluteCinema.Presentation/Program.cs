@@ -1,5 +1,5 @@
 using CinemaAura.Infrastructure;
-using CinemaAura.Infrastructure.Presistence;
+using CinemaAura.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
