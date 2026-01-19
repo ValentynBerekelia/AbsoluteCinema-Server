@@ -3,6 +3,7 @@ using System;
 using CinemaAura.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CinemaAura.Infrastructure.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    partial class CinemaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260119113150_InitCreateModificatedDB")]
+    partial class InitCreateModificatedDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,7 +195,6 @@ namespace CinemaAura.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
@@ -428,7 +430,6 @@ namespace CinemaAura.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("email");
@@ -436,7 +437,6 @@ namespace CinemaAura.Infrastructure.Migrations
                     b.Property<string>("UserName")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasDefaultValue("Unknown")
@@ -697,7 +697,7 @@ namespace CinemaAura.Infrastructure.Migrations
                             b1.HasOne("AbsoluteCinema.Domain.Entities.Role", null)
                                 .WithMany()
                                 .HasForeignKey("RoleId")
-                                .OnDelete(DeleteBehavior.Cascade)
+                                .OnDelete(DeleteBehavior.Restrict)
                                 .IsRequired();
 
                             b1.WithOwner()
