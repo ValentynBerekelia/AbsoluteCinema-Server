@@ -11,6 +11,10 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
         builder.ToTable("persons", tableBuilder =>
         {
             tableBuilder.HasCheckConstraint(
+                "ck_persons_name_not_empty",
+                "LENGTH(name) > 0");
+
+            tableBuilder.HasCheckConstraint(
                 "ck_persons_status_valid",
                 "person_role IN (1, 2)");
         });
@@ -41,6 +45,7 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
 
         builder.Property(x => x.Name)
             .HasColumnName("name")
+            .HasMaxLength(100)
             .IsRequired();
 
         builder.Property(x => x.Bio)
