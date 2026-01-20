@@ -1,4 +1,4 @@
-namespace CinemaAura.Domain.Exceptions;
+namespace AbsoluteCinema.Domain.Exceptions;
 
 public class DomainException : Exception
 {

@@ -1,0 +1,8 @@
+using AbsoluteCinema.Application.Abstructions;
+using AbsoluteCinema.Domain.Entities;
+
+namespace AbsoluteCinema.Application.Repository;
+
+public interface ISessionRepository : IRepository<SessionId, Session>
+{
+}
