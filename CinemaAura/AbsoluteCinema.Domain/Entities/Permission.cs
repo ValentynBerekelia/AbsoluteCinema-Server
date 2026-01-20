@@ -1,5 +1,5 @@
-using CinemaAura.Domain.Primitives;
-using CinemaAura.Domain.ValueObjects;
+using AbsoluteCinema.Domain.Primitives;
+using AbsoluteCinema.Domain.ValueObjects;
 
 namespace AbsoluteCinema.Domain.Entities;
 
