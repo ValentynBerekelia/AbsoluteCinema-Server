@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CinemaAura.Domain.Primitives;
+namespace AbsoluteCinema.Domain.Primitives;
 
 public abstract class AggregateRoot<TId> :Entity<TId> where TId : notnull
 {

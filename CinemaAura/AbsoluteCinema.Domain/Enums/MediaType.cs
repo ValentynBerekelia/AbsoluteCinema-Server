@@ -1,4 +1,4 @@
-namespace CinemaAura.Domain.Enums;
+namespace AbsoluteCinema.Domain.Enums;
 
 public enum MediaType
 {

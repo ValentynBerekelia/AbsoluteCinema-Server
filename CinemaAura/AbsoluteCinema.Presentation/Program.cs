@@ -1,11 +1,14 @@
-using CinemaAura.Infrastructure;
-using CinemaAura.Infrastructure.Persistence;
+using AbsoluteCinema.Application;
+using AbsoluteCinema.Infrastructure;
+using AbsoluteCinema.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddInfrastucture(builder.Configuration);
+builder.Services
+    .AddApplication()
+    .AddInfrastucture(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

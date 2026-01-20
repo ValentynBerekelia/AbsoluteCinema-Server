@@ -1,5 +1,5 @@
-using CinemaAura.Domain.Exceptions;
-using CinemaAura.Domain.Primitives;
+using AbsoluteCinema.Domain.Exceptions;
+using AbsoluteCinema.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
 

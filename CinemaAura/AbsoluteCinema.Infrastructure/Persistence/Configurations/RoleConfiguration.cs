@@ -1,9 +1,9 @@
-using CinemaAura.Domain.ValueObjects;
+using AbsoluteCinema.Domain.ValueObjects;
 using AbsoluteCinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CinemaAura.Infrastructure.Persistence.Configurations;
+namespace AbsoluteCinema.Infrastructure.Persistence.Configurations;
 
 public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
