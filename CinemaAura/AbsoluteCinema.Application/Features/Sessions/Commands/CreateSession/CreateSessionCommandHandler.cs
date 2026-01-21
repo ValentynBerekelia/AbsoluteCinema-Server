@@ -1,19 +1,19 @@
-﻿using AbsoluteCinema.Domain.Entities;
-using AbsoluteCinema.Domain.Interfaces;
+﻿using AbsoluteCinema.Application.Repository;
+using AbsoluteCinema.Domain.Entities;
 using MediatR;
 
-namespace CinemaAura.Application.Features.Sessions.Commands.CreateSession;
+namespace AbsoluteCinema.Application.Features.Sessions.Commands.CreateSession;
 
-public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand, Guid>
+public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand, CreateSessionResponse>
 {
     private readonly ISessionRepository _repository;
 
     public CreateSessionCommandHandler(ISessionRepository repository)
-    { 
+    {
         _repository = repository;
     }
 
-    public async Task<Guid> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
+    public async Task<CreateSessionResponse> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
     {
         var movieId = new MovieId(request.MovieId);
         var hallId = new HallId(request.HallId);
@@ -25,9 +25,9 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
             request.StartTime
         );
 
-        await _repository.AddSessionAsync(session, cancellationToken);
+        await _repository.AddAsync(session, cancellationToken);
 
-        foreach (var priceDto in request.Prices) 
+        foreach (var priceDto in request.Prices)
         {
             var seatTypeId = new SeatTypeId(priceDto.SeatTypeId);
 
@@ -39,9 +39,9 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
 
             await _repository.AddTypePriceAsync(typePrice, cancellationToken);
         }
+
         await _repository.SaveChangesAsync(cancellationToken);
 
-        return session.Id.Id;
+        return new CreateSessionResponse(session.Id.Id);
     }
-
 }

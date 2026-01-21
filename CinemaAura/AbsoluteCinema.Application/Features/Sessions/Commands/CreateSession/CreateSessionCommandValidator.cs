@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace CinemaAura.Application.Features.Sessions.Commands.CreateSession;
+namespace AbsoluteCinema.Application.Features.Sessions.Commands.CreateSession;
 
 public class CreateSessionCommandValidator : AbstractValidator<CreateSessionCommand>
 {
