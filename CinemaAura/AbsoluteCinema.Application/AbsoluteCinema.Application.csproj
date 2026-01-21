@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>CinemaAura.Application</RootNamespace>
+        <RootNamespace>AbsoluteCinema.Application</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,6 +18,7 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="16.0.0" />
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     </ItemGroup>
 
 </Project>

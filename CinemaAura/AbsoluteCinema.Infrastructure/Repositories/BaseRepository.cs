@@ -1,4 +1,4 @@
-using AbsoluteCinema.Application.Abstructions;
+using AbsoluteCinema.Application.Abstractions;
 using AbsoluteCinema.Domain.Primitives;
 using AbsoluteCinema.Domain.Specifications;
 using Microsoft.EntityFrameworkCore;
