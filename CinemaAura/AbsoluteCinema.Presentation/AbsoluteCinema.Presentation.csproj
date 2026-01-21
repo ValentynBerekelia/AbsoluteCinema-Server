@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>CinemaAura</RootNamespace>
+        <RootNamespace>AbsoluteCinema</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
