@@ -19,9 +19,12 @@ public class CinemaDbContext : DbContext
     public DbSet<TypePrice> TypePrices => Set<TypePrice>();
     public DbSet<Permission> Permissions => Set<Permission>();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     
 >>>>>>> e605872fd5311715984f08888d25332943dc5d2b
+=======
+>>>>>>> 948a5bf432240a587c7bc1e4e48a5d3dff559d80
     public CinemaDbContext(DbContextOptions<CinemaDbContext> options) : base(options) { }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

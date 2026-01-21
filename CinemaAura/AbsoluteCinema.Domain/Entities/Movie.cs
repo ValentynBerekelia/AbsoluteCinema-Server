@@ -16,14 +16,14 @@ public class Movie : AggregateRoot<MovieId>
     public string Studio { get; private set; }
     public string Language { get; private set; }
 
-    private readonly HashSet<MovieGenre> _genreIds = new HashSet<MovieGenre>();
-    public IReadOnlyCollection<MovieGenre> GenreIds => _genreIds;
+    private readonly List<Genre> _genres = new List<Genre>();
+    public IReadOnlyCollection<Genre> Genres => _genres.AsReadOnly();
 
-    private readonly HashSet<MovieMedia> _mediaIds = new HashSet<MovieMedia>();
-    public IReadOnlyCollection<MovieMedia> MediaIds => _mediaIds;
+    private readonly List<Media> _medias = new List<Media>();
+    public IReadOnlyCollection<Media> Medias => _medias.AsReadOnly();
 
-    private readonly HashSet<MoviePerson> _personIds = new HashSet<MoviePerson>();
-    public IReadOnlyCollection<MoviePerson> PersonIds => _personIds;
+    private readonly List<Person> _persons = new List<Person>();
+    public IReadOnlyCollection<Person> Persons => _persons.AsReadOnly();
 
     private Movie() { }
     private Movie(MovieId movieId, string name, string description, decimal rate, int ageLimit, TimeSpan duration, string country, string studio, string language)
@@ -138,49 +138,57 @@ public class Movie : AggregateRoot<MovieId>
 
         Duration = duration;
     }
-    public void AddGenre(GenreId genreId)
+    public void AddGenre(Genre genre)
     {
-        _genreIds.Add(new MovieGenre(genreId));
+        if (_genres.Any(g => g.Id != genre.Id))
+            _genres.Add(genre);
     }
 
     public void RemoveGenre(GenreId genreId)
     {
-        _genreIds.Remove(new MovieGenre(genreId));
+        var genre = _genres.FirstOrDefault(g => g.Id == genreId);
+        if (genre != null) _genres.Remove(genre);
     }
 
     public void ClearGenres()
     {
-        _genreIds.Clear();
+        _genres.Clear();
     }
 
-    public void AddMedia(MediaId mediaId)
+    public void AddMedia(Media media)
     {
-        _mediaIds.Add(new MovieMedia(mediaId));
+        if(_medias.Any(m => m.Id != media.Id))
+            _medias.Add(media);
     }
 
     public void RemoveMedia(MediaId mediaId)
     {
-        _mediaIds.Remove(new MovieMedia(mediaId));
+        var media = _medias.FirstOrDefault(m => m.Id == mediaId);
+        if (media != null)_medias.Remove(media);
     }
 
     public void ClearMedias()
     {
-        _mediaIds.Clear();
+        _medias.Clear();
     }
 
-    public void AddActor(PersonId personId)
+    public void AddPerson(Person person)
     {
-        _personIds.Add(new MoviePerson(personId));
+        var personExists = _persons.Any(p => p.Id == person.Id);
+        if (!personExists)
+            _persons.Add(person);
     }
 
-    public void RemoveActor(PersonId personId)
+    public void RemovePerson(Person person)
     {
-        _personIds.Remove(new MoviePerson(personId));
+        var personExists = _persons.Any(p => p.Id == person.Id);
+        if (personExists)
+            _persons.Remove(person);
     }
 
-    public void ClearActors()
+    public void ClearPersons()
     {
-        _personIds.Clear();
+        _persons.Clear();
     }
 
 }
@@ -190,8 +198,4 @@ public record struct MovieId(Guid Id)
     public static MovieId New() => new MovieId(Guid.NewGuid());
 }
 
-public record MovieGenre(GenreId GenreId);
 
-public record MovieMedia(MediaId MediaId);
-
-public record MoviePerson(PersonId PersonId);
