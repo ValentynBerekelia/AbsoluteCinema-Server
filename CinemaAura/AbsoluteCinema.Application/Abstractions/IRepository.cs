@@ -1,6 +1,6 @@
 using AbsoluteCinema.Domain.Specifications;
 
-namespace AbsoluteCinema.Application.Abstructions;
+namespace AbsoluteCinema.Application.Abstractions;
 
 public interface IRepository<in TKey, TEntity>
 {
