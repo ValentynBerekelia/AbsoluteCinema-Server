@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CinemaAura.Infrastructure.Migrations
+namespace AbsoluteCinema.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitCreateModificatedDB : Migration
+    public partial class Initial_Complete : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -153,8 +153,8 @@ namespace CinemaAura.Infrastructure.Migrations
                 name: "movie_genres",
                 columns: table => new
                 {
-                    genre_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    movie_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    movie_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    genre_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -182,7 +182,7 @@ namespace CinemaAura.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_movie_media", x => new { x.movie_id, x.media_id });
+                    table.PrimaryKey("PK_movie_media", x => new { x.media_id, x.movie_id });
                     table.ForeignKey(
                         name: "FK_movie_media_medias_media_id",
                         column: x => x.media_id,
@@ -227,8 +227,8 @@ namespace CinemaAura.Infrastructure.Migrations
                 name: "role_permissions",
                 columns: table => new
                 {
-                    permission_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    role_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    role_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    permission_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -278,8 +278,8 @@ namespace CinemaAura.Infrastructure.Migrations
                 name: "user_roles",
                 columns: table => new
                 {
-                    role_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    user_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    role_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -289,7 +289,7 @@ namespace CinemaAura.Infrastructure.Migrations
                         column: x => x.role_id,
                         principalTable: "roles",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_user_roles_users_user_id",
                         column: x => x.user_id,
@@ -302,12 +302,12 @@ namespace CinemaAura.Infrastructure.Migrations
                 name: "movie_persons",
                 columns: table => new
                 {
-                    actor_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    movie_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    movie_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    person_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_movie_persons", x => new { x.movie_id, x.actor_id });
+                    table.PrimaryKey("PK_movie_persons", x => new { x.movie_id, x.person_id });
                     table.ForeignKey(
                         name: "FK_movie_persons_movies_movie_id",
                         column: x => x.movie_id,
@@ -315,8 +315,8 @@ namespace CinemaAura.Infrastructure.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_movie_persons_persons_actor_id",
-                        column: x => x.actor_id,
+                        name: "FK_movie_persons_persons_person_id",
+                        column: x => x.person_id,
                         principalTable: "persons",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -396,14 +396,14 @@ namespace CinemaAura.Infrastructure.Migrations
                 column: "genre_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_movie_media_media_id",
+                name: "IX_movie_media_movie_id",
                 table: "movie_media",
-                column: "media_id");
+                column: "movie_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_movie_persons_actor_id",
+                name: "IX_movie_persons_person_id",
                 table: "movie_persons",
-                column: "actor_id");
+                column: "person_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_movies_rate",
@@ -460,12 +460,12 @@ namespace CinemaAura.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_sessions_hall_id",
+                name: "IX_sessions_hall_id",
                 table: "sessions",
                 column: "hall_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_sessions_movie_id",
+                name: "IX_sessions_movie_id",
                 table: "sessions",
                 column: "movie_id");
 
@@ -475,27 +475,17 @@ namespace CinemaAura.Infrastructure.Migrations
                 column: "start_time");
 
             migrationBuilder.CreateIndex(
-                name: "ix_tickets_purchased_at",
-                table: "tickets",
-                column: "purchased_at");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_tickets_seat_id",
                 table: "tickets",
                 column: "seat_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_tickets_session_id",
-                table: "tickets",
-                column: "session_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_tickets_status",
+                name: "IX_tickets_status",
                 table: "tickets",
                 column: "status");
 
             migrationBuilder.CreateIndex(
-                name: "ix_tickets_user_id",
+                name: "IX_tickets_user_id",
                 table: "tickets",
                 column: "user_id");
 

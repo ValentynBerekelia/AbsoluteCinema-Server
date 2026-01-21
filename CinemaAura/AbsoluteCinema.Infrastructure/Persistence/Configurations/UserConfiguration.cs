@@ -58,8 +58,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 j => j.HasOne<User>().WithMany().HasForeignKey("user_id"),
                 j =>
                 {
-                    j.Property<Guid>("user_id");
-                    j.Property<Guid>("role_id");
+                    j.Property<UserId>("user_id");
+                    j.Property<RoleId>("role_id");
                     j.HasKey("user_id", "role_id");
                 });
 
