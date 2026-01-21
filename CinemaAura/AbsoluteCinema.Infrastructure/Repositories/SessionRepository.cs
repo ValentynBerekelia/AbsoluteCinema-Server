@@ -9,4 +9,14 @@ public class SessionRepository : BaseRepository<SessionId, Session, CinemaDbCont
     public SessionRepository(CinemaDbContext dbContext) : base(dbContext)
     {
     }
+
+    public Task AddTypePriceAsync(TypePrice typePrice, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SaveChangesAsync(CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -26,33 +26,20 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
         builder.HasIndex(x => x.Name)
             .IsUnique()
             .HasDatabaseName("uq_roles_name");
+        
+        builder.HasMany(r => r.Permissions)
+            .WithMany() 
+            .UsingEntity<Dictionary<string, object>>(
+                "role_permissions", 
+                j => j.HasOne<Permission>().WithMany().HasForeignKey("permission_id"),
+                j => j.HasOne<Role>().WithMany().HasForeignKey("role_id"),
+                j => 
+                {
+                    j.HasKey("role_id", "permission_id"); 
+                });
 
-        builder.Ignore(r => r.PermissionsIds);
-        builder.Ignore(r => r.UserIds);
-
-        builder.OwnsMany<RolePermission>("_permissionsIds", b =>
-        {
-            b.ToTable("role_permissions");
-
-            b.WithOwner().HasForeignKey("role_id");
-            b.Property<RoleId>("role_id");
-
-            b.Property(p => p.PermissionId)
-                .HasColumnName("permission_id")
-                .HasConversion(
-                    id => id.Id,
-                    value => new PermissionId(value))
-                .IsRequired();
-
-            b.HasKey("role_id", nameof(RolePermission.PermissionId));
-
-            b.HasOne<Permission>()
-                .WithMany()
-                .HasForeignKey(nameof(RolePermission.PermissionId))
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        builder.Navigation("_permissionsIds")
-            .UsePropertyAccessMode(PropertyAccessMode.Field);
+        builder.Navigation(r => r.Permissions)
+            .HasField("_permissions") 
+            .UsePropertyAccessMode(PropertyAccessMode.PreferField);
     }
 }
