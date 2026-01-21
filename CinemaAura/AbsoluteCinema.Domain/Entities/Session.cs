@@ -6,11 +6,14 @@ namespace AbsoluteCinema.Domain.Entities;
 public class Session : AggregateRoot<SessionId>
 {
     public MovieId MovieId { get; private set; }
+    public Movie Movie { get; private set; } 
+
     public HallId HallId { get; private set; }
+    public Hall Hall { get; private set; }
     public DateTime StartDateTime { get; private set; }
 
-    private readonly HashSet<TicketId> _ticketIds = new HashSet<TicketId>();
-    public IReadOnlyCollection<TicketId> TicketIds => _ticketIds;
+    private readonly List<Ticket> _tickets = new();
+    public IReadOnlyCollection<Ticket> Tickets => _tickets.AsReadOnly();
 
     private Session() { }
     private Session(SessionId id, MovieId movieId, HallId hallId, DateTime date)
@@ -37,23 +40,26 @@ public class Session : AggregateRoot<SessionId>
         }
         StartDateTime = newDate;
     }
-
-    public void ChangeHall(HallId newHallId)
-    {
-        HallId = newHallId;
-    }
+    
 
     public void ChangeMovie(MovieId newMovieId)
     {
         MovieId = newMovieId;
     }
-    public void AddTicket(TicketId ticketId)
+    public void ChangeHall(HallId newHallId)
     {
-        _ticketIds.Add(ticketId);
+        if (_tickets.Any())
+            throw new DomainException("Cannot change hall after tickets have been sold.");
+
+        HallId = newHallId;
     }
-    public void CancelTicket(TicketId ticketId)
+
+    public void AddTicket(Ticket ticket)
     {
-        _ticketIds.Remove(ticketId);
+        if (_tickets.Any(t => t.SeatId == ticket.SeatId))
+            throw new DomainException("This seat is already taken.");
+
+        _tickets.Add(ticket);
     }
 }
 

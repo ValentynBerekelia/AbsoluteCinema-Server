@@ -66,82 +66,48 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.Ignore(m => m.PersonIds);
-        builder.Ignore(m => m.GenreIds);
-        builder.Ignore(m => m.MediaIds);
+        
+        builder.HasMany(m => m.Genres)
+            .WithMany() 
+            .UsingEntity<Dictionary<string, object>>(
+                "movie_genres", 
+                j => j.HasOne<Genre>()
+                    .WithMany()
+                    .HasForeignKey("genre_id"),
+                j => j.HasOne<Movie>()
+                    .WithMany()
+                    .HasForeignKey("movie_id"),
+                j => 
+                {
+                    j.HasKey("movie_id", "genre_id");
+                });
+        
+        builder.HasMany(m => m.Persons)
+            .WithMany()
+            .UsingEntity<Dictionary<string, object>>(
+                "movie_persons",
+                j => j.HasOne<Person>().WithMany().HasForeignKey("person_id"),
+                j => j.HasOne<Movie>().WithMany().HasForeignKey("movie_id")
+            );
+        
+        builder.HasMany(m => m.Medias)
+            .WithMany()
+            .UsingEntity<Dictionary<string, object>>(
+                "movie_media",
+                j => j.HasOne<Media>().WithMany().HasForeignKey("media_id"),
+                j => j.HasOne<Movie>().WithMany().HasForeignKey("movie_id")
+            );
 
-        builder.OwnsMany<MovieGenre>("_genreIds", b =>
-        {
-            b.ToTable("movie_genres");
+        builder.Navigation(m => m.Genres)
+            .HasField("_genres")
+            .UsePropertyAccessMode(PropertyAccessMode.PreferField);
 
-            b.WithOwner().HasForeignKey("movie_id");
-            b.Property<MovieId>("movie_id");
+        builder.Navigation(m => m.Persons)
+            .HasField("_persons")
+            .UsePropertyAccessMode(PropertyAccessMode.PreferField);
 
-            b.Property(p => p.GenreId)
-                .HasColumnName("genre_id")
-                .HasConversion(
-                    id => id.Id,
-                    value => new GenreId(value))
-                .IsRequired();
-
-            b.HasKey("movie_id", nameof(MovieGenre.GenreId));
-
-            b.HasOne<Genre>()
-                .WithMany()
-                .HasForeignKey(nameof(MovieGenre.GenreId))
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        builder.OwnsMany<MoviePerson>("_personIds", b =>
-        {
-            b.ToTable("movie_persons");
-
-            b.WithOwner().HasForeignKey("movie_id");
-            b.Property<MovieId>("movie_id");
-
-            b.Property(p => p.PersonId)
-                .HasColumnName("actor_id")
-                .HasConversion(
-                    id => id.Id,
-                    value => new PersonId(value))
-                .IsRequired();
-
-            b.HasKey("movie_id", nameof(MoviePerson.PersonId));
-
-            b.HasOne<Person>()
-                .WithMany()
-                .HasForeignKey(nameof(MoviePerson.PersonId))
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        builder.OwnsMany<MovieMedia>("_mediaIds", b =>
-        {
-            b.ToTable("movie_media");
-
-            b.WithOwner().HasForeignKey("movie_id");
-            b.Property<MovieId>("movie_id");
-            b.Property(p => p.MediaId)
-                .HasColumnName("media_id")
-                .HasConversion(
-                    id => id.Id,
-                    value => new MediaId(value))
-                .IsRequired();
-
-            b.HasKey("movie_id", nameof(MovieMedia.MediaId));
-
-            b.HasOne<Media>()
-                .WithMany()
-                .HasForeignKey(nameof(MovieMedia.MediaId))
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        builder.Navigation("_genreIds")
-            .UsePropertyAccessMode(PropertyAccessMode.Field);
-
-        builder.Navigation("_personIds")
-            .UsePropertyAccessMode(PropertyAccessMode.Field);
-
-        builder.Navigation("_mediaIds")
-            .UsePropertyAccessMode(PropertyAccessMode.Field);
+        builder.Navigation(m => m.Medias)
+            .HasField("_medias")
+            .UsePropertyAccessMode(PropertyAccessMode.PreferField);
     }
 }

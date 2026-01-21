@@ -14,7 +14,8 @@ public class HallConfiguration : IEntityTypeConfiguration<Hall>
             .HasColumnName("id")
             .HasConversion(
                 id => id.Id,
-                value => new HallId(value));
+                value => new HallId(value))
+            .ValueGeneratedNever();;
 
         builder.Property(h => h.HallName)
             .HasColumnName("hall_name")

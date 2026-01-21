@@ -6,11 +6,9 @@ public class Role : AggregateRoot<RoleId>
 {
     public string Name { get; private set; }
 
-    private readonly HashSet<RolePermission> _permissionsIds = new HashSet<RolePermission>();
-    public IReadOnlyCollection<RolePermission> PermissionsIds => _permissionsIds;
+    private readonly List<Permission> _permissions = new List<Permission>();
+    public IReadOnlyCollection<Permission> Permissions => _permissions.AsReadOnly();
 
-    private readonly HashSet<UserId> _userIds = new HashSet<UserId>();
-    public IReadOnlyCollection<UserId> UserIds => _userIds;
     private Role() { }
     private Role(RoleId id, string name)
     {
@@ -36,40 +34,30 @@ public class Role : AggregateRoot<RoleId>
         Name = name;
     }
 
-    public void Grant(PermissionId permissionId)
+    public void Grant(Permission permission)
     {
-        _permissionsIds.Add(new RolePermission(permissionId));
+        if (_permissions.All(p => p.Id != permission.Id))
+            _permissions.Add(permission);
     }
 
-    public void Revoke(PermissionId permissionId)
+    public void Revoke(Permission permission)
     {
-        _permissionsIds.Remove(new RolePermission(permissionId));
+        _permissions.Remove(permission);
     }
 
     public void RevokeAll()
     {
-        _permissionsIds.Clear();
+        _permissions.Clear();
     }
 
-    public bool HasPermission(PermissionId permissionId)
+    public bool HasPermission(Permission permission)
     {
-        return _permissionsIds.Contains(new RolePermission(permissionId));
+        return _permissions.Contains(permission);
     }
-
-    public void AddUser(UserId userId)
-    {
-        _userIds.Add(userId);
-    }
-
-    public void RemoveUser(UserId userId)
-    {
-        _userIds.Remove(userId);
-    }
+    
 }
 
 public record struct RoleId(Guid Id)
 {
     public static RoleId New() => new RoleId(Guid.NewGuid());
 }
-
-public record RolePermission(PermissionId PermissionId);
