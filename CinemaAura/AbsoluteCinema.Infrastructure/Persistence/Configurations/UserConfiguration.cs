@@ -2,13 +2,19 @@ using AbsoluteCinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CinemaAura.Infrastructure.Persistence.Configurations;
+namespace AbsoluteCinema.Infrastructure.Persistence.Configurations;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("users");
+        // mb add check constrint for email validation later?
+        builder.ToTable("users", t =>
+        {
+            t.HasCheckConstraint(
+                "ck_users_username_length",
+                "LENGTH(user_name) >= 1"); // mb also add username validation constraints
+        });
         builder.HasKey(x => x.Id);
         builder.Property(u => u.Id)
             .HasColumnName("id")
@@ -16,11 +22,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.UserName)
             .HasColumnName("user_name")
+            .HasMaxLength(100)
             .HasDefaultValue("Unknown")
             .IsRequired();
 
         builder.Property(x => x.Email)
             .HasColumnName("email")
+            .HasMaxLength(255)  // RFC 5321 standard
             .IsRequired();
 
         builder.HasIndex(x => x.Email)
@@ -35,12 +43,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 .IsRequired();
 
             b.Property(x => x.Salt).HasColumnName("password_salt")
-                // .HasMaxLength(128)
-                //.IsRequired()
+                .HasMaxLength(128)
+                .IsRequired()
                 ;
         });
 
         builder.Ignore(r => r.RoleIds);
+        builder.Ignore(u => u.DomainEvents);
 
         builder.OwnsMany<UserRole>("_roleIds", b =>
         {
@@ -60,7 +69,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             b.HasOne<Role>()
                 .WithMany()
                 .HasForeignKey(nameof(UserRole.RoleId))
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         builder.Navigation("_roleIds")

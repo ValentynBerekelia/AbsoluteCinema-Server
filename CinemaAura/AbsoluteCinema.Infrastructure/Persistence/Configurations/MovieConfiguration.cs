@@ -2,7 +2,7 @@ using AbsoluteCinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CinemaAura.Infrastructure.Persistence.Configurations;
+namespace AbsoluteCinema.Infrastructure.Persistence.Configurations;
 
 public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 {
@@ -12,6 +12,7 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         {
             tableBuilder.HasCheckConstraint("ck_movies_rate_range", "rate >= 0 AND rate <= 10");
             tableBuilder.HasCheckConstraint("ck_movies_age_limit_positive", "age_limit >= 0");
+            tableBuilder.HasCheckConstraint("ck_movies_duration_positive", "duration > 0");
         });
 
         builder.HasKey(x => x.Id);
@@ -42,25 +43,27 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 
         builder.HasIndex(x => x.Rate)
             .HasDatabaseName("ix_movies_rate");
-        
+
         builder.Property(x => x.Duration)
+            .HasColumnName("duration")
             .HasConversion(
                 v => v.TotalSeconds,
                 v => TimeSpan.FromSeconds(v))
-            .HasColumnType("bigint");
-        
-        builder.Property(m=> m.Country)
-            .HasColumnName("country_name")
-            .IsRequired();
-        builder.Property(m=> m.Studio)
+            .HasColumnType("integer");
+
+        builder.Property(m => m.Studio)
             .HasColumnName("studio")
+            .HasMaxLength(200)
             .IsRequired();
-        builder.Property(m=> m.Language)
+
+        builder.Property(m => m.Language)
+            .HasMaxLength(50)
             .HasColumnName("language")
-            .IsRequired();
-        
-        builder.Property(m=> m.Country)
+            .IsRequired(false);
+
+        builder.Property(m => m.Country)
             .HasColumnName("country_name")
+            .HasMaxLength(100)
             .IsRequired();
 
         builder.Ignore(m => m.PersonIds);

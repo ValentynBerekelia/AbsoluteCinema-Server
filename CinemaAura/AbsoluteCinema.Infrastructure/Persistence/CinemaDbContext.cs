@@ -1,7 +1,7 @@
 using AbsoluteCinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CinemaAura.Infrastructure.Persistence;
+namespace AbsoluteCinema.Infrastructure.Persistence;
 
 public class CinemaDbContext : DbContext
 {
