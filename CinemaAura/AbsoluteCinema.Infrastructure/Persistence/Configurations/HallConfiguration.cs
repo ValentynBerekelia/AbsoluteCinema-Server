@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using AbsoluteCinema.Domain.Entities;
 
-namespace CinemaAura.Infrastructure.Persistence.Configurations;
+namespace AbsoluteCinema.Infrastructure.Persistence.Configurations;
 
 public class HallConfiguration : IEntityTypeConfiguration<Hall>
 {

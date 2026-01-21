@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace CinemaAura.Domain.Primitives;
+namespace AbsoluteCinema.Domain.Primitives;
 
 public interface ISpecification<T>
 {

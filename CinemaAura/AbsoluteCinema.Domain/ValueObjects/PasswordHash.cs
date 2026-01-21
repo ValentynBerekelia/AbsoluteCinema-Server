@@ -1,6 +1,6 @@
-using CinemaAura.Domain.Exceptions;
+using AbsoluteCinema.Domain.Exceptions;
 
-namespace CinemaAura.Domain.ValueObjects;
+namespace AbsoluteCinema.Domain.ValueObjects;
 
 public class PasswordHash
 {

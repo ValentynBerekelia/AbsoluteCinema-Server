@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace CinemaAura.Domain.Primitives;
+namespace AbsoluteCinema.Domain.Primitives;
 
 public class IDomainEvent : INotification
 {

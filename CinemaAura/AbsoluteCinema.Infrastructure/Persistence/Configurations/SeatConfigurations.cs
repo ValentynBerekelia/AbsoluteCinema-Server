@@ -2,7 +2,7 @@ using AbsoluteCinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CinemaAura.Infrastructure.Persistence.Configurations;
+namespace AbsoluteCinema.Infrastructure.Persistence.Configurations;
 
 public class SeatConfigurations : IEntityTypeConfiguration<Seat>
 {
