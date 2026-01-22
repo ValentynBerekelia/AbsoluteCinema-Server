@@ -1,6 +1,7 @@
 using AbsoluteCinema.Application;
 using AbsoluteCinema.Infrastructure;
 using AbsoluteCinema.Infrastructure.Persistence;
+using CinemaAura.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();
+    InitialDataSeeder.Seed(db);
+}
 
 
 // Configure the HTTP request pipeline.
