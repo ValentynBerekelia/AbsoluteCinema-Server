@@ -1,15 +1,14 @@
-using CinemaAura.Domain.Primitives;
-using CinemaAura.Domain.ValueObjects;
+using AbsoluteCinema.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
 
 public class Role : AggregateRoot<RoleId>
 {
     public string Name { get; private set; }
-    
-    private readonly HashSet<PermissionCode> _permissions = new HashSet<PermissionCode>();
-    public IReadOnlyCollection<PermissionCode> Permissions => _permissions;
-    
+
+    private readonly List<Permission> _permissions = new List<Permission>();
+    public IReadOnlyCollection<Permission> Permissions => _permissions.AsReadOnly();
+
     private readonly HashSet<UserId> _userIds = new HashSet<UserId>();
     public IReadOnlyCollection<UserId> UserIds => _userIds;
     private Role() { }
@@ -27,7 +26,7 @@ public class Role : AggregateRoot<RoleId>
         }
         return new Role(RoleId.New(), roleName);
     }
-    
+
     public void Rename(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -36,13 +35,14 @@ public class Role : AggregateRoot<RoleId>
         }
         Name = name;
     }
-    
-    public void Grant(PermissionCode permission)
+
+    public void Grant(Permission permission)
     {
-        _permissions.Add(permission);
+        if (_permissions.All(p => p.Id != permission.Id))
+            _permissions.Add(permission);
     }
-    
-    public void Revoke(PermissionCode permission)
+
+    public void Revoke(Permission permission)
     {
         _permissions.Remove(permission);
     }
@@ -52,11 +52,11 @@ public class Role : AggregateRoot<RoleId>
         _permissions.Clear();
     }
 
-    public bool HasPermission(PermissionCode permission)
+    public bool HasPermission(Permission permission)
     {
         return _permissions.Contains(permission);
     }
-
+    
     public void AddUser(UserId userId)
     {
         _userIds.Add(userId);
@@ -71,4 +71,4 @@ public class Role : AggregateRoot<RoleId>
 public record struct RoleId(Guid Id)
 {
     public static RoleId New() => new RoleId(Guid.NewGuid());
-} 
+}

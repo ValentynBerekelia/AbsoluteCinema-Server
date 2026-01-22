@@ -1,0 +1,62 @@
+using AbsoluteCinema.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace AbsoluteCinema.Infrastructure.Persistence.Configurations;
+
+public class PersonConfiguration : IEntityTypeConfiguration<Person>
+{
+    public void Configure(EntityTypeBuilder<Person> builder)
+    {
+        builder.ToTable("persons", tableBuilder =>
+        {
+            tableBuilder.HasCheckConstraint(
+                "ck_persons_name_not_empty",
+                "LENGTH(name) > 0");
+
+            tableBuilder.HasCheckConstraint(
+                "ck_persons_status_valid",
+                "person_role IN (1, 2)");
+        });
+        builder.ToTable("persons");
+
+        builder.HasKey(x => x.Id);
+        
+        builder.Property(p => p.MediaId)
+            .HasColumnName("media_id")
+            .HasConversion(
+                id => id.HasValue ? id.Value.Id : (Guid?)null,
+                value => value.HasValue ? new MediaId(value.Value) : null);
+
+        builder.HasOne(p => p.Media)
+            .WithMany()
+            .HasForeignKey(p => p.MediaId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Property(p => p.PersonRole)
+            .HasColumnName("person_role")
+            .IsRequired();
+
+        builder.Property(x => x.Id)
+            .HasColumnName("id")
+            .HasConversion(
+                id => id.Id,
+                value => new PersonId(value));
+
+        builder.Property(x => x.Name)
+            .HasColumnName("name")
+            .HasMaxLength(100)
+            .IsRequired();
+
+        builder.Property(x => x.Bio)
+            .HasColumnName("bio")
+            .IsRequired(false);
+
+        builder.Property(x => x.BirthDate)
+            .HasColumnName("birth_date")
+            .IsRequired();
+
+        builder.HasIndex(x => x.Name)
+            .HasDatabaseName("ix_actors_name");
+    }
+}

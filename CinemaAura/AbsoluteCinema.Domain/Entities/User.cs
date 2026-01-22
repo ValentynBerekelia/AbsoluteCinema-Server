@@ -1,5 +1,5 @@
-using CinemaAura.Domain.Primitives;
-using CinemaAura.Domain.ValueObjects;
+using AbsoluteCinema.Domain.Primitives;
+using AbsoluteCinema.Domain.ValueObjects;
 
 namespace AbsoluteCinema.Domain.Entities;
 
@@ -9,8 +9,8 @@ public class User : AggregateRoot<UserId>
     public PasswordHash  PasswordHash { get; private set; }
     public string Email { get; private set; }
     
-    private readonly HashSet<UserRole> _roleIds = new HashSet<UserRole>();
-    public IReadOnlyCollection<UserRole> RoleIds => _roleIds;
+    private readonly List<Role> _roles = new List<Role>();
+    public IReadOnlyCollection<Role> Roles => _roles;
 
     private User() { }
 
@@ -66,14 +66,14 @@ public class User : AggregateRoot<UserId>
         UserName = userName;
     }
     
-    public void AddRole(RoleId roleId)
+    public void AddRole(Role role)
     {
-        _roleIds.Add(new UserRole(roleId));
+        _roles.Add(role);
     }
     
-    public void RemoveRole(RoleId roleId)
+    public void RemoveRole(Role role)
     {
-        _roleIds.Remove(new UserRole(roleId));
+        _roles.Remove(role);
     }
     
 }

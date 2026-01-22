@@ -1,15 +1,19 @@
-using CinemaAura.Domain.Primitives;
+using AbsoluteCinema.Domain.Exceptions;
+using AbsoluteCinema.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
 
 public class Session : AggregateRoot<SessionId>
 {
     public MovieId MovieId { get; private set; }
-    public HallId HallId { get; private set; }
-    public DateTime Date { get; private set; }
+    public Movie Movie { get; private set; } 
 
-    private readonly HashSet<TicketId> _ticketIds = new HashSet<TicketId>();
-    public IReadOnlyCollection<TicketId> TicketIds => _ticketIds;
+    public HallId HallId { get; private set; }
+    public Hall Hall { get; private set; }
+    public DateTime StartDateTime { get; private set; }
+
+    private readonly List<Ticket> _tickets = new();
+    public IReadOnlyCollection<Ticket> Tickets => _tickets.AsReadOnly();
 
     private Session() { }
     private Session(SessionId id, MovieId movieId, HallId hallId, DateTime date)
@@ -17,13 +21,13 @@ public class Session : AggregateRoot<SessionId>
         Id = id;
         MovieId = movieId;
         HallId = hallId;
-        Date = date;
+        StartDateTime = date;
     }
     public static Session Create(MovieId movieId, HallId hallId, DateTime date)
     {
         if (date < DateTime.UtcNow)
         {
-            throw new ArgumentException("Session date cannot be in the past.");
+            throw new DomainException("Session start date must be in the future.");
         }
 
         return new Session(SessionId.New(), movieId, hallId, date);
@@ -32,11 +36,11 @@ public class Session : AggregateRoot<SessionId>
     {
         if (newDate < DateTime.UtcNow)
         {
-            throw new ArgumentException("New session date cannot be in the past.");
+            throw new DomainException("New session date must be in the future.");
         }
-        Date = newDate;
+        StartDateTime = newDate;
     }
-
+    
     public void ChangeHall(HallId newHallId)
     {
         HallId = newHallId;
@@ -46,13 +50,20 @@ public class Session : AggregateRoot<SessionId>
     {
         MovieId = newMovieId;
     }
-    public void AddTicket(TicketId ticketId)
+    public void ChangeHall(HallId newHallId)
     {
-        _ticketIds.Add(ticketId);
+        if (_tickets.Any())
+            throw new DomainException("Cannot change hall after tickets have been sold.");
+
+        HallId = newHallId;
     }
-    public void CancelTicket(TicketId ticketId)
+
+    public void AddTicket(Ticket ticket)
     {
-        _ticketIds.Remove(ticketId);
+        if (_tickets.Any(t => t.SeatId == ticket.SeatId))
+            throw new DomainException("This seat is already taken.");
+
+        _tickets.Add(ticket);
     }
 }
 

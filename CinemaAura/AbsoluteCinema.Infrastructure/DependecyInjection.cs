@@ -1,9 +1,11 @@
-using CinemaAura.Infrastructure.Presistence;
+using AbsoluteCinema.Application.Repository;
+using AbsoluteCinema.Infrastructure.Persistence;
+using AbsoluteCinema.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CinemaAura.Infrastructure;
+namespace AbsoluteCinema.Infrastructure;
 
 public static class DependencyInjection
 {
@@ -13,7 +15,8 @@ public static class DependencyInjection
     ) =>
         services
             .AddDbContext(configuration)
-            .AddAuthenticationInternal();
+            .AddAuthenticationInternal()
+            .AddRepositories();
 
     private static IServiceCollection AddAuthenticationInternal(this IServiceCollection services)
     {
@@ -34,6 +37,25 @@ public static class DependencyInjection
             });
         });    
         
+        return services;
+    }
+
+    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IMovieRepository, MovieRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IHallRepository, HallRepository>();
+        services.AddScoped<ISessionRepository, SessionRepository>();
+        services.AddScoped<ITicketRepository, TicketRepository>();
+        services.AddScoped<IGenreRepository, GenreRepository>();
+        services.AddScoped<IPersonRepository, PersonRepository>();
+        services.AddScoped<IMediaRepository, MediaRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IPermissionRepository, PermissionRepository>();
+        services.AddScoped<ISeatRepository, SeatRepository>();
+        
+        services.AddScoped<IUnitOfWork, EfUnitOfWork<CinemaDbContext>>();
+
         return services;
     }
 }

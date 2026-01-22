@@ -1,0 +1,21 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build folders
+**/bin/
+**/obj/
+
+# Rider / JetBrains
+.idea/
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+
+.vs
+CinemaAura/.idea
+CinemaAura/.vs
