@@ -1,6 +1,6 @@
-using CinemaAura.Domain.Enums;
-using CinemaAura.Domain.Exceptions;
-using CinemaAura.Domain.Primitives;
+using AbsoluteCinema.Domain.Enums;
+using AbsoluteCinema.Domain.Exceptions;
+using AbsoluteCinema.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
 

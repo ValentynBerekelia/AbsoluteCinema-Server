@@ -1,9 +1,9 @@
 using AbsoluteCinema.Domain.Entities;
-using CinemaAura.Domain.ValueObjects;
+using AbsoluteCinema.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CinemaAura.Infrastructure.Persistence.Configurations;
+namespace AbsoluteCinema.Infrastructure.Persistence.Configurations;
 
 public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
 {

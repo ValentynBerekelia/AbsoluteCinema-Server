@@ -2,7 +2,7 @@ using AbsoluteCinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CinemaAura.Infrastructure.Persistence.Configurations;
+namespace AbsoluteCinema.Infrastructure.Persistence.Configurations;
 
 public class SeatConfigurations : IEntityTypeConfiguration<Seat>
 {
@@ -40,13 +40,13 @@ public class SeatConfigurations : IEntityTypeConfiguration<Seat>
                 value => new SeatTypeId(value))
             .IsRequired();
 
-        builder.HasOne<Hall>()
+        builder.HasOne(s => s.Hall)
             .WithMany()
             .HasForeignKey(s => s.HallId)
             .HasConstraintName("fk_seats_halls_hall_id")
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<SeatType>()
+        builder.HasOne(s => s.SeatType)
             .WithMany()
             .HasForeignKey(s => s.SeatTypeId)
             .HasConstraintName("fk_seats_seat_types_seat_type_id")
@@ -61,5 +61,11 @@ public class SeatConfigurations : IEntityTypeConfiguration<Seat>
 
         builder.HasIndex(s => s.SeatTypeId)
             .HasDatabaseName("ix_seats_seat_type_id");
+        
+        builder.Navigation(s => s.SeatType)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+        
+        builder.Navigation(s => s.Hall)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

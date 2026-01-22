@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using AbsoluteCinema.Domain.Entities;
 
-namespace CinemaAura.Infrastructure.Persistence.Configurations;
+namespace AbsoluteCinema.Infrastructure.Persistence.Configurations;
 
 public class HallConfiguration : IEntityTypeConfiguration<Hall>
 {
@@ -14,7 +14,8 @@ public class HallConfiguration : IEntityTypeConfiguration<Hall>
             .HasColumnName("id")
             .HasConversion(
                 id => id.Id,
-                value => new HallId(value));
+                value => new HallId(value))
+            .ValueGeneratedNever();;
 
         builder.Property(h => h.HallName)
             .HasColumnName("hall_name")

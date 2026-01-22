@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using AbsoluteCinema.Domain.Entities;
 
-namespace CinemaAura.Infrastructure.Persistence.Configurations;
+namespace AbsoluteCinema.Infrastructure.Persistence.Configurations;
 
 public class SessionConfiguration : IEntityTypeConfiguration<Session>
 {
@@ -16,7 +16,8 @@ public class SessionConfiguration : IEntityTypeConfiguration<Session>
             .HasColumnName("id")
             .HasConversion(
                 id => id.Id,
-                value => new SessionId(value));
+                value => new SessionId(value))
+            .ValueGeneratedNever();
 
         builder.Property(s => s.MovieId)
             .HasColumnName("movie_id")
@@ -36,27 +37,28 @@ public class SessionConfiguration : IEntityTypeConfiguration<Session>
             .HasColumnName("start_time")
             .IsRequired();
 
-        builder.HasOne<Movie>()
+        builder.HasOne(s => s.Movie)
             .WithMany()
             .HasForeignKey(s => s.MovieId)
             .HasConstraintName("fk_sessions_movies_movie_id")
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<Hall>()
-            .WithMany()
+        builder.HasOne(s => s.Hall)
+            .WithMany() 
             .HasForeignKey(s => s.HallId)
             .HasConstraintName("fk_sessions_halls_hall_id")
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(s => s.MovieId)
-            .HasDatabaseName("ix_sessions_movie_id");
+        builder.HasMany(s => s.Tickets)
+            .WithOne(t => t.Session) 
+            .HasForeignKey(t => t.SessionId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.Navigation(s => s.Tickets)
+            .HasField("_tickets")
+            .UsePropertyAccessMode(PropertyAccessMode.PreferField);
 
-        builder.HasIndex(s => s.HallId)
-            .HasDatabaseName("ix_sessions_hall_id");
+        builder.HasIndex(s => s.StartDateTime).HasDatabaseName("ix_sessions_start_time");
 
-        builder.HasIndex(s => s.StartDateTime)
-            .HasDatabaseName("ix_sessions_start_time");
-
-        builder.Ignore(s => s.TicketIds);
     }
 }

@@ -2,7 +2,7 @@ using AbsoluteCinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CinemaAura.Infrastructure.Persistence.Configurations;
+namespace AbsoluteCinema.Infrastructure.Persistence.Configurations;
 
 public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
 {
@@ -21,7 +21,8 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .HasColumnName("id")
             .HasConversion(
                 id => id.Id,
-                value => new TicketId(value));
+                value => new TicketId(value))
+            .ValueGeneratedNever();
 
         builder.Property(t => t.UserId)
             .HasColumnName("user_id")
@@ -60,34 +61,34 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .HasDatabaseName("uq_tickets_session_seat");
 
         // FK
-        builder.HasOne<Session>()
-            .WithMany()
+        builder.HasOne(t => t.Session)
+            .WithMany(s => s.Tickets) 
             .HasForeignKey(t => t.SessionId)
             .HasConstraintName("fk_tickets_sessions_session_id")
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<Seat>()
+        builder.HasOne(t => t.Seat)
             .WithMany()
             .HasForeignKey(t => t.SeatId)
             .HasConstraintName("fk_tickets_seats_seat_id")
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne<User>()
+        builder.HasOne(t => t.User)
             .WithMany()
             .HasForeignKey(t => t.UserId)
             .HasConstraintName("fk_tickets_users_user_id")
             .OnDelete(DeleteBehavior.SetNull);
 
-        builder.HasIndex(t => t.UserId)
-            .HasDatabaseName("ix_tickets_user_id");
+        builder.Property(t => t.Status)
+            .HasColumnName("status")
+            .IsRequired()
+            .HasDefaultValue(TicketStatus.Pending);
 
-        builder.HasIndex(t => t.SessionId)
-            .HasDatabaseName("ix_tickets_session_id");
+        builder.HasIndex(t => new { t.SessionId, t.SeatId })
+            .IsUnique()
+            .HasDatabaseName("uq_tickets_session_seat");
 
-        builder.HasIndex(t => t.Status)
-            .HasDatabaseName("ix_tickets_status");
-
-        builder.HasIndex(t => t.PurchasedAt)
-            .HasDatabaseName("ix_tickets_purchased_at");
+        builder.HasIndex(t => t.UserId);
+        builder.HasIndex(t => t.Status);
     }
 }

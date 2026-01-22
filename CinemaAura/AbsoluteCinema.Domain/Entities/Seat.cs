@@ -1,4 +1,4 @@
-using CinemaAura.Domain.Primitives;
+using AbsoluteCinema.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
 
@@ -8,6 +8,8 @@ public class Seat : Entity<SeatId>
     public short Row { get; private set; }
     public short Number { get; private set; }
     public SeatTypeId SeatTypeId { get; private set; }
+    public SeatType SeatType {get; private set;}
+    public Hall Hall {get; private set;}
 
     private Seat() { }
     private Seat(SeatId id, HallId hallId, short row, short number, SeatTypeId seatTypeId)
