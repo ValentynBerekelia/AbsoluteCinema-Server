@@ -1,0 +1,14 @@
+using System.Collections;
+using AbsoluteCinema.Domain.Entities;
+
+namespace AbsoluteCinema.Application.DTOs;
+
+public record MovieDto
+(
+     MovieId Id,
+     string? PosterUrl,
+     decimal Rate,
+     int AgeLimit,
+     TimeSpan Duration,
+     IEnumerable<string> Genres
+){}
