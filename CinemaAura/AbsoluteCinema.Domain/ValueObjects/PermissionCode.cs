@@ -1,4 +1,4 @@
-namespace CinemaAura.Domain.ValueObjects;
+namespace AbsoluteCinema.Domain.ValueObjects;
 
 public sealed class PermissionCode
 {

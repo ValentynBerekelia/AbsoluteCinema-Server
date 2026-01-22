@@ -1,4 +1,4 @@
-namespace CinemaAura.Domain.Primitives;
+namespace AbsoluteCinema.Domain.Primitives;
 
 public abstract class Entity<TId> where TId : notnull
 {

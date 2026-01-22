@@ -10,6 +10,12 @@
 # Rider / JetBrains
 .idea/
 
-# OS files
-.DS_Store
-Thumbs.db
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+
+.vs
+CinemaAura/.idea
+CinemaAura/.vs

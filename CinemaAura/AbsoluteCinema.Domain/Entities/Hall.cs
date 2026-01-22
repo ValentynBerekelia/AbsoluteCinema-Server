@@ -1,4 +1,4 @@
-using CinemaAura.Domain.Primitives;
+using AbsoluteCinema.Domain.Primitives;
 
 namespace AbsoluteCinema.Domain.Entities;
 
@@ -14,7 +14,7 @@ public class Hall : AggregateRoot<HallId>
     public IReadOnlyCollection<SessionId> SessionIds => _sessionIds;
     private Hall() { }
 
-    private Hall(HallId id, string name, int verticalSize, int horizontalSize)
+    private Hall(HallId id, string name)
     {
         Id = id;
         HallName = name;
@@ -27,7 +27,7 @@ public class Hall : AggregateRoot<HallId>
         {
             throw new ArgumentException("Hall dimensions must be positive.");
         }
-        return new Hall(HallId.New(), name, verticalSize, horizontalSize);
+        return new Hall(HallId.New(), name);
     }
 
     public void ChangeHallName(string name)
