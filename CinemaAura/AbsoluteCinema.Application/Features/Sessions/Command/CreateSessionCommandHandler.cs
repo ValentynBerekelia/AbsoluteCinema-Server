@@ -7,10 +7,12 @@ namespace AbsoluteCinema.Application.Features.Sessions.Commands.CreateSession;
 public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand, CreateSessionResponse>
 {
     private readonly ISessionRepository _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateSessionCommandHandler(ISessionRepository repository)
+    public CreateSessionCommandHandler(ISessionRepository repository, IUnitOfWork unitOfWork)
     {
         _repository = repository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<CreateSessionResponse> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
