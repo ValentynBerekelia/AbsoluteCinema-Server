@@ -4,7 +4,7 @@ using MediatR;
 
 namespace AbsoluteCinema.Application.Features.Movies.Queries;
 
-public class GetMovieQueryHandler : IRequestHandler<GetMovieQuery, GetMovieQueryResponse>
+public class GetMovieAdminQueryHandler : IRequestHandler<GetMovieQuery, GetMovieQueryResponse>
 {
     private readonly IGetMovieDetailsQuery _detailsQuery;
     public async Task<GetMovieQueryResponse> Handle(GetMovieQuery request, CancellationToken ct)
@@ -16,6 +16,7 @@ public class GetMovieQueryHandler : IRequestHandler<GetMovieQuery, GetMovieQuery
 public record GetMovieQuery : IRequest<GetMovieQueryResponse>
 {
     public MovieId MovieId  { get; init; }
+    public bool IsAdminsRequest { get; init; }
 }
 
 public record GetMovieQueryResponse(
@@ -28,9 +29,9 @@ public record GetMovieQueryResponse(
     string Studio,
     string Language,
     IEnumerable<string> Genres,
-    string PosterUrl,
+    string? PosterUrl,
     IEnumerable<string> TrailerUrls,
-    IEnumerable<string> ImageUrls
-)
+    IEnumerable<string> ImageUrls,
+    List<PersonDto> Persons)
 {}
 
