@@ -4,19 +4,24 @@ using MediatR;
 
 namespace AbsoluteCinema.Application.Features.Movies.Queries;
 
-public class GetMovieAdminQueryHandler : IRequestHandler<GetMovieQuery, GetMovieQueryResponse>
+public class GetMovieQueryHandler(IGetMovieDetailsQuery detailsQuery)
+    : IRequestHandler<GetMovieQuery, GetMovieQueryResponse>
 {
-    private readonly IGetMovieDetailsQuery _detailsQuery;
     public async Task<GetMovieQueryResponse> Handle(GetMovieQuery request, CancellationToken ct)
     {
-        return await _detailsQuery.ExecuteAsync(request, ct);
+        var movie = await detailsQuery.ExecuteAsync(request, ct);
+        if (movie is null)
+        {
+            throw new KeyNotFoundException($"Movie {request.MovieId} not found");
+        }
+
+        return movie;
     }
 }
 
 public record GetMovieQuery : IRequest<GetMovieQueryResponse>
 {
     public MovieId MovieId  { get; init; }
-    public bool IsAdminsRequest { get; init; }
 }
 
 public record GetMovieQueryResponse(
@@ -32,6 +37,6 @@ public record GetMovieQueryResponse(
     string? PosterUrl,
     IEnumerable<string> TrailerUrls,
     IEnumerable<string> ImageUrls,
-    List<PersonDto> Persons)
+    IEnumerable<PersonDto> Persons)
 {}
 
