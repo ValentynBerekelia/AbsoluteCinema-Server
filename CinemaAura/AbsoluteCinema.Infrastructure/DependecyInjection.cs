@@ -1,4 +1,6 @@
+using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Application.Repository;
+using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using AbsoluteCinema.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +18,8 @@ public static class DependencyInjection
         services
             .AddDbContext(configuration)
             .AddAuthenticationInternal()
-            .AddRepositories();
+            .AddRepositories()
+            .AddQueries();
 
     private static IServiceCollection AddAuthenticationInternal(this IServiceCollection services)
     {
@@ -55,6 +58,15 @@ public static class DependencyInjection
         services.AddScoped<ISeatRepository, SeatRepository>();
         
         services.AddScoped<IUnitOfWork, EfUnitOfWork<CinemaDbContext>>();
+
+        return services;
+    }
+    
+    private static IServiceCollection AddQueries(this IServiceCollection services)
+    {
+        services.AddScoped<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
+        services.AddScoped<IGetMovieDetailsQuery, GetMovieDetailsQuery>();
+        
 
         return services;
     }
