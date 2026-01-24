@@ -1,7 +1,9 @@
+using System.Reflection;
 using AbsoluteCinema.Application;
 using AbsoluteCinema.Infrastructure;
 using AbsoluteCinema.Infrastructure.Persistence;
 using CinemaAura.Infrastructure.Persistence;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddApplication()
     .AddInfrastucture(builder.Configuration);
+
+
+var config = TypeAdapterConfig.GlobalSettings;
+
+config.Scan(Assembly.GetExecutingAssembly());
+builder.Services.AddMapster();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
