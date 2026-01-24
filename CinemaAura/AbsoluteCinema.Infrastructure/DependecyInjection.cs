@@ -18,7 +18,8 @@ public static class DependencyInjection
         services
             .AddDbContext(configuration)
             .AddAuthenticationInternal()
-            .AddRepositories();
+            .AddRepositories()
+            .AddQueries();
 
     private static IServiceCollection AddAuthenticationInternal(this IServiceCollection services)
     {
