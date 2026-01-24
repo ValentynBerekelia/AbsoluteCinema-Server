@@ -21,7 +21,12 @@ public class GetMovieQueryHandler(IGetMovieDetailsQuery detailsQuery)
 
 public record GetMovieQuery : IRequest<GetMovieQueryResponse>
 {
-    public MovieId MovieId  { get; init; }
+    public MovieId MovieId  { get; }
+
+    public GetMovieQuery(MovieId id)
+    {
+        MovieId = id;
+    }
 }
 
 public record GetMovieQueryResponse(
