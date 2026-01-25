@@ -47,9 +47,10 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder.Property(x => x.Duration)
             .HasColumnName("duration")
             .HasConversion(
-                v => v.TotalSeconds,
+                v => (int)v.TotalSeconds,
                 v => TimeSpan.FromSeconds(v))
-            .HasColumnType("integer");
+            .HasColumnType("integer")
+            .IsRequired();
 
         builder.Property(m => m.Studio)
             .HasColumnName("studio")
