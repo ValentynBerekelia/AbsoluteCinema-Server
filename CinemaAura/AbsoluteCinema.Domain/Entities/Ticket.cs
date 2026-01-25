@@ -5,8 +5,11 @@ namespace AbsoluteCinema.Domain.Entities;
 public class Ticket : Entity<TicketId>
 {
     public UserId? UserId { get; private set; }
+    public User? User { get; private set; }
     public SessionId SessionId { get; private set; }
+    public Session Session { get; private set; }
     public SeatId SeatId { get; private set; }
+    public Seat Seat { get; private set; }
 
     // NOTE: UNIQUE constraint (SessionId, SeatId) setup in configuration to prevent double booking
     

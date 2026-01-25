@@ -28,7 +28,7 @@ public class UpdateSessionHandler : IRequestHandler<UpdateSessionCommand>
     public async Task Handle(UpdateSessionCommand request, CancellationToken cancellationToken)
     {
         var sessionId = new SessionId(request.SessionId);
-        // цей метод повертає сесію, яку EF відстежує
+        // this method returns the session that EF is tracking
         var session = await _repository.GetByIdWithPricesAsync(sessionId, cancellationToken);
 
         if (session is null)
@@ -44,10 +44,10 @@ public class UpdateSessionHandler : IRequestHandler<UpdateSessionCommand>
             .Where(existing => !request.Prices.Any(p => p.SeatTypeId == existing.SeatTypeId.Id))
             .ToList();
 
-        // замість виклику репозиторія ми працюємо через Домен
+        // instead of calling the repository, we work through the Domain
         foreach (var price in pricesToDelete)
         {
-            // викликаємо метод сутності, який видаляє ціну з внутрішньої колекції _typePrices
+            // we call the entity method that removes the price from the internal _typePrices collection
             session.RemovePrice(price);
         }
 
@@ -67,7 +67,7 @@ public class UpdateSessionHandler : IRequestHandler<UpdateSessionCommand>
                     new SeatTypeId(priceDto.SeatTypeId),
                     priceDto.Price
                 );
-                // додаємо ціну в колекцію сесії, EF Core сам побачить нову сутність і додасть її
+                // add the price to the session collection, EF Core will see the new entity and add it
                 session.AddPrice(newPrice);
             }
         }

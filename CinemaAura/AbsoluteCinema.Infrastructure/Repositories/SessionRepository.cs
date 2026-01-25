@@ -16,10 +16,10 @@ public class SessionRepository : BaseRepository<SessionId, Session, CinemaDbCont
         await _dbContext.SaveChangesAsync(ct);
     }
 
-    // одна сесія з цінами
+    //one session with prices
     public async Task<Session?> GetByIdWithPricesAsync(SessionId id, CancellationToken ct = default)
     {
-        return await _set // _set з BaseRepository
+        return await _set // _set from BaseRepository
             .Include(s => s.TypePrices)
             .FirstOrDefaultAsync(s => s.Id == id, ct);
     }
@@ -27,7 +27,7 @@ public class SessionRepository : BaseRepository<SessionId, Session, CinemaDbCont
     public async Task<List<Session>> GetAllWithDetailsAsync(CancellationToken ct = default)
     {
         return await _set
-            .AsNoTracking() // оптимізація для читання (швидше)
+            .AsNoTracking()
             .Include(s => s.TypePrices)
             .ToListAsync(ct);
     }

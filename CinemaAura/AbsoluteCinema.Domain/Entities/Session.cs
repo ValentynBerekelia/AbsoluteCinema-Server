@@ -6,11 +6,14 @@ namespace AbsoluteCinema.Domain.Entities;
 public class Session : AggregateRoot<SessionId>
 {
     public MovieId MovieId { get; private set; }
+    public Movie Movie { get; private set; } 
+
     public HallId HallId { get; private set; }
+    public Hall Hall { get; private set; }
     public DateTime StartDateTime { get; private set; }
 
-    private readonly HashSet<TicketId> _ticketIds = new HashSet<TicketId>();
-    public IReadOnlyCollection<TicketId> TicketIds => _ticketIds;
+    private readonly List<Ticket> _tickets = new();
+    public IReadOnlyCollection<Ticket> Tickets => _tickets.AsReadOnly();
 
 
     private readonly List<TypePrice> _typePrices = new();
@@ -49,11 +52,7 @@ public class Session : AggregateRoot<SessionId>
         }
         StartDateTime = newDate;
     }
-
-    public void ChangeHall(HallId newHallId)
-    {
-        HallId = newHallId;
-    }
+    
 
     public void ChangeMovie(MovieId newMovieId)
     {
@@ -64,9 +63,9 @@ public class Session : AggregateRoot<SessionId>
     {
         if (_typePrices.Any(p => p.SeatTypeId == price.SeatTypeId))
         {
-            // можна або ігнорувати, або кидати ексепшн, або оновлювати
-            // я думала, щоб на віпку і перші 2 ряди був чекбокс, наприклад,
-            // тоді можна буде поставити ексепшн на них і дописати тут код
+            // you can either ignore, throw an exception, or update
+            // I thought there should be a checkbox for VIP and the first 2 rows, for example,
+            // then you can throw an exception on them and add the code here
             return;
         }
         _typePrices.Add(price);
@@ -77,10 +76,22 @@ public class Session : AggregateRoot<SessionId>
         _typePrices.Remove(price);
     }
 
-    public void AddTicket(TicketId ticketId)
+    public void ChangeHall(HallId newHallId)
     {
-        _ticketIds.Add(ticketId);
+        if (_tickets.Any())
+            throw new DomainException("Cannot change hall after tickets have been sold.");
+
+        HallId = newHallId;
     }
+
+    public void AddTicket(Ticket ticket)
+    {
+        if (_tickets.Any(t => t.SeatId == ticket.SeatId))
+            throw new DomainException("This seat is already taken.");
+
+        _tickets.Add(ticket);
+    }
+
     public void CancelTicket(TicketId ticketId)
     {
         _ticketIds.Remove(ticketId);
