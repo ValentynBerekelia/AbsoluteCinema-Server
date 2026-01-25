@@ -4,44 +4,49 @@ using MediatR;
 
 namespace AbsoluteCinema.Application.Features.Sessions.Commands.CreateSession;
 
-public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand, CreateSessionResponse>
+public record CreateSessionCommand(
+    Guid MovieId,
+    Guid HallId,
+    DateTime StartTime,
+    List<SessionPriceDto> Prices
+) : IRequest<CreateSessionResponse>;
+
+public record SessionPriceDto(
+    Guid SeatTypeId,
+    decimal Price
+);
+
+public class CreateSession : IRequestHandler<CreateSessionCommand, CreateSessionResponse>
 {
     private readonly ISessionRepository _repository;
 
-    public CreateSessionCommandHandler(ISessionRepository repository)
-    {
-        _repository = repository;
-    }
+    public CreateSession(ISessionRepository repository)
+    { _repository = repository; }
 
     public async Task<CreateSessionResponse> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
     {
-        var movieId = new MovieId(request.MovieId);
-        var hallId = new HallId(request.HallId);
-
-        // (Валідація дати відбудеться всередині методу Session.Create)
         var session = Session.Create(
-            movieId,
-            hallId,
+            new MovieId(request.MovieId),
+            new HallId(request.HallId),
             request.StartTime
         );
 
-        await _repository.AddAsync(session, cancellationToken);
-
         foreach (var priceDto in request.Prices)
         {
-            var seatTypeId = new SeatTypeId(priceDto.SeatTypeId);
-
             var typePrice = TypePrice.Create(
                 session.Id,
-                seatTypeId,
+                new SeatTypeId(priceDto.SeatTypeId),
                 priceDto.Price
             );
 
-            await _repository.AddTypePriceAsync(typePrice, cancellationToken);
+            session.AddPrice(typePrice);
         }
 
+        await _repository.AddAsync(session, cancellationToken);
         await _repository.SaveChangesAsync(cancellationToken);
 
         return new CreateSessionResponse(session.Id.Id);
     }
 }
+
+public record CreateSessionResponse(Guid Id);

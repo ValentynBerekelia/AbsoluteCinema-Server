@@ -12,6 +12,10 @@ public class Session : AggregateRoot<SessionId>
     private readonly HashSet<TicketId> _ticketIds = new HashSet<TicketId>();
     public IReadOnlyCollection<TicketId> TicketIds => _ticketIds;
 
+
+    private readonly List<TypePrice> _typePrices = new();
+    public IReadOnlyCollection<TypePrice> TypePrices => _typePrices.AsReadOnly();
+
     private Session() { }
     private Session(SessionId id, MovieId movieId, HallId hallId, DateTime date)
     {
@@ -29,6 +33,14 @@ public class Session : AggregateRoot<SessionId>
 
         return new Session(SessionId.New(), movieId, hallId, date);
     }
+
+    public void UpdateDetails(MovieId newMovieId, HallId newHallId, DateTime newDate)
+    {
+        ChangeMovie(newMovieId);
+        ChangeHall(newHallId);
+        Reschedule(newDate);
+    }
+
     public void Reschedule(DateTime newDate)
     {
         if (newDate < DateTime.UtcNow)
@@ -47,6 +59,24 @@ public class Session : AggregateRoot<SessionId>
     {
         MovieId = newMovieId;
     }
+
+    public void AddPrice(TypePrice price)
+    {
+        if (_typePrices.Any(p => p.SeatTypeId == price.SeatTypeId))
+        {
+            // можна або ігнорувати, або кидати ексепшн, або оновлювати
+            // я думала, щоб на віпку і перші 2 ряди був чекбокс, наприклад,
+            // тоді можна буде поставити ексепшн на них і дописати тут код
+            return;
+        }
+        _typePrices.Add(price);
+    }
+
+    public void RemovePrice(TypePrice price)
+    {
+        _typePrices.Remove(price);
+    }
+
     public void AddTicket(TicketId ticketId)
     {
         _ticketIds.Add(ticketId);

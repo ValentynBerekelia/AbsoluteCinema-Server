@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CinemaAura.Infrastructure.Migrations
+namespace AbsoluteCinema.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitCreateModificatedDB : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
