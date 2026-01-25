@@ -17,6 +17,7 @@ public class GetMovieDetailsQuery(CinemaDbContext db) : IGetMovieDetailsQuery
             .Where(m => m.Id == query.MovieId)
             .Select(m => new GetMovieQueryResponse(
                 m.Id,
+                m.Name,
                 m.Description,
                 m.Rate,
                 m.AgeLimit,
