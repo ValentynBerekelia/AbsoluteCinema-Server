@@ -31,6 +31,7 @@ public record GetMovieQuery : IRequest<GetMovieQueryResponse>
 
 public record GetMovieQueryResponse(
     MovieId MovieId,
+    string Title,
     string Description,
     decimal Rate,
     int AgeLimit,
