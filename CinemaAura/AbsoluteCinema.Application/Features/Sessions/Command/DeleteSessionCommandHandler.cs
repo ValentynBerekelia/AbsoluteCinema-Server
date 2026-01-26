@@ -31,3 +31,7 @@ public class DeleteSessionCommandHandler : IRequestHandler<DeleteSessionCommand>
     }
 }
 
+public record DeleteSessionCommand(Guid SessionId) : IRequest;
+
+
+
