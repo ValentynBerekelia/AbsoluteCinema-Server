@@ -3,6 +3,7 @@ using System;
 using AbsoluteCinema.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AbsoluteCinema.Infrastructure.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    partial class CinemaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260124104908_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -356,17 +359,11 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PurchasedAt")
-                        .HasDatabaseName("ix_tickets_purchased_at");
-
                     b.HasIndex("SeatId");
 
                     b.HasIndex("Status");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_tickets_user_id");
 
                     b.HasIndex("SessionId", "SeatId")
                         .IsUnique()
@@ -613,7 +610,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                         .HasConstraintName("fk_type_prices_seat_types_seat_type_id");
 
                     b.HasOne("AbsoluteCinema.Domain.Entities.Session", null)
-                        .WithMany("TypePrices")
+                        .WithMany()
                         .HasForeignKey("SessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
