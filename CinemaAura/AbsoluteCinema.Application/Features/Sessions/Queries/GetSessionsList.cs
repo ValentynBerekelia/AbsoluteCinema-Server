@@ -1,17 +1,36 @@
-﻿using AbsoluteCinema.Application.Repository;
+﻿using AbsoluteCinema.Application.DTOs; 
+using AbsoluteCinema.Application.Repository;
+using AbsoluteCinema.Domain.Enums;     
 using MediatR;
 
 namespace AbsoluteCinema.Application.Features.Sessions.Queries;
+
 public record SessionListItemDto(
     Guid Id,
     Guid MovieId,
-    Guid HallId,
-    DateTime StartTime
+    string HallName,      
+    DateTime StartDateTime
 );
 
-public record GetSessionsListQuery() : IRequest<List<SessionListItemDto>>;
+public record PagedSessionResponse(
+    List<SessionListItemDto> Sessions, 
+    int TotalCount,                    
+    int PageNumber,                    
+    int PageSize                       
+);
 
-public class GetSessionsListHandler : IRequestHandler<GetSessionsListQuery, List<SessionListItemDto>>
+public record GetSessionsListQuery : IRequest<PagedSessionResponse>
+{
+    public Guid MovieId { get; init; } 
+
+    public int PageNumber { get; init; } = 1;
+    public int PageSize { get; init; } = 10;
+
+    public string? SortColumn { get; init; }
+    public SortOrder SortOrder { get; init; } = SortOrder.Asc;
+}
+
+public class GetSessionsListHandler : IRequestHandler<GetSessionsListQuery, PagedSessionResponse>
 {
     private readonly ISessionRepository _repository;
 
@@ -20,15 +39,24 @@ public class GetSessionsListHandler : IRequestHandler<GetSessionsListQuery, List
         _repository = repository;
     }
 
-    public async Task<List<SessionListItemDto>> Handle(GetSessionsListQuery request, CancellationToken cancellationToken)
+    public async Task<PagedSessionResponse> Handle(GetSessionsListQuery request, CancellationToken cancellationToken)
     {
-        var sessions = await _repository.GetAllWithDetailsAsync(cancellationToken);
+        var (sessions, totalCount) = await _repository.GetPagedSessionsAsync(
+            request.MovieId,
+            request.PageNumber,
+            request.PageSize,
+            request.SortColumn,
+            request.SortOrder,
+            cancellationToken
+        );
 
-        return sessions.Select(s => new SessionListItemDto(
+        var sessionDtos = sessions.Select(s => new SessionListItemDto(
             s.Id.Id,
             s.MovieId.Id,
-            s.HallId.Id,
+            s.Hall.HallName,
             s.StartDateTime
         )).ToList();
+
+        return new PagedSessionResponse(sessionDtos, totalCount, request.PageNumber, request.PageSize);
     }
 }

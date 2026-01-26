@@ -6,44 +6,39 @@ namespace AbsoluteCinema.Application.Features.Sessions.Commands.CreateSession;
 
 public record CreateSessionCommand(
     Guid MovieId,
-    Guid HallId,
-    DateTime StartTime,
-    List<SessionPriceDto> Prices
+    string HallName,
+    DateTime StartTime
 ) : IRequest<CreateSessionResponse>;
-
-public record SessionPriceDto(
-    Guid SeatTypeId,
-    decimal Price
-);
 
 public class CreateSession : IRequestHandler<CreateSessionCommand, CreateSessionResponse>
 {
-    private readonly ISessionRepository _repository;
+    private readonly ISessionRepository _sessionRepository;
+    private readonly IHallRepository _hallRepository;
 
-    public CreateSession(ISessionRepository repository)
-    { _repository = repository; }
+    // Ін'єктимо інтерфейси
+    public CreateSession(ISessionRepository sessionRepository, IHallRepository hallRepository)
+    {
+        _sessionRepository = sessionRepository;
+        _hallRepository = hallRepository;
+    }
 
     public async Task<CreateSessionResponse> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
     {
+        var hall = await _hallRepository.GetByNameAsync(request.HallName, cancellationToken);
+
+        if (hall is null)
+        {
+            throw new KeyNotFoundException($"Hall with name '{request.HallName}' not found.");
+        }
+
         var session = Session.Create(
             new MovieId(request.MovieId),
-            new HallId(request.HallId),
+            hall.Id,
             request.StartTime
         );
 
-        foreach (var priceDto in request.Prices)
-        {
-            var typePrice = TypePrice.Create(
-                session.Id,
-                new SeatTypeId(priceDto.SeatTypeId),
-                priceDto.Price
-            );
-
-            session.AddPrice(typePrice);
-        }
-
-        await _repository.AddAsync(session, cancellationToken);
-        await _repository.SaveChangesAsync(cancellationToken);
+        await _sessionRepository.AddAsync(session, cancellationToken);
+        await _sessionRepository.SaveChangesAsync(cancellationToken);
 
         return new CreateSessionResponse(session.Id.Id);
     }

@@ -4,76 +4,55 @@ using MediatR;
 
 namespace AbsoluteCinema.Application.Features.Sessions.Commands.UpdateSession;
 
-// Command
 public record UpdateSessionCommand(
     Guid SessionId,
-    Guid MovieId,
-    Guid HallId,
-    DateTime StartTime,
-    List<UpdateSessionPriceDto> Prices
+    Guid? MovieId,
+    string? HallName,
+    DateTime? StartTime
 ) : IRequest;
 
-public record UpdateSessionPriceDto(Guid SeatTypeId, decimal Price);
-
-// Handler
 public class UpdateSessionHandler : IRequestHandler<UpdateSessionCommand>
 {
-    private readonly ISessionRepository _repository;
+    private readonly ISessionRepository _sessionRepository;
+    private readonly IHallRepository _hallRepository;
 
-    public UpdateSessionHandler(ISessionRepository repository)
+    public UpdateSessionHandler(ISessionRepository sessionRepository, IHallRepository hallRepository)
     {
-        _repository = repository;
+        _sessionRepository = sessionRepository;
+        _hallRepository = hallRepository;
     }
 
     public async Task Handle(UpdateSessionCommand request, CancellationToken cancellationToken)
     {
         var sessionId = new SessionId(request.SessionId);
-        // this method returns the session that EF is tracking
-        var session = await _repository.GetByIdWithPricesAsync(sessionId, cancellationToken);
+
+        var session = await _sessionRepository.GetByIdAsync(sessionId, cancellationToken);
 
         if (session is null)
-            throw new Exception($"Session {request.SessionId} not found");
+            throw new KeyNotFoundException($"Session {request.SessionId} not found");
 
-        session.UpdateDetails(
-            new MovieId(request.MovieId),
-            new HallId(request.HallId),
-            request.StartTime
-        );
-
-        var pricesToDelete = session.TypePrices
-            .Where(existing => !request.Prices.Any(p => p.SeatTypeId == existing.SeatTypeId.Id))
-            .ToList();
-
-        // instead of calling the repository, we work through the Domain
-        foreach (var price in pricesToDelete)
+        if (request.MovieId.HasValue)
         {
-            // we call the entity method that removes the price from the internal _typePrices collection
-            session.RemovePrice(price);
+            session.ChangeMovie(new MovieId(request.MovieId.Value));
         }
 
-        foreach (var priceDto in request.Prices)
+        if (request.StartTime.HasValue)
         {
-            var existingPrice = session.TypePrices
-                .FirstOrDefault(p => p.SeatTypeId.Id == priceDto.SeatTypeId);
-
-            if (existingPrice != null)
-            {
-                existingPrice.ChangePrice(priceDto.Price);
-            }
-            else
-            {
-                var newPrice = TypePrice.Create(
-                    session.Id,
-                    new SeatTypeId(priceDto.SeatTypeId),
-                    priceDto.Price
-                );
-                // add the price to the session collection, EF Core will see the new entity and add it
-                session.AddPrice(newPrice);
-            }
+            session.Reschedule(request.StartTime.Value);
         }
 
-        _repository.Update(session);
+        if (!string.IsNullOrEmpty(request.HallName))
+        {
+            var hall = await _hallRepository.GetByNameAsync(request.HallName, cancellationToken);
 
-        await _repository.SaveChangesAsync(cancellationToken);
+            if (hall is null)
+            {
+                throw new KeyNotFoundException($"Hall with name '{request.HallName}' not found.");
+            }
+
+            session.ChangeHall(hall.Id);
+        }
+
+        await _sessionRepository.SaveChangesAsync(cancellationToken);
     }
 }

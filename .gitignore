@@ -57,3 +57,4 @@ nunit-*.xml
 .vs
 CinemaAura/.idea
 CinemaAura/.vs
+/CinemaAura/notglobal.json

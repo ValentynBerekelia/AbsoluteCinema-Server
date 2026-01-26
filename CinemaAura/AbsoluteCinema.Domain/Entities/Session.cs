@@ -94,7 +94,11 @@ public class Session : AggregateRoot<SessionId>
 
     public void CancelTicket(TicketId ticketId)
     {
-        _ticketIds.Remove(ticketId);
+        var ticket = _tickets.FirstOrDefault(t => t.Id == ticketId);
+        if (ticket != null)
+        {
+            _tickets.Remove(ticket);
+        }
     }
 }
 
