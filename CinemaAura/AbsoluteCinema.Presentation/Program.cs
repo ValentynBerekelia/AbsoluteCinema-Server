@@ -1,6 +1,8 @@
 using System.Reflection;
 using AbsoluteCinema.Application;
+using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Infrastructure;
+using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using CinemaAura.Infrastructure.Persistence;
 using Mapster;
@@ -21,6 +23,8 @@ builder.Services.AddMapster();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
 
 var app = builder.Build();
 
