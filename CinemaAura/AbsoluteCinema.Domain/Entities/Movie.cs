@@ -157,7 +157,10 @@ public class Movie : AggregateRoot<MovieId>
 
     public void AddMedia(Media media)
     {
-        if(_medias.Any(m => m.Id != media.Id))
+        //if(_medias.Any(m => m.Id != media.Id))
+        //    _medias.Add(media);
+
+        if (_medias.All(m => m.Id != media.Id))
             _medias.Add(media);
     }
 

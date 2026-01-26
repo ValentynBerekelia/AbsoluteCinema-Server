@@ -1,4 +1,7 @@
+using AbsoluteCinema.Application.Features.Movies.Command.DeleteMovie;
 using AbsoluteCinema.Application.Features.Movies.Queries;
+using AbsoluteCinema.Application.Features.Movies.Command.AttachMediaToMovie;
+using AbsoluteCinema.Application.Features.Movies.Command.DetachMediaFromMovie;
 using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Requests;
 using Mapster;
@@ -32,5 +35,37 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         var response = await _mediator.Send(query);
         return Ok(response);
     }
-    
+
+    [HttpDelete("admin/movies/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteMovie(Guid id)
+    {
+        var command = new DeleteMovieCommand(id);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPost("admin/movies/media")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AttachMediaToMovie([FromBody] AttachMediaToMovieCommand command)
+    {
+
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpDelete("admin/movies/{movieId:guid}/media/{mediaId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DetachMediaFromMovie(Guid movieId, Guid mediaId)
+    {
+        await _mediator.Send(new DetachMediaFromMovieCommand(movieId, mediaId));
+        return NoContent();
+    }
 }
