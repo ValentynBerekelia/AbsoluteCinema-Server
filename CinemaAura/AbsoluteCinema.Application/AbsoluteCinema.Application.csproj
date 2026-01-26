@@ -15,6 +15,16 @@
       <PackageReference Include="AutoMapper" Version="16.0.0" />
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+      <PackageReference Include="Mapster" Version="7.4.0" />
+      <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Features\Halls\Commands\CreateHall\" />
+      <Folder Include="Features\Halls\Commands\DeleteHall\" />
+      <Folder Include="Features\Halls\Commands\UpdateHall\" />
+      <Folder Include="Features\Halls\Queries\GetHallById\" />
+      <Folder Include="Features\Halls\Queries\GetAllHalls\" />
     </ItemGroup>
 
 </Project>
