@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: absolutecinema-postgres
+    environment:
+      POSTGRES_DB: AbsoluteCinemaDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: AbsoluteCinema.Presentation/Dockerfile
+    container_name: absolutecinema-api
+    depends_on:
+      - postgres
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=AbsoluteCinemaDb;Username=postgres;Password=postgres
+    ports:
+      - "5000:8080"
+
+volumes:
+  postgres_data:
