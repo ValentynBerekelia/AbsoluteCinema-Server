@@ -1,3 +1,9 @@
+using AbsoluteCinema.Application.Abstractions;
+using AbsoluteCinema.Domain.Primitives;
+using AbsoluteCinema.Domain.Specifications;
+using AbsoluteCinema.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 public class BaseRepository<TKey, TEntity, TContext> : 
     IRepository<TKey, TEntity>
     where TKey : notnull
