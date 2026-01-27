@@ -12,11 +12,16 @@ using static AbsoluteCinema.Application.Features.Movies.Command.UpdateMovieParti
 
 namespace AbsoluteCinema.Application.Features.Movies.Command
 {
-    public class UpdateMoviePartialCommandHandler : IRequestHandler<UpdateMoviePartialCommand>
+    public class UpdateMoviePartialCommandHandler : IRequestHandler<UpdateMoviePartialCommand, Unit>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMovieRepository _movies;
-        public async Task Handle(UpdateMoviePartialCommand command, CancellationToken ct)
+        public UpdateMoviePartialCommandHandler(IUnitOfWork unitOfWork, IMovieRepository movies)
+        {
+            _unitOfWork = unitOfWork;
+            _movies = movies;
+        }
+        public async Task<Unit> Handle(UpdateMoviePartialCommand command, CancellationToken ct)
         {
             var movie = await _movies.GetByIdForUpdateAsync(command.MovieId, ct);
             if (movie is null)
@@ -31,7 +36,7 @@ namespace AbsoluteCinema.Application.Features.Movies.Command
                 r.DurationSeconds is null &&
                 r.Country is null &&
                 r.Studio is null &&
-                r.Language is null)
+                r.Language is null) { }
 
             if (r.Name is not null)
                 movie.ChangeName(r.Name);
@@ -59,7 +64,8 @@ namespace AbsoluteCinema.Application.Features.Movies.Command
 
             _movies.Update(movie);
             await _unitOfWork.SaveChangesAsync(ct);
+            return Unit.Value;
         }
-        public record UpdateMoviePartialCommand(MovieId MovieId, MovieUpdatePartialRequest Request) : IRequest;
+        public record UpdateMoviePartialCommand(MovieId MovieId, MovieUpdatePartialRequest Request) : IRequest<Unit>;
     }
 }
