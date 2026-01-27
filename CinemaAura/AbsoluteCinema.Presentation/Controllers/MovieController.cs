@@ -8,31 +8,53 @@ using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography.Xml;
+using static AbsoluteCinema.Application.Features.Movies.Command.UpdateMoviePartialCommandHandler;
 
 namespace AbsoluteCinema.Controllers;
-
 [Route("api")]
 public class MovieController(IMediator mediator, IMapper mapper) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
     private readonly IMapper _mapper = mapper;
 
-    [HttpGet]
-    [Route("movies")]
-    public async Task<IActionResult> GetMovies([FromQuery] MoviesQueryParameters filter)
+
+    [HttpPost]
+    [Route("admin/movies")]
+    public async Task<IActionResult> CreateMovie([FromBody]MovieCreateRequest request, CancellationToken ct)
     {
-        var query = filter.Adapt<GetMoviesQuery>();
-        var response = await _mediator.Send(query);
+        var command = new CreateMovieCommand(
+            request.MovieName,
+            request.Description,
+            request.Rate,
+            request.AgeLimit,
+            request.Duration,
+            request.Country,
+            request.Studio,
+            request.Language
+        );
+
+        var response = await _mediator.Send(command, ct);
+
         return Ok(response);
     }
-    
+
+    [HttpGet]
+    [Route("movies")]
+    public async Task<IActionResult> GetMovies([FromQuery] MoviesQueryParameters filter, CancellationToken ct)
+    {
+        var query = filter.Adapt<GetMoviesQuery>();
+        var response = await _mediator.Send(query, ct);
+        return Ok(response);
+    }
+
     [HttpGet]
     [Route("movie/{id:guid}")]
-    public async Task<IActionResult> GetMovie(Guid id)
+    public async Task<IActionResult> GetMovie(Guid id, CancellationToken ct)
     {
         var query = new GetMovieQuery(new MovieId(id));
-    
-        var response = await _mediator.Send(query);
+
+        var response = await _mediator.Send(query, ct);
         return Ok(response);
     }
 
@@ -66,6 +88,25 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
     public async Task<IActionResult> DetachMediaFromMovie(Guid movieId, Guid mediaId)
     {
         await _mediator.Send(new DetachMediaFromMovieCommand(movieId, mediaId));
+
+    [HttpPut("admin/movies/{movieId:guid}")]
+    public async Task<IActionResult> UpdateMovieFull(
+        [FromRoute] Guid movieId,
+        [FromBody] MovieUpdateRequest request,
+        CancellationToken ct)
+    {
+        await _mediator.Send(new UpdateMovieFullCommand(new MovieId(movieId), request), ct);
+        return NoContent();
+    }
+
+
+    [HttpPatch("admin/movies/{movieId:guid}")]
+    public async Task<IActionResult> UpdateMoviePartial(
+    [FromRoute] Guid movieId,
+    [FromBody] MovieUpdatePartialRequest request,
+    CancellationToken ct)
+    {
+        await _mediator.Send(new UpdateMoviePartialCommand(new MovieId(movieId), request), ct);
         return NoContent();
     }
 }

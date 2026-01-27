@@ -1,10 +1,8 @@
 using AbsoluteCinema.Application.Abstractions;
 using AbsoluteCinema.Domain.Primitives;
 using AbsoluteCinema.Domain.Specifications;
+using AbsoluteCinema.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-
-namespace AbsoluteCinema.Infrastructure.Repositories;
-
 public class BaseRepository<TKey, TEntity, TContext> : 
     IRepository<TKey, TEntity>
     where TKey : notnull
@@ -27,8 +25,8 @@ public class BaseRepository<TKey, TEntity, TContext> :
     }
 
     public async Task<TEntity?> GetByIdForUpdateAsync(TKey id, CancellationToken ct = default)
-    { 
-        return await _set.FirstOrDefaultAsync(e => EqualityComparer<TKey>.Default.Equals(e.Id, id), ct);
+    {
+        return await _set.FindAsync(new object?[] { id }, ct);
     }
     
     public async Task<List<TEntity>> GetAllBySpecificationAsync(Specification<TEntity> spec, CancellationToken ct = default)

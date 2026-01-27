@@ -43,6 +43,7 @@ public class GetMovieDetailsQuery(CinemaDbContext db) : IGetMovieDetailsQuery
                         p.PersonRole,
                         p.Media.Url
                         ))
+                
             ));
 
         return await movie.FirstOrDefaultAsync(ct);
