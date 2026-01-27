@@ -356,11 +356,17 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PurchasedAt")
+                        .HasDatabaseName("ix_tickets_purchased_at");
+
                     b.HasIndex("SeatId");
 
                     b.HasIndex("Status");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_tickets_user_id");
 
                     b.HasIndex("SessionId", "SeatId")
                         .IsUnique()
@@ -607,7 +613,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                         .HasConstraintName("fk_type_prices_seat_types_seat_type_id");
 
                     b.HasOne("AbsoluteCinema.Domain.Entities.Session", null)
-                        .WithMany()
+                        .WithMany("TypePrices")
                         .HasForeignKey("SessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
