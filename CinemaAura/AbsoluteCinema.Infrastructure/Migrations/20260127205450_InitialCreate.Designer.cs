@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AbsoluteCinema.Infrastructure.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20260126173325_TinyFixMovieDurationConversion")]
-    partial class TinyFixMovieDurationConversion
+    [Migration("20260127205450_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,7 +63,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Halls");
+                    b.ToTable("halls", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Media", b =>
@@ -302,6 +302,10 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<byte>("Format")
+                        .HasColumnType("smallint")
+                        .HasColumnName("format");
 
                     b.Property<Guid>("HallId")
                         .HasColumnType("uuid")
