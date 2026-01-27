@@ -1,11 +1,30 @@
-using AutoMapper;
+using AbsoluteCinema.Domain.Entities;
+using Mapster;
 
 namespace AbsoluteCinema.Mapping;
 
-public partial class RequestMapping : Profile
+public class RequestMapping
 {
-    public RequestMapping()
+    public static void RegisterMappings()
     {
-        
+        TypeAdapterConfig<MovieId, Guid>.NewConfig()
+            .MapWith(src => src.Id);
+
+        TypeAdapterConfig<Guid, MovieId>.NewConfig()
+            .MapWith(src => new MovieId(src));
+
+        TypeAdapterConfig<SessionId, Guid>.NewConfig()
+            .MapWith(src => src.Id);
+
+        TypeAdapterConfig<Guid, SessionId>.NewConfig()
+            .MapWith(src => new SessionId(src));
+
+        TypeAdapterConfig<HallId, Guid>.NewConfig()
+            .MapWith(src => src.Id);
+
+        TypeAdapterConfig<Guid, HallId>.NewConfig()
+            .MapWith(src => new HallId(src));
     }
+
+
 }

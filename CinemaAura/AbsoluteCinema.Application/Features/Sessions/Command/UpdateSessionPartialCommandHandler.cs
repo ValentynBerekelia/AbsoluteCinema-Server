@@ -17,17 +17,17 @@ public class UpdateSessionPartialCommandHandler : IRequestHandler<UpdateSessionP
 
     public async Task Handle(UpdateSessionPartialCommand command, CancellationToken ct)
     {
-        var session = await _sessions.GetByIdAsync(new SessionId(command.Id), ct) 
+        var session = await _sessions.GetByIdAsync(command.Id, ct) 
             ?? throw new Exception("Session not found");
 
         if (command.MovieId.HasValue)
         {
-            session.ChangeMovie(new MovieId(command.MovieId.Value));
+            session.ChangeMovie(command.MovieId.Value);
         }
 
         if (command.HallId.HasValue)
         {
-            session.ChangeHall(new HallId(command.HallId.Value));
+            session.ChangeHall(command.HallId.Value);
         }
 
         if (command.Format.HasValue)
@@ -45,9 +45,9 @@ public class UpdateSessionPartialCommandHandler : IRequestHandler<UpdateSessionP
 }
 
 public record UpdateSessionPartialCommand(
-    Guid Id,
-    Guid? MovieId,
-    Guid? HallId,
+    SessionId Id,
+    MovieId? MovieId,
+    HallId? HallId,
     MovieFormat? Format,
     DateTime? StartDateTime
 ) : IRequest;
