@@ -3,7 +3,7 @@ using Mapster;
 
 namespace AbsoluteCinema.Mapping;
 
-public class RequestMapping
+public class RequestMapping 
 {
     public static void RegisterMappings()
     {

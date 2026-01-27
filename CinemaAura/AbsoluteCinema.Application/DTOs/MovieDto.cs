@@ -10,5 +10,6 @@ public record MovieDto
      decimal Rate,
      int AgeLimit,
      TimeSpan Duration,
-     IEnumerable<string> Genres
-){}
+     IEnumerable<string> Genres,
+     IEnumerable<DateTime> SessionTimes
+         ){}
