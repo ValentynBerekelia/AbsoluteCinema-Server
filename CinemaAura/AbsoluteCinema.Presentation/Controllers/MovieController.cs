@@ -47,26 +47,34 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         var response = await _mediator.Send(query, ct);
         return Ok(response);
     }
-    
+
     [HttpGet]
     [Route("movie/{id:guid}")]
     public async Task<IActionResult> GetMovie(Guid id, CancellationToken ct)
     {
         var query = new GetMovieQuery(new MovieId(id));
-    
+
         var response = await _mediator.Send(query, ct);
         return Ok(response);
     }
-    [HttpPut]
-    [Route("/admin/movie/{id:guid}")]
-    public async Task<IActionResult> UpdateMovieFull(Guid movieId, [FromBody] MovieUpdateRequest request, CancellationToken ct)
+
+
+    [HttpPut("admin/movies/{movieId:guid}")]
+    public async Task<IActionResult> UpdateMovieFull(
+        [FromRoute] Guid movieId,
+        [FromBody] MovieUpdateRequest request,
+        CancellationToken ct)
     {
         await _mediator.Send(new UpdateMovieFullCommand(new MovieId(movieId), request), ct);
         return NoContent();
     }
-    [HttpPatch]
-    [Route("/admin/movie/{id:guid}")]
-    public async Task<IActionResult> UpdateMoviePartial(Guid movieId, [FromBody] MovieUpdatePartialRequest request,CancellationToken ct)
+
+
+    [HttpPatch("admin/movies/{movieId:guid}")]
+    public async Task<IActionResult> UpdateMoviePartial(
+    [FromRoute] Guid movieId,
+    [FromBody] MovieUpdatePartialRequest request,
+    CancellationToken ct)
     {
         await _mediator.Send(new UpdateMoviePartialCommand(new MovieId(movieId), request), ct);
         return NoContent();
