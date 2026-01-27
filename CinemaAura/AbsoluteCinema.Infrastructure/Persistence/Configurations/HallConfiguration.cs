@@ -8,6 +8,7 @@ public class HallConfiguration : IEntityTypeConfiguration<Hall>
 {
     public void Configure(EntityTypeBuilder<Hall> builder)
     {
+        builder.ToTable("halls");
         builder.HasKey(h => h.Id);
 
         builder.Property(h => h.Id)
