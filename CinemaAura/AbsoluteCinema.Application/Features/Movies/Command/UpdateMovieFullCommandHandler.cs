@@ -40,7 +40,7 @@ namespace AbsoluteCinema.Application.Features.Movies.Command
             movie.ChangeStudio(r.Studio);
             movie.ChangeLanguage(r.Language);
 
-            _movies.Update(movie);
+            //_movies.Update(movie);
             await _unitOfWork.SaveChangesAsync(ct);
         }
     }

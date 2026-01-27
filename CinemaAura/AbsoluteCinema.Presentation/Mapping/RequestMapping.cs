@@ -12,7 +12,19 @@ public class RequestMapping
 
         TypeAdapterConfig<Guid, MovieId>.NewConfig()
             .MapWith(src => new MovieId(src));
+
+        TypeAdapterConfig<SessionId, Guid>.NewConfig()
+            .MapWith(src => src.Id);
+
+        TypeAdapterConfig<Guid, SessionId>.NewConfig()
+            .MapWith(src => new SessionId(src));
+
+        TypeAdapterConfig<HallId, Guid>.NewConfig()
+            .MapWith(src => src.Id);
+
+        TypeAdapterConfig<Guid, HallId>.NewConfig()
+            .MapWith(src => new HallId(src));
     }
 
-    
+
 }

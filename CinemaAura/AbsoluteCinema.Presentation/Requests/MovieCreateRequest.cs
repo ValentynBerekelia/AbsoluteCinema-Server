@@ -8,5 +8,6 @@ public record MovieCreateRequest(
     TimeSpan Duration,
     string Country,
     string Studio,
-    string Language
+    string Language,
+    List<string> Genres
 );
