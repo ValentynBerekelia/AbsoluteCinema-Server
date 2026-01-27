@@ -23,7 +23,7 @@ builder.Services.AddMapster();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddControllers();
 builder.Services.AddTransient<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
 
 var app = builder.Build();
