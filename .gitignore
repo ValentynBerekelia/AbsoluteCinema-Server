@@ -58,4 +58,3 @@ nunit-*.xml
 CinemaAura/.idea
 CinemaAura/.vs
 CinemaAura\AbsoluteCinema.Presentation\appsettings.Development.json
-/CinemaAura/notglobal.json

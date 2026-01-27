@@ -45,7 +45,7 @@ public class TypePriceConfiguration : IEntityTypeConfiguration<TypePrice>
             .HasDatabaseName("uq_type_prices_session_seat_type");
 
         builder.HasOne<Session>()
-            .WithMany(s => s.TypePrices)
+            .WithMany()
             .HasForeignKey(tp => tp.SessionId)
             .HasConstraintName("fk_type_prices_sessions_session_id")
             .OnDelete(DeleteBehavior.Cascade);
