@@ -7,7 +7,7 @@ public class CreateSessionCommandValidator : AbstractValidator<CreateSessionComm
     public CreateSessionCommandValidator()
     {
         RuleFor(x => x.MovieId).NotEmpty();
-        RuleFor(x => x.HallName).NotEmpty(); 
+        RuleFor(x => x.HallId).NotEmpty(); 
 
         RuleFor(x => x.StartTime)
             .NotEmpty()

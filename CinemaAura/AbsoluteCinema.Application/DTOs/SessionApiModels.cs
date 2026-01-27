@@ -3,26 +3,25 @@
 //POST
 public record AdminSessionCreateRequest(
     Guid MovieId,
-    string HallName,
+    Guid HallId,
     DateTime StartDateTime
 );
 
 // PUT
 public record AdminSessionUpdatePartialRequest(
-    string? HallName,
     DateTime? StartDateTime
 );
 
 // PATCH
 public record AdminSessionUpdateRequest(
     Guid MovieId,
-    string HallName,
+    Guid HallId,
     DateTime StartDateTime
 );
 
 public record SessionListItemDto(
     Guid Id,
     Guid MovieId,
-    string HallName,
+    Guid HallId,
     DateTime StartDateTime
 );

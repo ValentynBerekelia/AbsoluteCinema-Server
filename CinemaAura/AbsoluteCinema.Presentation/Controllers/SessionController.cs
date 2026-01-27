@@ -9,8 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AbsoluteCinema.Presentation.Controllers;
 
-[ApiController]
-[Route("api/admin")]
+[Route("api")]
 public class SessionController : ControllerBase
 {
     private readonly ISender _sender;
@@ -51,14 +50,14 @@ public class SessionController : ControllerBase
     }
 
     // 2. POST /api/admin/sessions
-    [HttpPost("sessions")]
+    [HttpPost("admin/sessions")]
     public async Task<IActionResult> CreateSession(
         [FromBody] AdminSessionCreateRequest request,
         CancellationToken ct)
     {
         var command = new CreateSessionCommand(
             request.MovieId,
-            request.HallName,
+            request.HallId,
             request.StartDateTime
         );
 
@@ -77,7 +76,7 @@ public class SessionController : ControllerBase
         var command = new UpdateSessionCommand(
             sessionId,
             null,
-            request.HallName,
+            null,
             request.StartDateTime
         );
 
@@ -96,7 +95,7 @@ public class SessionController : ControllerBase
         var command = new UpdateSessionCommand(
             sessionId,
             request.MovieId,
-            request.HallName,
+            request.HallId,
             request.StartDateTime
         );
 

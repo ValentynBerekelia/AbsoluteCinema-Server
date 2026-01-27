@@ -19,16 +19,15 @@ public class BaseRepository<TKey, TEntity, TContext> :
         _dbContext = dbContext;
         _set = _dbContext.Set<TEntity>();
     }
-    
+
     public async Task<TEntity?> GetByIdAsync(TKey id, CancellationToken ct = default)
     {
-        return await _set.AsNoTracking()
-            .FirstOrDefaultAsync(e => EqualityComparer<TKey>.Default.Equals(e.Id, id), ct);
+        return await _set.FindAsync(new object?[] { id }, ct);
     }
 
     public async Task<TEntity?> GetByIdForUpdateAsync(TKey id, CancellationToken ct = default)
-    { 
-        return await _set.FirstOrDefaultAsync(e => EqualityComparer<TKey>.Default.Equals(e.Id, id), ct);
+    {
+        return await _set.FindAsync(new object?[] { id }, ct);
     }
     
     public async Task<List<TEntity>> GetAllBySpecificationAsync(Specification<TEntity> spec, CancellationToken ct = default)

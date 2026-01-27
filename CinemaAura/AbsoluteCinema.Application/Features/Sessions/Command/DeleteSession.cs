@@ -1,33 +1,34 @@
 ﻿using AbsoluteCinema.Application.Repository;
-using AbsoluteCinema.Domain.Entities; 
+using AbsoluteCinema.Domain.Entities;
+using AbsoluteCinema.Domain.Exceptions;
 using MediatR;
 
 namespace AbsoluteCinema.Application.Features.Sessions.Commands.DeleteSession;
 
-public record DeleteSessionCommand(Guid SessionId) : IRequest;
-
 public class DeleteSessionCommandHandler : IRequestHandler<DeleteSessionCommand>
 {
     private readonly ISessionRepository _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteSessionCommandHandler(ISessionRepository repository)
+    public DeleteSessionCommandHandler(ISessionRepository repository, IUnitOfWork unitOfWork)
     {
         _repository = repository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task Handle(DeleteSessionCommand request, CancellationToken cancellationToken)
     {
         var sessionId = new SessionId(request.SessionId);
 
-        var exists = await _repository.AnyAsync(sessionId, cancellationToken);
-
-        if (!exists)
+        var session = await _repository.GetByIdAsync(sessionId, cancellationToken);
+        if (session is null)
         {
-            throw new KeyNotFoundException($"Session with id {request.SessionId} was not found.");
+            throw new DomainException("Session not found");
         }
 
         await _repository.DeleteAsync(sessionId, cancellationToken);
-
-        await _repository.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }
+
+public record DeleteSessionCommand(Guid SessionId) : IRequest;

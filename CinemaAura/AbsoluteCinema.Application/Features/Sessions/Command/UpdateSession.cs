@@ -7,7 +7,7 @@ namespace AbsoluteCinema.Application.Features.Sessions.Commands.UpdateSession;
 public record UpdateSessionCommand(
     Guid SessionId,
     Guid? MovieId,
-    string? HallName,
+    Guid? HallId,
     DateTime? StartTime
 ) : IRequest;
 
@@ -40,17 +40,9 @@ public class UpdateSessionHandler : IRequestHandler<UpdateSessionCommand>
         {
             session.Reschedule(request.StartTime.Value);
         }
-
-        if (!string.IsNullOrEmpty(request.HallName))
+        if (request.HallId.HasValue)
         {
-            var hall = await _hallRepository.GetByNameAsync(request.HallName, cancellationToken);
-
-            if (hall is null)
-            {
-                throw new KeyNotFoundException($"Hall with name '{request.HallName}' not found.");
-            }
-
-            session.ChangeHall(hall.Id);
+            session.ChangeHall(new HallId(request.HallId.Value));
         }
 
         await _sessionRepository.SaveChangesAsync(cancellationToken);
