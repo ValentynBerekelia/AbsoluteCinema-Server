@@ -4,7 +4,7 @@ namespace AbsoluteCinema.Application.DTOs;
 
 public record SessionUpdatePartialRequest(
     MovieId? MovieID,
-    MovieId? HallId,
+    HallId? HallId,
     MovieFormat? Format,
     DateTime? StartDateTime
 );

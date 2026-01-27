@@ -1,4 +1,7 @@
+using AbsoluteCinema.Application.DTOs;
 using AbsoluteCinema.Application.Features.Sessions.Commands;
+using AbsoluteCinema.Domain.Entities;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,35 +18,23 @@ public class SessionController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateFull(Guid id, [FromBody] UpdateSessionFullCommand request)
+    [HttpPut("admin/sessions/{id:guid}")]
+    public async Task<IActionResult> UpdateFull(Guid id, [FromBody] SessionUpdateFullRequest request)
     {
-        var command = new UpdateSessionFullCommand(
-            id,
-            request.MovieId,
-            request.HallId,
-            request.Format,
-            request.StartDateTime
-        );
+        var command = request.Adapt<UpdateSessionFullCommand>();
+        var finalCommand = command with { Id = new SessionId(id) };
 
-        await _mediator.Send(command);
-
+        await _mediator.Send(finalCommand);
         return NoContent();
     }
 
-    [HttpPatch("{id:guid}")]
-    public async Task<IActionResult> UpdatePartial(Guid id, [FromBody] UpdateSessionPartialCommand request)
+    [HttpPatch("admin/sessions/{id:guid}")]
+    public async Task<IActionResult> UpdatePartial(Guid id, [FromBody] SessionUpdatePartialRequest request)
     {
-        var command = new UpdateSessionPartialCommand(
-            id,
-            request.MovieId,
-            request.HallId,
-            request.Format,
-            request.StartDateTime
-        );
+        var command = request.Adapt<UpdateSessionPartialCommand>();
+        var finalCommand = command with { Id = new SessionId(id) };
 
-        await _mediator.Send(command);
-
+        await _mediator.Send(finalCommand);
         return NoContent();
     }
 }
