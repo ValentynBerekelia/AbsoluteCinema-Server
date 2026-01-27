@@ -31,12 +31,26 @@ public class BaseRepository<TKey, TEntity, TContext> :
     
     public async Task<List<TEntity>> GetAllBySpecificationAsync(Specification<TEntity> spec, CancellationToken ct = default)
     {
-        return await ApplySpecification(spec).AsNoTracking().ToListAsync(ct);
+        // return await ApplySpecification(spec).AsNoTracking().ToListAsync(ct);
+
+        var query = ApplySpecification(spec);
+
+        if (spec.AsNoTracking)
+            query = query.AsNoTracking();
+
+        return await query.ToListAsync(ct);
     }
 
     public async Task<TEntity?> GetBySpecificationAsync(Specification<TEntity> spec, CancellationToken ct = default)
     {
-        return await ApplySpecification(spec).AsNoTracking().FirstOrDefaultAsync(ct);
+        // return await ApplySpecification(spec).AsNoTracking().FirstOrDefaultAsync(ct);
+
+        var query = ApplySpecification(spec);
+
+        if (spec.AsNoTracking)
+            query = query.AsNoTracking();
+
+        return await query.FirstOrDefaultAsync(ct);
     }
 
 
