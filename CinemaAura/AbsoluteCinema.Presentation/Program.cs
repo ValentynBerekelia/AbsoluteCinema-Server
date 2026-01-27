@@ -6,7 +6,6 @@ using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using CinemaAura.Infrastructure.Persistence;
 using Mapster;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +23,15 @@ builder.Services.AddMapster();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "AbsoluteCinema API",
+        Version = "v1",
+        Description = "Cinema booking system API"
+    });
+});
 
 builder.Services.AddTransient<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
 
@@ -41,7 +48,11 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "AbsoluteCinema API v1");
+        options.RoutePrefix = "swagger";
+    });
 }
 
 app.UseHttpsRedirection();
