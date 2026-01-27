@@ -140,7 +140,7 @@ public class Movie : AggregateRoot<MovieId>
     }
     public void AddGenre(Genre genre)
     {
-        if (_genres.Any(g => g.Id != genre.Id))
+        if (_genres.All(g => g.Id != genre.Id))
             _genres.Add(genre);
     }
 
@@ -157,7 +157,7 @@ public class Movie : AggregateRoot<MovieId>
 
     public void AddMedia(Media media)
     {
-        if(_medias.Any(m => m.Id != media.Id))
+        if(_medias.All(m => m.Id != media.Id))
             _medias.Add(media);
     }
 

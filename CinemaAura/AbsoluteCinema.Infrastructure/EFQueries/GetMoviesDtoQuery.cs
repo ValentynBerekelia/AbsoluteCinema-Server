@@ -43,6 +43,7 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
 
         return await newQuery.Select(m => new MovieDto(
             m.Id,
+            m.Name,
             m.Medias
                 .Where(c => c.Type == MediaType.BannerImage)
                 .Select(j => j.Url)
@@ -50,10 +51,11 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
             m.Rate,
             m.AgeLimit,
             m.Duration,
-            m.Genres.Select(g => g.Name),
+            m.Genres.Select(g => g.Name).ToList(),
             _db.Sessions
                 .Where(s=> s.MovieId == m.Id && s.StartDateTime.Date == DateTime.UtcNow.Date)
                 .Select(s=> s.StartDateTime)
+                .ToList()
         )).ToListAsync(ct);
     }
 
