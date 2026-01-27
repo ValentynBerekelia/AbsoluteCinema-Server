@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AbsoluteCinema.Controllers;
 
 [Route("api")]
+[ApiController]
 public class MovieController(IMediator mediator, IMapper mapper) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
@@ -30,7 +31,8 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
             request.Duration,
             request.Country,
             request.Studio,
-            request.Language
+            request.Language,
+            request.Genres
         );
 
         var response = await _mediator.Send(command, ct);

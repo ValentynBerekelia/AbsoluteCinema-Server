@@ -6,28 +6,32 @@ using MediatR;
 
 namespace AbsoluteCinema.Application.Features.Movies.Command;
 
-public class CreateMovieCommandHandler : IRequestHandler<CreateMovieCommand, CreateMovieResponse>
+public class CreateMovieCommandHandler(IUnitOfWork unit, IMovieRepository movies, ICreateGenreCommend createGenre)
+    : IRequestHandler<CreateMovieCommand, CreateMovieResponse>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMovieRepository _movies;
+    private readonly ICreateGenreCommend _createGenre = createGenre;
 
-    public CreateMovieCommandHandler(IUnitOfWork unit, IMovieRepository movies)
-    {
-        _movies = movies;
-        _unitOfWork = unit;
-    }
     public async Task<CreateMovieResponse> Handle(CreateMovieCommand command, CancellationToken ct)
     {
-        var movie = await _movies.GetBySpecificationAsync(new MovieByNameSpec(command.MovieName), ct);
+        var movie = await movies.GetBySpecificationAsync(new MovieByNameSpec(command.MovieName), ct);
         if (movie is not null)
         {
             throw new DomainException($"Movie {command.MovieName} already exists.");
         }
+        
+        var genres = await _createGenre.ExecuteAsync(command.Geners, ct);
+
         var newMovie = Movie.Create(command.MovieName, command.Description, command.Rate, command.AgeLimit, command.Duration,
             command.Country, command.Studio, command.Language);
-        await _movies.AddAsync(newMovie, ct);
+
+        foreach (var g in genres)
+        {
+            newMovie.AddGenre(g);
+        }
+
+        await movies.AddAsync(newMovie, ct);
         
-        await _unitOfWork.SaveChangesAsync(ct);
+        await unit.SaveChangesAsync(ct);
         
         return new CreateMovieResponse(newMovie.Id);
     }
@@ -41,7 +45,8 @@ public record  CreateMovieCommand(
     TimeSpan Duration,
     string Country,
     string Studio,
-    string Language
+    string Language,
+    List<string> Geners
     ) : IRequest<CreateMovieResponse>{}
 
 public record CreateMovieResponse(MovieId MovieId)
