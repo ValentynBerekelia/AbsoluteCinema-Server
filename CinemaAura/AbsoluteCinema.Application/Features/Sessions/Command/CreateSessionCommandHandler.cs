@@ -19,12 +19,14 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
     {
         var movieId = new MovieId(request.MovieId);
         var hallId = new HallId(request.HallId);
+        var format = request.Format;
 
         // (Валідація дати відбудеться всередині методу Session.Create)
         var session = Session.Create(
             movieId,
             hallId,
-            request.StartTime
+            request.StartTime,
+            format
         );
 
         await _repository.AddAsync(session, cancellationToken);

@@ -36,6 +36,10 @@ public class SessionConfiguration : IEntityTypeConfiguration<Session>
         builder.Property(s => s.StartDateTime)
             .HasColumnName("start_time")
             .IsRequired();
+        
+        builder.Property(s => s.Format)
+            .HasColumnName("format")
+            .IsRequired();
 
         builder.HasOne(s => s.Movie)
             .WithMany()

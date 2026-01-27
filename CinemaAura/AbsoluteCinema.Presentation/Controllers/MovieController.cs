@@ -66,9 +66,9 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
     }
     [HttpPatch]
     [Route("/admin/movie/{id:guid}")]
-    public async Task<IActionResult> UpdateMoviePartial(Guid muvieId, [FromBody] MovieUpdatePartialRequest request,CancellationToken ct)
+    public async Task<IActionResult> UpdateMoviePartial(Guid movieId, [FromBody] MovieUpdatePartialRequest request,CancellationToken ct)
     {
-        await _mediator.Send(new UpdateMoviePartialCommand(new MovieId(muvieId), request), ct);
+        await _mediator.Send(new UpdateMoviePartialCommand(new MovieId(movieId), request), ct);
         return NoContent();
     }
 }
