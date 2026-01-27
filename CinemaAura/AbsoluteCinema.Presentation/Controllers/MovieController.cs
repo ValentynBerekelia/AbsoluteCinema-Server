@@ -10,6 +10,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.Xml;
 using static AbsoluteCinema.Application.Features.Movies.Command.UpdateMoviePartialCommandHandler;
+using AbsoluteCinema.Application.DTOs.Movie;
+using AbsoluteCinema.Application.Features.Movies.Command;
 
 namespace AbsoluteCinema.Controllers;
 [Route("api")]
@@ -88,6 +90,8 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
     public async Task<IActionResult> DetachMediaFromMovie(Guid movieId, Guid mediaId)
     {
         await _mediator.Send(new DetachMediaFromMovieCommand(movieId, mediaId));
+        return NoContent();
+    }
 
     [HttpPut("admin/movies/{movieId:guid}")]
     public async Task<IActionResult> UpdateMovieFull(

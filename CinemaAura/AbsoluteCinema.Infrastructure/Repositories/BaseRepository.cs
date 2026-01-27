@@ -61,7 +61,8 @@ public class BaseRepository<TKey, TEntity, TContext> :
     
     public async Task<bool> AnyAsync(TKey id, CancellationToken ct = default)
     {
-        return await _set.AnyAsync(e => EqualityComparer<TKey>.Default.Equals(e.Id, id), ct);
+        var entity = await _set.FindAsync(new object?[] { id }, ct);
+        return entity is not null;
     }
 
 
