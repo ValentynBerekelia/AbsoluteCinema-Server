@@ -6,6 +6,7 @@ using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using CinemaAura.Infrastructure.Persistence;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,17 @@ var config = TypeAdapterConfig.GlobalSettings;
 
 config.Scan(Assembly.GetExecutingAssembly());
 builder.Services.AddMapster();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowViteFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
 
 builder.Services.AddControllers();
 
@@ -56,6 +68,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowViteFrontend");
 
 app.MapControllers();
 

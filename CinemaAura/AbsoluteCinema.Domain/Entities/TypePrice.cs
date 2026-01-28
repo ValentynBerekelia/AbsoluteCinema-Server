@@ -6,7 +6,9 @@ namespace AbsoluteCinema.Domain.Entities;
 public class TypePrice : Entity<TypePriceId>
 {
     public SessionId SessionId { get; private set; }
+    public Session Session { get; private set; } = null!;
     public SeatTypeId SeatTypeId { get; private set; }
+    public SeatType SeatType { get; private set; } = null!;
     public decimal Price { get; private set; }
 
     private TypePrice() { }
