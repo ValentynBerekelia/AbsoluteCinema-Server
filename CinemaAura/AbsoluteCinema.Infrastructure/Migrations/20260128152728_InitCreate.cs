@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AbsoluteCinema.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,7 +25,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Halls",
+                name: "halls",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -33,7 +33,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Halls", x => x.id);
+                    table.PrimaryKey("PK_halls", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -203,6 +203,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     movie_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    format = table.Column<byte>(type: "smallint", nullable: false),
                     hall_id = table.Column<Guid>(type: "uuid", nullable: false),
                     start_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -212,7 +213,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "fk_sessions_halls_hall_id",
                         column: x => x.hall_id,
-                        principalTable: "Halls",
+                        principalTable: "halls",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -263,7 +264,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "fk_seats_halls_hall_id",
                         column: x => x.hall_id,
-                        principalTable: "Halls",
+                        principalTable: "halls",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -575,7 +576,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                 name: "seat_types");
 
             migrationBuilder.DropTable(
-                name: "Halls");
+                name: "halls");
 
             migrationBuilder.DropTable(
                 name: "movies");

@@ -60,7 +60,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Halls");
+                    b.ToTable("halls", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Media", b =>
@@ -300,6 +300,10 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<byte>("Format")
+                        .HasColumnType("smallint")
+                        .HasColumnName("format");
+
                     b.Property<Guid>("HallId")
                         .HasColumnType("uuid")
                         .HasColumnName("hall_id");
@@ -356,17 +360,11 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PurchasedAt")
-                        .HasDatabaseName("ix_tickets_purchased_at");
-
                     b.HasIndex("SeatId");
 
                     b.HasIndex("Status");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_tickets_user_id");
 
                     b.HasIndex("SessionId", "SeatId")
                         .IsUnique()
@@ -729,6 +727,8 @@ namespace AbsoluteCinema.Infrastructure.Migrations
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Session", b =>
                 {
                     b.Navigation("Tickets");
+
+                    b.Navigation("TypePrices");
                 });
 #pragma warning restore 612, 618
         }
