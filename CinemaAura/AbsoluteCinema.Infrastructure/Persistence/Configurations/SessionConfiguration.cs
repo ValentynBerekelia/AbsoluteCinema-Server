@@ -36,10 +36,6 @@ public class SessionConfiguration : IEntityTypeConfiguration<Session>
         builder.Property(s => s.StartDateTime)
             .HasColumnName("start_time")
             .IsRequired();
-        
-        builder.Property(s => s.Format)
-            .HasColumnName("format")
-            .IsRequired();
 
         builder.HasOne(s => s.Movie)
             .WithMany()
@@ -48,16 +44,16 @@ public class SessionConfiguration : IEntityTypeConfiguration<Session>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(s => s.Hall)
-            .WithMany() 
+            .WithMany()
             .HasForeignKey(s => s.HallId)
             .HasConstraintName("fk_sessions_halls_hall_id")
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(s => s.Tickets)
-            .WithOne(t => t.Session) 
+            .WithOne(t => t.Session)
             .HasForeignKey(t => t.SessionId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         builder.Navigation(s => s.Tickets)
             .HasField("_tickets")
             .UsePropertyAccessMode(PropertyAccessMode.PreferField);
