@@ -36,7 +36,21 @@ public class SessionConfiguration : IEntityTypeConfiguration<Session>
         builder.Property(s => s.StartDateTime)
             .HasColumnName("start_time")
             .IsRequired();
+        //-------------
+        builder.Property(s => s.Format)
+        .HasColumnName("format")
+        .HasConversion<byte>()
+        .IsRequired();
+        //---------------
+        builder.HasMany(s => s.TypePrices)
+        .WithOne()
+        .HasForeignKey(tp => tp.SessionId)
+        .OnDelete(DeleteBehavior.Cascade);
 
+        builder.Navigation(s => s.TypePrices)
+            .HasField("_typePrices")
+            .UsePropertyAccessMode(PropertyAccessMode.PreferField);
+        //-------------------------
         builder.HasOne(s => s.Movie)
             .WithMany()
             .HasForeignKey(s => s.MovieId)
@@ -57,7 +71,17 @@ public class SessionConfiguration : IEntityTypeConfiguration<Session>
         builder.Navigation(s => s.Tickets)
             .HasField("_tickets")
             .UsePropertyAccessMode(PropertyAccessMode.PreferField);
+        //////
+        builder.HasMany(s => s.TypePrices)
+        .WithOne(tp => tp.Session)
+        .HasForeignKey(tp => tp.SessionId)
+        .HasConstraintName("fk_type_prices_sessions_session_id")
+        .OnDelete(DeleteBehavior.Cascade);
 
+        builder.Navigation(s => s.TypePrices)
+            .HasField("_typePrices")
+            .UsePropertyAccessMode(PropertyAccessMode.PreferField);
+        /////
         builder.HasIndex(s => s.StartDateTime).HasDatabaseName("ix_sessions_start_time");
 
     }
