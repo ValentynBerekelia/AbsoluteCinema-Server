@@ -6,6 +6,7 @@ using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using CinemaAura.Infrastructure.Persistence;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
