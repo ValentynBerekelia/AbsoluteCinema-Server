@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using AbsoluteCinema.Application.Repository;
 
 namespace AbsoluteCinema.Application.Features.Sessions.Commands.CreateSession;
 

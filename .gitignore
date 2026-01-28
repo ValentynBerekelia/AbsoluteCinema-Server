@@ -62,3 +62,4 @@ CinemaAura\AbsoluteCinema.Presentation\appsettings.Development.json
 /CinemaAura/AbsoluteCinema.Infrastructure/AbsoluteCinema.Infrastructure.csproj
 /CinemaAura/AbsoluteCinema.Presentation/appsettings.Development.json
 /CinemaAura/AbsoluteCinema.Application/Features/Sessions/Command/CreateSessionCommandValidator.cs
+/CinemaAura/AbsoluteCinema.Infrastructure/AbsoluteCinema.Infrastructure.csproj
