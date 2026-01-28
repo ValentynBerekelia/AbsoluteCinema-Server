@@ -64,8 +64,11 @@ public class SessionRepository : BaseRepository<SessionId, Session, CinemaDbCont
         return (items, totalCount);
     }
 
-    public Task AddTypePriceAsync(TypePrice typePrice, CancellationToken cancellationToken)
+    public async Task AddTypePriceAsync(TypePrice typePrice, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        if (typePrice is null)
+            throw new ArgumentNullException(nameof(typePrice));
+
+        await _dbContext.TypePrices.AddAsync(typePrice, cancellationToken);
     }
 }
