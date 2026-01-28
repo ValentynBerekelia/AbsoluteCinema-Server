@@ -1,5 +1,6 @@
 ﻿using AbsoluteCinema.Application.DTOs;
 using AbsoluteCinema.Application.Repository;
+using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Domain.Enums;
 using MediatR;
 using System.Linq;
@@ -10,6 +11,7 @@ public record SessionListItemDto(
     Guid Id,
     Guid MovieId,
     Guid HallId,//fix
+    MovieFormat Format,
     DateTime StartDateTime
 );
 
@@ -55,6 +57,7 @@ public class GetSessionsListHandler : IRequestHandler<GetSessionsListQuery, Page
             s.Id.Id,
             s.MovieId.Id,
             s.HallId.Id,
+            s.Format,
             s.StartDateTime
         )).ToList();
 

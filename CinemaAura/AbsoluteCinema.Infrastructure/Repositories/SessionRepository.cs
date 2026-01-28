@@ -42,9 +42,9 @@ public class SessionRepository : BaseRepository<SessionId, Session, CinemaDbCont
         CancellationToken ct = default)
     {
         IQueryable<Session> query = _set
-            .Include(s => s.Hall) // ???????: Include, ??? ???????? Hall.Name
+            .Include(s => s.Hall)
             .Where(s => s.MovieId == new MovieId(movieId))
-            .AsNoTracking(); // ??? ??????? ?? ??????
+            .AsNoTracking();
 
         bool isDesc = sortOrder == SortOrder.Desc;
 
@@ -52,7 +52,7 @@ public class SessionRepository : BaseRepository<SessionId, Session, CinemaDbCont
         {
             "hallname" => isDesc ? query.OrderByDescending(s => s.Hall.HallName) : query.OrderBy(s => s.Hall.HallName),
             "startdatetime" => isDesc ? query.OrderByDescending(s => s.StartDateTime) : query.OrderBy(s => s.StartDateTime),
-            _ => isDesc ? query.OrderByDescending(s => s.StartDateTime) : query.OrderBy(s => s.StartDateTime) // ???????? ??????????
+            _ => isDesc ? query.OrderByDescending(s => s.StartDateTime) : query.OrderBy(s => s.StartDateTime)
         };
         int totalCount = await query.CountAsync(ct);
 
