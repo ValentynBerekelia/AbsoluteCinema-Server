@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AbsoluteCinema.Controllers;
 
 [ApiController]
-[Route("api/sessions")]
+[Route("api")]
 public class SessionController : ControllerBase
 {
     private readonly ISender _mediator;
