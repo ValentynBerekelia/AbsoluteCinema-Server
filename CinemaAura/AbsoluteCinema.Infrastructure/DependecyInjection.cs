@@ -1,3 +1,4 @@
+using AbsoluteCinema.Application.Features.Movies.Command;
 using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Application.Repository;
 using AbsoluteCinema.Infrastructure.EFQueries;
@@ -66,6 +67,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
         services.AddScoped<IGetMovieDetailsQuery, GetMovieDetailsQuery>();
+        services.AddScoped<ICreateGenreCommend, CreateGenreCommand>();
         
 
         return services;

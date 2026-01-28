@@ -6,6 +6,7 @@ namespace AbsoluteCinema.Application.DTOs;
 public record MovieDto
 (
      MovieId Id,
+     string Name,
      string? PosterUrl,
      decimal Rate,
      int AgeLimit,

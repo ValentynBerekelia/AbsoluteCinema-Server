@@ -1,9 +1,11 @@
 using AbsoluteCinema.Application.DTOs;
 using AbsoluteCinema.Application.Features.Sessions.Commands.CreateSession;
 using AbsoluteCinema.Application.Features.Sessions.Commands.DeleteSession;
-using AbsoluteCinema.Application.Features.Sessions.Commands.UpdateSession;
 using AbsoluteCinema.Application.Features.Sessions.Queries;
 using AbsoluteCinema.Domain.Enums;
+using AbsoluteCinema.Application.Features.Sessions.Commands;
+using AbsoluteCinema.Domain.Entities;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,8 +31,6 @@ public class SessionController : ControllerBase
         [FromQuery] string sortOrder = "Asc",
         CancellationToken ct = default)
     {
-        // конвертуємо рядок "Asc"/"Desc" в Enum (SortOrder)
-        // 'true' означає ігнорувати регістр (asc == Asc == ASC)
         if (!Enum.TryParse<SortOrder>(sortOrder, true, out var parsedSortOrder))
         {
             parsedSortOrder = SortOrder.Asc;
@@ -58,49 +58,31 @@ public class SessionController : ControllerBase
         var command = new CreateSessionCommand(
             request.MovieId,
             request.HallId,
-            request.StartDateTime
+            request.StartDateTime,
+            request.Format
         );
 
         var response = await _sender.Send(command, ct);
         return CreatedAtAction(nameof(GetSessionsByMovie), new { movieId = request.MovieId }, response);
     }
 
-    // 3. PUT /api/admin/sessions/{sessionId}
-    // Partial Update
-    [HttpPut("sessions/{sessionId:guid}")]
-    public async Task<IActionResult> UpdateSessionPartial(
-        Guid sessionId,
-        [FromBody] AdminSessionUpdatePartialRequest request,
-        CancellationToken ct)
+    [HttpPut("admin/sessions/{id:guid}")]
+    public async Task<IActionResult> UpdateFull(Guid id, [FromBody] SessionUpdateFullRequest request)
     {
-        var command = new UpdateSessionCommand(
-            sessionId,
-            null,
-            null,
-            request.StartDateTime
-        );
+        var command = request.Adapt<UpdateSessionFullCommand>();
+        var finalCommand = command with { Id = new SessionId(id) };
 
-        await _sender.Send(command, ct);
+        await _sender.Send(finalCommand);
         return NoContent();
     }
 
-    // 4. PATCH /api/admin/sessions/{sessionId}
-    // full update
-    [HttpPatch("sessions/{sessionId:guid}")]
-    public async Task<IActionResult> UpdateSessionFull(
-        Guid sessionId,
-        [FromBody] AdminSessionUpdateRequest request,
-        CancellationToken ct)
+    [HttpPatch("admin/sessions/{id:guid}")]
+    public async Task<IActionResult> UpdatePartial(Guid id, [FromBody] SessionUpdatePartialRequest request)
     {
-        var command = new UpdateSessionCommand(
-            sessionId,
-            request.MovieId,
-            request.HallId,
-            request.StartDateTime
-        );
+        var command = request.Adapt<UpdateSessionPartialCommand>();
+        var finalCommand = command with { Id = new SessionId(id) };
 
-        await _sender.Send(command, ct);
-
+        await _sender.Send(finalCommand);
         return NoContent();
     }
 

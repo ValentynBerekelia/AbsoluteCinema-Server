@@ -1,4 +1,4 @@
-﻿using AbsoluteCinema.Application.Repository;
+﻿﻿using AbsoluteCinema.Application.Repository;
 using AbsoluteCinema.Domain.Entities;
 using MediatR;
 
@@ -7,7 +7,8 @@ namespace AbsoluteCinema.Application.Features.Sessions.Commands.CreateSession;
 public record CreateSessionCommand(
     Guid MovieId,
     Guid HallId,
-    DateTime StartTime
+    DateTime StartTime,
+    MovieFormat Format
 ) : IRequest<CreateSessionResponse>;
 
 public class CreateSession : IRequestHandler<CreateSessionCommand, CreateSessionResponse>
@@ -33,7 +34,8 @@ public class CreateSession : IRequestHandler<CreateSessionCommand, CreateSession
         var session = Session.Create(
             new MovieId(request.MovieId),
             hall.Id,
-            request.StartTime
+            request.StartTime,
+            request.Format
         );
 
         await _sessionRepository.AddAsync(session, cancellationToken);

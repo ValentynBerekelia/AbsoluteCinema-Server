@@ -6,7 +6,8 @@ namespace AbsoluteCinema.Domain.Entities;
 public class Session : AggregateRoot<SessionId>
 {
     public MovieId MovieId { get; private set; }
-    public Movie Movie { get; private set; } 
+    public Movie Movie { get; private set; }
+    public MovieFormat Format { get; private set; }
 
     public HallId HallId { get; private set; }
     public Hall Hall { get; private set; }
@@ -20,21 +21,22 @@ public class Session : AggregateRoot<SessionId>
     public IReadOnlyCollection<TypePrice> TypePrices => _typePrices.AsReadOnly();
 
     private Session() { }
-    private Session(SessionId id, MovieId movieId, HallId hallId, DateTime date)
+    private Session(SessionId id, MovieId movieId, HallId hallId, DateTime date, MovieFormat format)
     {
         Id = id;
         MovieId = movieId;
         HallId = hallId;
         StartDateTime = date;
+        Format = format;
     }
-    public static Session Create(MovieId movieId, HallId hallId, DateTime date)
+    public static Session Create(MovieId movieId, HallId hallId, DateTime date, MovieFormat format)
     {
         if (date < DateTime.UtcNow)
         {
             throw new DomainException("Session start date must be in the future.");
         }
 
-        return new Session(SessionId.New(), movieId, hallId, date);
+        return new Session(SessionId.New(), movieId, hallId, date, format);
     }
 
     public void UpdateDetails(MovieId newMovieId, HallId newHallId, DateTime newDate)
@@ -52,10 +54,12 @@ public class Session : AggregateRoot<SessionId>
         }
         StartDateTime = newDate;
     }
-    
+
 
     public void ChangeMovie(MovieId newMovieId)
     {
+        if (_tickets.Any())
+            throw new DomainException("Cannot change movie after tickets have been sold.");
         MovieId = newMovieId;
     }
 
@@ -83,6 +87,14 @@ public class Session : AggregateRoot<SessionId>
 
         HallId = newHallId;
     }
+    public void ChangeFormat(MovieFormat format)
+    {
+        if (_tickets.Any())
+            throw new DomainException("Cannot change format after tickets have been sold.");
+
+        Format = format;
+    }
+
 
     public void AddTicket(Ticket ticket)
     {
