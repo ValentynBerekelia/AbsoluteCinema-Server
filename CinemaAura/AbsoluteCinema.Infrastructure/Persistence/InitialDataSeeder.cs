@@ -15,11 +15,9 @@ public static class InitialDataSeeder
         // Перевірка, щоб не дублювати дані
         if (context.Movies.Any() || context.Halls.Any() || context.Seats.Any())
             return;
-
-        // --------------------
-        // Genres
-        // --------------------
-        var action = Genre.Create("Action");
+    // Genres
+    // --------------------
+    var action = Genre.Create("Action");
         var drama  = Genre.Create("Drama");
         var comedy = Genre.Create("Comedy");
         var sciFi  = Genre.Create("Sci-Fi");

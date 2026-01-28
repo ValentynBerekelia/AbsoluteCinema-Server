@@ -16,6 +16,10 @@ public class Session : AggregateRoot<SessionId>
     private readonly List<Ticket> _tickets = new();
     public IReadOnlyCollection<Ticket> Tickets => _tickets.AsReadOnly();
 
+
+    private readonly List<TypePrice> _typePrices = new();
+    public IReadOnlyCollection<TypePrice> TypePrices => _typePrices.AsReadOnly();
+
     private Session() { }
     private Session(SessionId id, MovieId movieId, HallId hallId, DateTime date, MovieFormat format)
     {
@@ -34,6 +38,14 @@ public class Session : AggregateRoot<SessionId>
 
         return new Session(SessionId.New(), movieId, hallId, date, format);
     }
+
+    public void UpdateDetails(MovieId newMovieId, HallId newHallId, DateTime newDate)
+    {
+        ChangeMovie(newMovieId);
+        ChangeHall(newHallId);
+        Reschedule(newDate);
+    }
+
     public void Reschedule(DateTime newDate)
     {
         if (newDate < DateTime.UtcNow)
@@ -50,6 +62,24 @@ public class Session : AggregateRoot<SessionId>
             throw new DomainException("Cannot change movie after tickets have been sold.");
         MovieId = newMovieId;
     }
+
+    public void AddPrice(TypePrice price)
+    {
+        if (_typePrices.Any(p => p.SeatTypeId == price.SeatTypeId))
+        {
+            // you can either ignore, throw an exception, or update
+            // I thought there should be a checkbox for VIP and the first 2 rows, for example,
+            // then you can throw an exception on them and add the code here
+            return;
+        }
+        _typePrices.Add(price);
+    }
+
+    public void RemovePrice(TypePrice price)
+    {
+        _typePrices.Remove(price);
+    }
+
     public void ChangeHall(HallId newHallId)
     {
         if (_tickets.Any())
@@ -72,6 +102,15 @@ public class Session : AggregateRoot<SessionId>
             throw new DomainException("This seat is already taken.");
 
         _tickets.Add(ticket);
+    }
+
+    public void CancelTicket(TicketId ticketId)
+    {
+        var ticket = _tickets.FirstOrDefault(t => t.Id == ticketId);
+        if (ticket != null)
+        {
+            _tickets.Remove(ticket);
+        }
     }
 }
 

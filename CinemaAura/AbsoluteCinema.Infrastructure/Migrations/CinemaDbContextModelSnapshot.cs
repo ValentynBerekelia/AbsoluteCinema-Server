@@ -60,7 +60,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Halls");
+                    b.ToTable("halls", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Media", b =>
@@ -299,6 +299,10 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<byte>("Format")
+                        .HasColumnType("smallint")
+                        .HasColumnName("format");
 
                     b.Property<Guid>("HallId")
                         .HasColumnType("uuid")
