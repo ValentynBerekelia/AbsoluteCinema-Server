@@ -3,7 +3,6 @@ using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Infrastructure;
 using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
-using CinemaAura.Infrastructure.Persistence;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;

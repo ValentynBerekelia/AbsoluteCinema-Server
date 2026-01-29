@@ -21,11 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Halls\Commands\CreateHall\" />
-      <Folder Include="Features\Halls\Commands\DeleteHall\" />
-      <Folder Include="Features\Halls\Commands\UpdateHall\" />
-      <Folder Include="Features\Halls\Queries\GetHallById\" />
-      <Folder Include="Features\Halls\Queries\GetAllHalls\" />
+      <Folder Include="Features\Halls\Queries\" />
     </ItemGroup>
 
 </Project>
