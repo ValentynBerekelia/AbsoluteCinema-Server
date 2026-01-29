@@ -52,22 +52,22 @@ public static class InitialDataSeeder
 
         // --- PERSONS ---
         var nolan = Person.Create("Christopher Nolan", "Director...", new DateTime(1970, 7, 30, 0, 0, 0, DateTimeKind.Utc), PersonRole.Director);
-        nolan.ChangeMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/commons/9/95/Christopher_Nolan_Cannes_2018.jpg"));
+        nolan.ChangeMedia(Media.Create(MediaType.PersonImage, "https://upload.wikimedia.org/wikipedia/commons/9/95/Christopher_Nolan_Cannes_2018.jpg"));
 
         var dicaprio = Person.Create("Leonardo DiCaprio", "Actor...", new DateTime(1974, 11, 11, 0, 0, 0, DateTimeKind.Utc), PersonRole.Actor);
-        dicaprio.ChangeMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/commons/4/46/Leonardo_Dicaprio_Cannes_2019.jpg"));
+        dicaprio.ChangeMedia(Media.Create(MediaType.PersonImage, "https://upload.wikimedia.org/wikipedia/commons/4/46/Leonardo_Dicaprio_Cannes_2019.jpg"));
 
         var mcconaughey = Person.Create("Matthew McConaughey", "Actor...", new DateTime(1969, 11, 4, 0, 0, 0, DateTimeKind.Utc), PersonRole.Actor);
-        mcconaughey.ChangeMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/commons/b/bf/Matthew_McConaughey_2011.jpg"));
+        mcconaughey.ChangeMedia(Media.Create(MediaType.PersonImage, "https://upload.wikimedia.org/wikipedia/commons/b/bf/Matthew_McConaughey_2011.jpg"));
 
         var gosling = Person.Create("Ryan Gosling", "Actor...", new DateTime(1980, 11, 12, 0, 0, 0, DateTimeKind.Utc), PersonRole.Actor);
-        gosling.ChangeMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/commons/f/f6/Ryan_Gosling_in_2018.jpg"));
+        gosling.ChangeMedia(Media.Create(MediaType.PersonImage, "https://upload.wikimedia.org/wikipedia/commons/f/f6/Ryan_Gosling_in_2018.jpg"));
 
         var robbie = Person.Create("Margot Robbie", "Actress...", new DateTime(1990, 7, 2, 0, 0, 0, DateTimeKind.Utc), PersonRole.Actor);
-        robbie.ChangeMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/commons/0/0b/Margot_Robbie_2019.jpg"));
+        robbie.ChangeMedia(Media.Create(MediaType.PersonImage, "https://upload.wikimedia.org/wikipedia/commons/0/0b/Margot_Robbie_2019.jpg"));
 
         var gerwig = Person.Create("Greta Gerwig", "Director...", new DateTime(1983, 8, 4, 0, 0, 0, DateTimeKind.Utc), PersonRole.Director);
-        gerwig.ChangeMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/commons/8/82/Greta_Gerwig_2018.jpg"));
+        gerwig.ChangeMedia(Media.Create(MediaType.PersonImage, "https://upload.wikimedia.org/wikipedia/commons/8/82/Greta_Gerwig_2018.jpg"));
 
         context.Persons.AddRange(nolan, dicaprio, mcconaughey, gosling, robbie, gerwig);
 
@@ -81,13 +81,15 @@ public static class InitialDataSeeder
         inception.AddPerson(dicaprio);
 
         // Poster
-        inception.AddMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/uk/e/e1/%D0%9F%D0%BE%D1%87%D0%B0%D1%82%D0%BE%D0%BA_%D1%84%D1%96%D0%BB%D1%8C%D0%BC%2C_2010.jpg"));
+        inception.AddMedia(Media.Create(MediaType.PosterImage, "https://upload.wikimedia.org/wikipedia/uk/e/e1/%D0%9F%D0%BE%D1%87%D0%B0%D1%82%D0%BE%D0%BA_%D1%84%D1%96%D0%BB%D1%8C%D0%BC%2C_2010.jpg"));
         // Trailer
         inception.AddMedia(Media.Create(MediaType.Video, "https://www.youtube.com/watch?v=YoHD9XEInc0"));
         // Screenshots (Movie Stills)
         inception.AddMedia(Media.Create(MediaType.Image, "https://drop.ndtv.com/albums/ENTERTAINMENT/inception-leonardo/2.jpg"));
         inception.AddMedia(Media.Create(MediaType.Image, "https://drop.ndtv.com/albums/ENTERTAINMENT/inception-leonardo/10.jpg"));
         inception.AddMedia(Media.Create(MediaType.Image, "https://drop.ndtv.com/albums/ENTERTAINMENT/inception-leonardo/21.jpg"));
+        // Banner
+        inception.AddMedia(Media.Create(MediaType.BannerImage, "https://images7.alphacoders.com/586/thumb-1920-586904.jpg"));
 
         context.Movies.Add(inception);
 
@@ -100,14 +102,16 @@ public static class InitialDataSeeder
         interstellar.AddPerson(mcconaughey);
 
         // Poster
-        interstellar.AddMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg"));
+        interstellar.AddMedia(Media.Create(MediaType.PosterImage, "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg"));
         // Trailer
         interstellar.AddMedia(Media.Create(MediaType.Video, "https://www.youtube.com/watch?v=zSWdZVtXT7E"));
         // Screenshots
         interstellar.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/2015/04/35-512.jpg"));
         interstellar.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/12%20(514).jpg?bwg=1547222787"));
         interstellar.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/43%20(504).jpg?bwg=1547222787"));
-
+        // Banner
+        interstellar.AddMedia(Media.Create(MediaType.BannerImage, "https://images3.alphacoders.com/551/thumb-1920-551456.jpg"));
+        
         context.Movies.Add(interstellar);
 
         // 3. Barbie
@@ -119,13 +123,15 @@ public static class InitialDataSeeder
         barbie.AddPerson(gosling);
 
         // Poster
-        barbie.AddMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg"));
+        barbie.AddMedia(Media.Create(MediaType.PosterImage, "https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg"));
         // Trailer
         barbie.AddMedia(Media.Create(MediaType.Video, "https://www.youtube.com/watch?v=pBk4NYhWNMM"));
         // Screenshots
         barbie.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/Barbie_19.jpg?bwg=1699879305"));
         barbie.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/Barbie_59.jpg?bwg=1699879305"));
         barbie.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/Barbie_52.jpg?bwg=1699879305"));
+        // Banner
+        barbie.AddMedia(Media.Create(MediaType.BannerImage, "https://images2.alphacoders.com/132/1320904.jpg"));
 
         context.Movies.Add(barbie);
 
@@ -136,13 +142,15 @@ public static class InitialDataSeeder
         darkKnight.AddPerson(nolan);
 
         // Poster
-        darkKnight.AddMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/en/1/1c/The_Dark_Knight_%282008_film%29.jpg"));
+        darkKnight.AddMedia(Media.Create(MediaType.PosterImage, "https://upload.wikimedia.org/wikipedia/en/1/1c/The_Dark_Knight_%282008_film%29.jpg"));
         // Trailer
         darkKnight.AddMedia(Media.Create(MediaType.Video, "https://www.youtube.com/watch?v=EXeTwQWrcwY"));
         // Screenshots
         darkKnight.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/10%20(1051).jpg?bwg=1547463350"));
         darkKnight.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/46%20(1027).jpg?bwg=1547463350"));
         darkKnight.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/23%20(1051).jpg?bwg=1547463351"));
+        // Banner
+        darkKnight.AddMedia(Media.Create(MediaType.BannerImage, "https://wallpapercat.com/w/full/b/0/8/37797-3840x2160-desktop-4k-the-dark-knight-wallpaper-image.jpg"));
 
         context.Movies.Add(darkKnight);
 
@@ -153,7 +161,7 @@ public static class InitialDataSeeder
         bladeRunner.AddPerson(gosling);
 
         // Poster
-        bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/en/9/9b/Blade_Runner_2049_poster.png"));
+        bladeRunner.AddMedia(Media.Create(MediaType.PosterImage, "https://upload.wikimedia.org/wikipedia/en/9/9b/Blade_Runner_2049_poster.png"));
         // Trailer
         bladeRunner.AddMedia(Media.Create(MediaType.Video, "https://www.youtube.com/watch?v=gCcx85zbxz4"));
         // Screenshots
@@ -161,6 +169,8 @@ public static class InitialDataSeeder
         bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/bladerunner026.jpg?bwg=1551282394"));
         bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/bladerunner022.jpg?bwg=1551282394"));
         bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/bladerunner056.jpg?bwg=1551282394"));
+        //Banner
+        bladeRunner.AddMedia(Media.Create(MediaType.BannerImage, "https://images4.alphacoders.com/866/thumb-1920-866590.jpg"));
 
         context.Movies.Add(bladeRunner);
 
@@ -181,17 +191,6 @@ public static class InitialDataSeeder
         var standardType = context.SeatTypes.First(st => st.TypeName == "Standard");
         var vipType = context.SeatTypes.First(st => st.TypeName == "VIP");
 
-        // --------------------
-        // Media
-        // --------------------
-        var posters = new[]
-        {
-            Media.Create(MediaType.PosterImage, "https://i.ibb.co/jvDScBnd/449231935-859617122721322-2155950919009721165-n.jpg"),
-            Media.Create(MediaType.PosterImage, "https://i.ibb.co/SwvWqL9W/photo-2024-09-06-14-59-30.jpg"),
-            Media.Create(MediaType.PosterImage, "https://i.ibb.co/svznCKVv/2025-02-22-202217.jpg"),
-            Media.Create(MediaType.PosterImage, "https://i.ibb.co/WNfxpfLz/Screenshot-20250901-142509-Instagram.png"),
-            Media.Create(MediaType.PosterImage, "https://i.ibb.co/TBjk3Ttt/images.jpg"),
-        };
         var inception = context.Movies.First(m => m.Name == "Inception");
         var interstellar = context.Movies.First(m => m.Name == "Interstellar");
         var barbie = context.Movies.First(m => m.Name == "Barbie");
