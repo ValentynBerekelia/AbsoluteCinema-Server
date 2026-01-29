@@ -41,6 +41,7 @@ public record GetMovieQueryResponse(
     string Language,
     IEnumerable<string> Genres,
     string? PosterUrl,
+    string? BannerUrl,
     IEnumerable<string> TrailerUrls,
     IEnumerable<string> ImageUrls,
     IEnumerable<PersonDto> Persons)

@@ -83,7 +83,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
                     b.ToTable("medias", null, t =>
                         {
-                            t.HasCheckConstraint("ck_medias_status_valid", "type IN (1, 2, 3, 4)");
+                            t.HasCheckConstraint("ck_medias_status_valid", "type IN (1, 2, 3, 4, 5)");
                         });
                 });
 

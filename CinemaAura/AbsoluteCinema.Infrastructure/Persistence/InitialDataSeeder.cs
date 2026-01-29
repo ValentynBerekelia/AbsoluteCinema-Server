@@ -181,6 +181,17 @@ public static class InitialDataSeeder
         var standardType = context.SeatTypes.First(st => st.TypeName == "Standard");
         var vipType = context.SeatTypes.First(st => st.TypeName == "VIP");
 
+        // --------------------
+        // Media
+        // --------------------
+        var posters = new[]
+        {
+            Media.Create(MediaType.PosterImage, "https://i.ibb.co/jvDScBnd/449231935-859617122721322-2155950919009721165-n.jpg"),
+            Media.Create(MediaType.PosterImage, "https://i.ibb.co/SwvWqL9W/photo-2024-09-06-14-59-30.jpg"),
+            Media.Create(MediaType.PosterImage, "https://i.ibb.co/svznCKVv/2025-02-22-202217.jpg"),
+            Media.Create(MediaType.PosterImage, "https://i.ibb.co/WNfxpfLz/Screenshot-20250901-142509-Instagram.png"),
+            Media.Create(MediaType.PosterImage, "https://i.ibb.co/TBjk3Ttt/images.jpg"),
+        };
         var inception = context.Movies.First(m => m.Name == "Inception");
         var interstellar = context.Movies.First(m => m.Name == "Interstellar");
         var barbie = context.Movies.First(m => m.Name == "Barbie");

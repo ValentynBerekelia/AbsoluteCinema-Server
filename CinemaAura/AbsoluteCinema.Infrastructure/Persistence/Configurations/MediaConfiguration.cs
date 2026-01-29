@@ -12,7 +12,7 @@ public class MediaConfiguration : IEntityTypeConfiguration<Media>
         {
             tableBuilder.HasCheckConstraint(
                 "ck_medias_status_valid",
-                "type IN (1, 2, 3, 4)");
+                "type IN (1, 2, 3, 4, 5)");
         });
         
         builder.ToTable("medias");
