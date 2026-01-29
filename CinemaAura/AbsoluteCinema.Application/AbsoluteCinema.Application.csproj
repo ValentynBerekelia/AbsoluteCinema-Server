@@ -8,6 +8,24 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Features\Halls\Commands\CreateHall\**" />
+      <Compile Remove="Features\Halls\Commands\DeleteHall\**" />
+      <Compile Remove="Features\Halls\Commands\UpdateHall\**" />
+      <Compile Remove="Features\Halls\Queries\GetAllHalls\**" />
+      <Compile Remove="Features\Halls\Queries\GetHallById\**" />
+      <EmbeddedResource Remove="Features\Halls\Commands\CreateHall\**" />
+      <EmbeddedResource Remove="Features\Halls\Commands\DeleteHall\**" />
+      <EmbeddedResource Remove="Features\Halls\Commands\UpdateHall\**" />
+      <EmbeddedResource Remove="Features\Halls\Queries\GetAllHalls\**" />
+      <EmbeddedResource Remove="Features\Halls\Queries\GetHallById\**" />
+      <None Remove="Features\Halls\Commands\CreateHall\**" />
+      <None Remove="Features\Halls\Commands\DeleteHall\**" />
+      <None Remove="Features\Halls\Commands\UpdateHall\**" />
+      <None Remove="Features\Halls\Queries\GetAllHalls\**" />
+      <None Remove="Features\Halls\Queries\GetHallById\**" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\AbsoluteCinema.Domain\AbsoluteCinema.Domain.csproj" />
     </ItemGroup>
 
@@ -21,11 +39,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Halls\Commands\CreateHall\" />
-      <Folder Include="Features\Halls\Commands\DeleteHall\" />
-      <Folder Include="Features\Halls\Commands\UpdateHall\" />
-      <Folder Include="Features\Halls\Queries\GetHallById\" />
-      <Folder Include="Features\Halls\Queries\GetAllHalls\" />
+      <Folder Include="Features\Halls\Commands\" />
     </ItemGroup>
 
 </Project>

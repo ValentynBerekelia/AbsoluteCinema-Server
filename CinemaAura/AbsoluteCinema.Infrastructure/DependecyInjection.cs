@@ -1,3 +1,5 @@
+using AbsoluteCinema.Application.DTOs.Hall;
+using AbsoluteCinema.Application.Features.Halls.Queries;
 using AbsoluteCinema.Application.Features.Movies.Command;
 using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Application.Repository;
@@ -68,8 +70,9 @@ public static class DependencyInjection
         services.AddScoped<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
         services.AddScoped<IGetMovieDetailsQuery, GetMovieDetailsQuery>();
         services.AddScoped<ICreateGenreCommend, CreateGenreCommand>();
+        services.AddScoped<IGetHallsDtoQuery, GetHallsDtoQuery>();
+        services.AddScoped<IGetHallQueryHandler, GetHallDetailsQuery>();
         
-
         return services;
     }
 }
