@@ -1,11 +1,12 @@
-using System.Reflection;
 using AbsoluteCinema.Application;
 using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Infrastructure;
 using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
-using CinemaAura.Infrastructure.Persistence;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,24 @@ var config = TypeAdapterConfig.GlobalSettings;
 config.Scan(Assembly.GetExecutingAssembly());
 builder.Services.AddMapster();
 
-builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowViteFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        // add converter
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -56,6 +74,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowViteFrontend");
 
 app.MapControllers();
 

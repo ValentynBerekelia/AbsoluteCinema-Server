@@ -3,6 +3,7 @@ using System;
 using AbsoluteCinema.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AbsoluteCinema.Infrastructure.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    partial class CinemaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260128133329_TinyFixMovieDurationConversion")]
+    partial class TinyFixMovieDurationConversion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +86,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
                     b.ToTable("medias", null, t =>
                         {
-                            t.HasCheckConstraint("ck_medias_status_valid", "type IN (1, 2, 3, 4, 5)");
+                            t.HasCheckConstraint("ck_medias_status_valid", "type IN (1, 2, 3, 4)");
                         });
                 });
 
@@ -603,23 +606,19 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.TypePrice", b =>
                 {
-                    b.HasOne("AbsoluteCinema.Domain.Entities.SeatType", "SeatType")
+                    b.HasOne("AbsoluteCinema.Domain.Entities.SeatType", null)
                         .WithMany()
                         .HasForeignKey("SeatTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_type_prices_seat_types_seat_type_id");
 
-                    b.HasOne("AbsoluteCinema.Domain.Entities.Session", "Session")
-                        .WithMany("TypePrices")
+                    b.HasOne("AbsoluteCinema.Domain.Entities.Session", null)
+                        .WithMany()
                         .HasForeignKey("SessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_type_prices_sessions_session_id");
-
-                    b.Navigation("SeatType");
-
-                    b.Navigation("Session");
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.User", b =>
@@ -731,8 +730,6 @@ namespace AbsoluteCinema.Infrastructure.Migrations
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Session", b =>
                 {
                     b.Navigation("Tickets");
-
-                    b.Navigation("TypePrices");
                 });
 #pragma warning restore 612, 618
         }

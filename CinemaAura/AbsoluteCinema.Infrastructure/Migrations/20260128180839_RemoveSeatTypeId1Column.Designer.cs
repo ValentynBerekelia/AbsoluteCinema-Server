@@ -3,6 +3,7 @@ using System;
 using AbsoluteCinema.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AbsoluteCinema.Infrastructure.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    partial class CinemaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260128180839_RemoveSeatTypeId1Column")]
+    partial class RemoveSeatTypeId1Column
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +86,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
                     b.ToTable("medias", null, t =>
                         {
-                            t.HasCheckConstraint("ck_medias_status_valid", "type IN (1, 2, 3, 4, 5)");
+                            t.HasCheckConstraint("ck_medias_status_valid", "type IN (1, 2, 3, 4)");
                         });
                 });
 
