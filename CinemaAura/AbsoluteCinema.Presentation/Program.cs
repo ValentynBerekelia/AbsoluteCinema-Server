@@ -1,4 +1,3 @@
-using System.Reflection;
 using AbsoluteCinema.Application;
 using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Infrastructure;
@@ -7,6 +6,8 @@ using AbsoluteCinema.Infrastructure.Persistence;
 using CinemaAura.Infrastructure.Persistence;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +33,13 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        // add converter
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

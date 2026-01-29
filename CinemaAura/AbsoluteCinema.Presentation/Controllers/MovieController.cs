@@ -12,10 +12,13 @@ using System.Security.Cryptography.Xml;
 using static AbsoluteCinema.Application.Features.Movies.Command.UpdateMoviePartialCommandHandler;
 using AbsoluteCinema.Application.DTOs.Movie;
 using AbsoluteCinema.Application.Features.Movies.Command;
+using AbsoluteCinema.Application.Features.Movies.Command.CreateMovieAndAttachMedia;
 
 namespace AbsoluteCinema.Controllers;
+
 [Route("api")]
 [ApiController]
+[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 public class MovieController(IMediator mediator, IMapper mapper) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
@@ -24,7 +27,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPost]
     [Route("admin/movies")]
-    public async Task<IActionResult> CreateMovie([FromBody]MovieCreateRequest request, CancellationToken ct)
+    public async Task<IActionResult> CreateMovie([FromBody] MovieCreateRequest request, CancellationToken ct)
     {
         var command = new CreateMovieCommand(
             request.MovieName,
@@ -65,33 +68,49 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpDelete("admin/movies/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteMovie(Guid id)
+    public async Task<IActionResult> DeleteMovie(Guid id, CancellationToken ct)
     {
-        var command = new DeleteMovieCommand(id);
-        await _mediator.Send(command);
+        await _mediator.Send(new DeleteMovieCommand(id), ct);
         return NoContent();
     }
 
-    [HttpPost("admin/movies/media")]
+    [HttpPost("admin/movies/{movieId:guid}/media/attach")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> AttachMediaToMovie([FromBody] AttachMediaToMovieCommand command)
+    public async Task<IActionResult> AttachMediaToMovie(
+        [FromRoute] Guid movieId,
+        [FromBody] AttachMediaRequest request,
+        CancellationToken ct)
     {
-
-        await _mediator.Send(command);
+        var command = new AttachMediaToMovieCommand(movieId, request.mediaId);
+        await _mediator.Send(command, ct);
         return NoContent();
+    }
+
+    [HttpPost("admin/movies/{movieId:guid}/media")]
+    [ProducesResponseType(typeof(CreateAndAttachMediaResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CreateAndAttachMediaToMovie(
+    [FromRoute] Guid movieId,
+    [FromBody] CreateMediaRequest request,
+    CancellationToken ct)
+    {
+        var command = new CreateAndAttachMediaCommand(movieId, request.Url, request.Type);
+        var response = await _mediator.Send(command, ct);
+        return Ok(response);
     }
 
     [HttpDelete("admin/movies/{movieId:guid}/media/{mediaId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DetachMediaFromMovie(Guid movieId, Guid mediaId)
+    public async Task<IActionResult> DetachMediaFromMovie(
+        [FromRoute] Guid movieId,
+        [FromRoute] Guid mediaId,
+        CancellationToken ct)
     {
-        await _mediator.Send(new DetachMediaFromMovieCommand(movieId, mediaId));
+        await _mediator.Send(new DetachMediaFromMovieCommand(movieId, mediaId), ct);
         return NoContent();
     }
 
