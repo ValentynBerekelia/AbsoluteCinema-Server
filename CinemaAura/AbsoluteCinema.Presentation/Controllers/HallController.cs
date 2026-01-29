@@ -1,18 +1,24 @@
 using AbsoluteCinema.Application.Features.Halls.Commands;
-using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Requests;
 using Mapster;
+using AbsoluteCinema.Application.Features.Halls.Queries;
+using AbsoluteCinema.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbsoluteCinema.Controllers;
-
 [Route("api")]
 [ApiController]
-[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 public class HallController(IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
+    [HttpGet]
+    [Route("halls")]
+    public async Task<IActionResult> GetHalls(CancellationToken ct)
+    {
+        var response = await _mediator.Send(new GetHallsQuery(),ct);
+        return Ok(response);
+    }
 
     [HttpPost]
     [Route("admin/halls/seats")]
@@ -52,5 +58,14 @@ public class HallController(IMediator mediator) : ControllerBase
         var command = new DeleteSeatCommand(seatId);
         var response = await _mediator.Send(command, ct);
         return Ok();
+    }
+    
+    [HttpGet]
+    [Route("halls/{id:guid}")]
+    public async Task<IActionResult> GetHall(Guid id,CancellationToken ct)
+    {
+        var query = new GetHallQuery(new HallId(id));
+        var response = await _mediator.Send(query, ct);
+        return Ok(response);
     }
 }
