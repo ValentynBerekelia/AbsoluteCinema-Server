@@ -61,7 +61,7 @@ public class Person: Entity<PersonId>
 
     public void ChangeMedia(Media media)
     {
-        if (media.Type != MediaType.Image)
+        if (media.Type != MediaType.PersonImage)
         {
             throw new DomainException("Media type must be an image.");
         }
