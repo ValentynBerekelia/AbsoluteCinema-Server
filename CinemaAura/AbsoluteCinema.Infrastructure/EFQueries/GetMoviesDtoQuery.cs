@@ -48,7 +48,7 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
             m.Id,
             m.Name,
             m.Medias
-                .Where(c => c.Type == MediaType.BannerImage)
+                .Where(c => c.Type == MediaType.PosterImage)
                 .Select(j => j.Url)
                 .FirstOrDefault(),
             m.Rate,

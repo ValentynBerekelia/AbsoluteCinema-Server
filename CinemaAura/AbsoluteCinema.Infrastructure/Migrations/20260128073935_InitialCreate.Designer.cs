@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AbsoluteCinema.Infrastructure.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20260124104908_InitialCreate")]
+    [Migration("20260128073935_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -63,7 +63,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Halls");
+                    b.ToTable("halls", (string)null);
                 });
 
             modelBuilder.Entity("AbsoluteCinema.Domain.Entities.Media", b =>
@@ -86,7 +86,7 @@ namespace AbsoluteCinema.Infrastructure.Migrations
 
                     b.ToTable("medias", null, t =>
                         {
-                            t.HasCheckConstraint("ck_medias_status_valid", "type IN (1, 2, 3, 4)");
+                            t.HasCheckConstraint("ck_medias_status_valid", "type IN (1, 2, 3, 4, 5)");
                         });
                 });
 
@@ -302,6 +302,10 @@ namespace AbsoluteCinema.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<byte>("Format")
+                        .HasColumnType("smallint")
+                        .HasColumnName("format");
 
                     b.Property<Guid>("HallId")
                         .HasColumnType("uuid")

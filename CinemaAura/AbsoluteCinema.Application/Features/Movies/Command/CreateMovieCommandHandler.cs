@@ -19,7 +19,7 @@ public class CreateMovieCommandHandler(IUnitOfWork unit, IMovieRepository movies
             throw new DomainException($"Movie {command.MovieName} already exists.");
         }
         
-        var genres = await _createGenre.ExecuteAsync(command.Geners, ct);
+        var genres = await _createGenre.ExecuteAsync(command.Genres, ct);
 
         var newMovie = Movie.Create(command.MovieName, command.Description, command.Rate, command.AgeLimit, command.Duration,
             command.Country, command.Studio, command.Language);
@@ -46,7 +46,7 @@ public record  CreateMovieCommand(
     string Country,
     string Studio,
     string Language,
-    List<string> Geners
+    List<string> Genres
     ) : IRequest<CreateMovieResponse>{}
 
 public record CreateMovieResponse(MovieId MovieId)
