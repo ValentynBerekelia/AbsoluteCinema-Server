@@ -27,7 +27,11 @@ public class GetMovieDetailsQuery(CinemaDbContext db) : IGetMovieDetailsQuery
                 m.Language,
                 m.Genres.Select(g => g.Name),
                 m.Medias
-                    .Where(c => c.Type == MediaType.BannerImage)
+                    .Where(c => c.Type == MediaType.PosterImage)
+                    .Select(c => c.Url)
+                    .FirstOrDefault(),
+                m.Medias
+                    .Where(c =>c.Type == MediaType.BannerImage)
                     .Select(c => c.Url)
                     .FirstOrDefault(),
                 m.Medias

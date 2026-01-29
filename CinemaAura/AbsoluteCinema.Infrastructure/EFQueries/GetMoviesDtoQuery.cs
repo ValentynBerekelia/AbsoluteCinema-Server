@@ -41,11 +41,14 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
             .Skip((query.PageNumber - 1) * query.PageSize)
             .Take(query.PageSize);
 
+        var today = DateTime.UtcNow.Date;
+        var tomorrow = today.AddDays(1);
+        
         return await newQuery.Select(m => new MovieDto(
             m.Id,
             m.Name,
             m.Medias
-                .Where(c => c.Type == MediaType.BannerImage)
+                .Where(c => c.Type == MediaType.PosterImage)
                 .Select(j => j.Url)
                 .FirstOrDefault(),
             m.Rate,
@@ -53,7 +56,7 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
             m.Duration,
             m.Genres.Select(g => g.Name).ToList(),
             _db.Sessions
-                .Where(s=> s.MovieId == m.Id && s.StartDateTime.Date == DateTime.UtcNow.Date)
+                .Where(s=> s.MovieId == m.Id && s.StartDateTime >= today)
                 .Select(s=> s.StartDateTime)
                 .ToList()
         )).ToListAsync(ct);
