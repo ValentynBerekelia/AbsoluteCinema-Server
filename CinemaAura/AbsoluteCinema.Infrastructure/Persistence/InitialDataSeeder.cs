@@ -81,13 +81,13 @@ public static class InitialDataSeeder
         inception.AddPerson(dicaprio);
 
         // Poster
-        inception.AddMedia(Media.Create(MediaType.Image, "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg"));
+        inception.AddMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/uk/e/e1/%D0%9F%D0%BE%D1%87%D0%B0%D1%82%D0%BE%D0%BA_%D1%84%D1%96%D0%BB%D1%8C%D0%BC%2C_2010.jpg"));
         // Trailer
         inception.AddMedia(Media.Create(MediaType.Video, "https://www.youtube.com/watch?v=YoHD9XEInc0"));
         // Screenshots (Movie Stills)
-        inception.AddMedia(Media.Create(MediaType.Image, "https://images.alphacoders.com/131/1312480.jpg"));
-        inception.AddMedia(Media.Create(MediaType.Image, "https://images.alphacoders.com/202/202280.jpg"));
-        inception.AddMedia(Media.Create(MediaType.Image, "https://images.alphacoders.com/204/204282.jpg"));
+        inception.AddMedia(Media.Create(MediaType.Image, "https://drop.ndtv.com/albums/ENTERTAINMENT/inception-leonardo/2.jpg"));
+        inception.AddMedia(Media.Create(MediaType.Image, "https://drop.ndtv.com/albums/ENTERTAINMENT/inception-leonardo/10.jpg"));
+        inception.AddMedia(Media.Create(MediaType.Image, "https://drop.ndtv.com/albums/ENTERTAINMENT/inception-leonardo/21.jpg"));
 
         context.Movies.Add(inception);
 
@@ -100,13 +100,13 @@ public static class InitialDataSeeder
         interstellar.AddPerson(mcconaughey);
 
         // Poster
-        interstellar.AddMedia(Media.Create(MediaType.Image, "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg"));
+        interstellar.AddMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg"));
         // Trailer
         interstellar.AddMedia(Media.Create(MediaType.Video, "https://www.youtube.com/watch?v=zSWdZVtXT7E"));
         // Screenshots
-        interstellar.AddMedia(Media.Create(MediaType.Image, "https://images.alphacoders.com/554/554060.jpg"));
-        interstellar.AddMedia(Media.Create(MediaType.Image, "https://images.alphacoders.com/554/554061.jpg"));
-        interstellar.AddMedia(Media.Create(MediaType.Image, "https://images.alphacoders.com/600/600965.jpg"));
+        interstellar.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/2015/04/35-512.jpg"));
+        interstellar.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/12%20(514).jpg?bwg=1547222787"));
+        interstellar.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/43%20(504).jpg?bwg=1547222787"));
 
         context.Movies.Add(interstellar);
 
@@ -119,12 +119,13 @@ public static class InitialDataSeeder
         barbie.AddPerson(gosling);
 
         // Poster
-        barbie.AddMedia(Media.Create(MediaType.Image, "https://m.media-amazon.com/images/M/MV5BOWIyN2Y5NmYtMzg2MC00YWQ4LWFkZGUtY2UzZTI0ZjhiYzMxXkEyXkFqcGc@._V1_.jpg"));
+        barbie.AddMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg"));
         // Trailer
         barbie.AddMedia(Media.Create(MediaType.Video, "https://www.youtube.com/watch?v=pBk4NYhWNMM"));
         // Screenshots
-        barbie.AddMedia(Media.Create(MediaType.Image, "https://images.alphacoders.com/131/1315570.jpg"));
-        barbie.AddMedia(Media.Create(MediaType.Image, "https://images.alphacoders.com/132/1322986.jpg"));
+        barbie.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/Barbie_19.jpg?bwg=1699879305"));
+        barbie.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/Barbie_59.jpg?bwg=1699879305"));
+        barbie.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/Barbie_52.jpg?bwg=1699879305"));
 
         context.Movies.Add(barbie);
 
@@ -135,12 +136,13 @@ public static class InitialDataSeeder
         darkKnight.AddPerson(nolan);
 
         // Poster
-        darkKnight.AddMedia(Media.Create(MediaType.Image, "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg"));
+        darkKnight.AddMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/en/1/1c/The_Dark_Knight_%282008_film%29.jpg"));
         // Trailer
         darkKnight.AddMedia(Media.Create(MediaType.Video, "https://www.youtube.com/watch?v=EXeTwQWrcwY"));
         // Screenshots
-        darkKnight.AddMedia(Media.Create(MediaType.Image, "https://images.alphacoders.com/279/279282.jpg"));
-        darkKnight.AddMedia(Media.Create(MediaType.Image, "https://images.alphacoders.com/206/206263.jpg"));
+        darkKnight.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/10%20(1051).jpg?bwg=1547463350"));
+        darkKnight.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/46%20(1027).jpg?bwg=1547463350"));
+        darkKnight.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/23%20(1051).jpg?bwg=1547463351"));
 
         context.Movies.Add(darkKnight);
 
@@ -151,12 +153,14 @@ public static class InitialDataSeeder
         bladeRunner.AddPerson(gosling);
 
         // Poster
-        bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_.jpg"));
+        bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://upload.wikimedia.org/wikipedia/en/9/9b/Blade_Runner_2049_poster.png"));
         // Trailer
         bladeRunner.AddMedia(Media.Create(MediaType.Video, "https://www.youtube.com/watch?v=gCcx85zbxz4"));
         // Screenshots
-        bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://images4.alphacoders.com/861/861877.jpg"));
-        bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://images3.alphacoders.com/889/889506.jpg"));
+        bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/bladerunner062.jpg?bwg=1551282394"));
+        bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/bladerunner026.jpg?bwg=1551282394"));
+        bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/bladerunner022.jpg?bwg=1551282394"));
+        bladeRunner.AddMedia(Media.Create(MediaType.Image, "https://film-grab.com/wp-content/uploads/photo-gallery/thumb/bladerunner056.jpg?bwg=1551282394"));
 
         context.Movies.Add(bladeRunner);
 
