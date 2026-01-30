@@ -72,6 +72,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateGenreCommend, CreateGenreCommand>();
         services.AddScoped<IGetHallsDtoQuery, GetHallsDtoQuery>();
         services.AddScoped<IGetHallQueryHandler, GetHallDetailsQuery>();
+        services.AddScoped<IGetFeaturedMoviesDtoQuery, GetFeaturedMoviesDtoQuery>();
         
         return services;
     }
