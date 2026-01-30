@@ -45,7 +45,7 @@ public class GetMovieDetailsQuery(CinemaDbContext db) : IGetMovieDetailsQuery
                         p.Id,
                         p.Name,
                         p.PersonRole,
-                        p.Media.Url
+                        p.Media != null ? p.Media.Url : null
                         ))
                 
             ));
