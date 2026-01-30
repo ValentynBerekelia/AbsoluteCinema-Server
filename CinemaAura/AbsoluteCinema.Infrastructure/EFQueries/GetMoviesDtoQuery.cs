@@ -56,8 +56,12 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
             m.Duration,
             m.Genres.Select(g => g.Name).ToList(),
             _db.Sessions
-                .Where(s=> s.MovieId == m.Id && s.StartDateTime >= today)
-                .Select(s=> s.StartDateTime)
+                .Where(s => s.MovieId == m.Id && s.StartDateTime >= today)
+                .Select(s => new SessionDto (
+                    s.Id,
+                    s.StartDateTime,
+                    s.Format
+                ))
                 .ToList()
         )).ToListAsync(ct);
     }
