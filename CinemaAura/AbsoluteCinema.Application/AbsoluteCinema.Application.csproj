@@ -40,7 +40,6 @@
 
     <ItemGroup>
       <Folder Include="Features\Halls\Queries\" />
-      <Folder Include="Features\Halls\Commands\" />
     </ItemGroup>
 
 </Project>
