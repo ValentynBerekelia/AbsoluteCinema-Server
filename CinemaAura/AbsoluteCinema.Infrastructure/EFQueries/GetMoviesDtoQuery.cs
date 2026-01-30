@@ -1,11 +1,11 @@
 using System.Linq.Expressions;
 using AbsoluteCinema.Application.DTOs;
+using AbsoluteCinema.Application.DTOs.Movie;
 using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Domain.Enums;
 using AbsoluteCinema.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace AbsoluteCinema.Infrastructure.EFQueries;
 
@@ -41,11 +41,20 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
             .Skip((query.PageNumber - 1) * query.PageSize)
             .Take(query.PageSize);
 
-        var today = DateTime.UtcNow.Date;
-        var tomorrow = today.AddDays(1);
+        var first = query.FirstDate is not null
+            ? DateTime.SpecifyKind(
+                DateOnly.Parse(query.FirstDate).ToDateTime(TimeOnly.MinValue),
+                DateTimeKind.Utc)
+            : DateTime.UtcNow.Date;
+
+        var second = query.SecondDate is not null
+            ? DateTime.SpecifyKind(
+                DateOnly.Parse(query.SecondDate).ToDateTime(TimeOnly.MinValue),
+                DateTimeKind.Utc).AddDays(1)
+            : first.AddDays(1);
         
         return await newQuery.Select(m => new MovieDto(
-            m.Id,
+            m.Id.Id,
             m.Name,
             m.Medias
                 .Where(c => c.Type == MediaType.PosterImage)
@@ -54,11 +63,11 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
             m.Rate,
             m.AgeLimit,
             m.Duration,
-            m.Genres.Select(g => g.Name).ToList(),
+            m.Genres.Select(g => new GenreDto(g.Id.Id, g.Name) ).ToList(),
             _db.Sessions
-                .Where(s => s.MovieId == m.Id && s.StartDateTime >= today)
+                .Where(s => s.MovieId == m.Id && s.StartDateTime >= first && s.StartDateTime < second)
                 .Select(s => new SessionDto (
-                    s.Id,
+                    s.Id.Id,
                     s.StartDateTime,
                     s.Format
                 ))
