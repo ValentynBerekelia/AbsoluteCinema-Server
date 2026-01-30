@@ -91,4 +91,12 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         await _mediator.Send(new DetachMediaFromMovieCommand(movieId, mediaId));
         return NoContent();
     }
+
+    [HttpGet("movies/features")]
+    public async Task<IActionResult> GetMoviesFeatured([FromQuery] GetFeaturedMoviesQuery request, CancellationToken ct)
+    {
+        var response = await _mediator.Send(new GetFeaturedMoviesQuery(), ct);
+
+        return Ok(response);
+    }
 }
