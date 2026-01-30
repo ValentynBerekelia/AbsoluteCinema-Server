@@ -34,6 +34,9 @@ namespace AbsoluteCinema.Application.Features.Halls.Commands
             {
                 throw new KeyNotFoundException($"Seat {request.SeatId} does not belong to hall {request.HallId}");
             }
+            seat.ChangeRow((short)request.Row);
+            seat.ChangeNumber((short)request.Number);
+            seat.ChangeSeatTypeId(new SeatTypeId(request.SeatTypeId));
 
             _seat.Update(seat);
             await _unitOfWork.SaveChangesAsync(ct);
