@@ -3,7 +3,7 @@ using AbsoluteCinema.Domain.Enums;
 
 namespace AbsoluteCinema.Application.DTOs;
 
-public class PersonDto
+public record PersonDto
 (
     PersonId PersonId,
     string PersonName,

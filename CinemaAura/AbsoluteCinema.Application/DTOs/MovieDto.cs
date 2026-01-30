@@ -12,5 +12,5 @@ public record MovieDto
      int AgeLimit,
      TimeSpan Duration,
      IEnumerable<string> Genres,
-     IEnumerable<DateTime> SessionTimes
+     IEnumerable<SessionDto> Sessions
          ){}
