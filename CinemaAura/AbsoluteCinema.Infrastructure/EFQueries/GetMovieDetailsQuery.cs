@@ -38,8 +38,14 @@ public class GetMovieDetailsQuery(CinemaDbContext db) : IGetMovieDetailsQuery
                     .Where(c => c.Type == MediaType.Video)
                     .Select(c => c.Url),
                 m.Medias
+                    .Where(c => c.Type == MediaType.Video)
+                    .Select(c => c.Id.Id),
+                m.Medias
                     .Where(c => c.Type == MediaType.Image)
                     .Select(c => c.Url),
+                m.Medias
+                    .Where(c => c.Type == MediaType.Image)
+                    .Select(c => c.Id.Id),
                 m.Persons
                     .Select(p=> new PersonDto(
                         p.Id,
