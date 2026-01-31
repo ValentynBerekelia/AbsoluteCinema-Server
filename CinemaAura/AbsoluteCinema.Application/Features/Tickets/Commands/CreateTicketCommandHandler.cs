@@ -42,10 +42,9 @@ namespace AbsoluteCinema.Application.Features.Tickets.Commands
         Guid Id
         );
     public record CreateTicketRequest(
-            Guid Id,
-            List<UserDto> User,
-            List<SessionDto> Session,
-            List<SeatDto> Seat
+        Guid SessionId,
+        Guid SeatId,
+        Guid? UserId
         );
 }
 }
