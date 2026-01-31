@@ -11,7 +11,7 @@ namespace AbsoluteCinema.Application.DTOs
         SeatId SeatId,
         short Row,
         short Number,
-        SeatType SeatType
+        SeatTypeId SeatTypeId
         );
     
 }
