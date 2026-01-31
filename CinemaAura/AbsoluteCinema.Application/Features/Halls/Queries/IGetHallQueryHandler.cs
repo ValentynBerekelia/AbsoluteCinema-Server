@@ -8,6 +8,6 @@ namespace AbsoluteCinema.Application.Features.Halls.Queries
 {
     public interface IGetHallQueryHandler
     {
-        Task<GetHallQueryResponse> ExecuteAsync(GetHallQuery request, CancellationToken ct);
+        Task<GetHallQueryResponse?> ExecuteAsync(GetHallQuery request, CancellationToken ct);
     }
 }

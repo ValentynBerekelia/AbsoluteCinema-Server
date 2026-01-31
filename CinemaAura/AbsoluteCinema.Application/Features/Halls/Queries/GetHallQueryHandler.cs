@@ -31,6 +31,7 @@ namespace AbsoluteCinema.Application.Features.Halls.Queries
     public record GetHallQueryResponse(
         HallId HallId,
         string Name,
-        IEnumerable<SeatDto> Seats
+        IEnumerable<SeatDto> Seats,
+        IEnumerable<SeatTypeDto> AvailableSeatTypes
         ) { }
 }
