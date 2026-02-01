@@ -41,10 +41,10 @@ public record GetMovieQueryResponse(
     string Studio,
     string Language,
     IEnumerable<GenreDto> Genres,
-    MediaDto? PosterUrl,
-    MediaDto? BannerUrl,
-    IEnumerable<MediaDto> TrailerUrls,
-    IEnumerable<MediaDto> ImageUrls,
+    MediaDto? Poster,
+    MediaDto? Banner,
+    IEnumerable<MediaDto> Trailers,
+    IEnumerable<MediaDto> Images,
     IEnumerable<PersonDto> Persons)
 {}
 
