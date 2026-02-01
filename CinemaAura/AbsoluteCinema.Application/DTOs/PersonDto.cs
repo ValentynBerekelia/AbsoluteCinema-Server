@@ -5,7 +5,7 @@ namespace AbsoluteCinema.Application.DTOs;
 
 public record PersonDto
 (
-    PersonId PersonId,
+    Guid PersonId,
     string PersonName,
     PersonRole PersonRole,
     string? ImageUrl
