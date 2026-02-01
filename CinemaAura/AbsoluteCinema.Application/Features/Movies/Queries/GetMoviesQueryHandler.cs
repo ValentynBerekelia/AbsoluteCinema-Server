@@ -22,6 +22,10 @@ public record GetMoviesQuery : IRequest<GetMoviesResponse>
     public string? SearchTerm { get; init; }
     public List<string>? Genres { get; init; }
     
+    //[first; second)
+    public string? FirstDate { get; init; }
+    public string? SecondDate { get; init; }
+    
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
     

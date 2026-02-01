@@ -1,5 +1,7 @@
 using AbsoluteCinema.Application.DTOs;
+using AbsoluteCinema.Application.DTOs.Movie;
 using AbsoluteCinema.Application.Features.Movies.Queries;
+using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Domain.Enums;
 using AbsoluteCinema.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +18,7 @@ public class GetMovieDetailsQuery(CinemaDbContext db) : IGetMovieDetailsQuery
             .AsNoTracking()
             .Where(m => m.Id == query.MovieId)
             .Select(m => new GetMovieQueryResponse(
-                m.Id,
+                m.Id.Id,
                 m.Name,
                 m.Description,
                 m.Rate,
@@ -25,24 +27,24 @@ public class GetMovieDetailsQuery(CinemaDbContext db) : IGetMovieDetailsQuery
                 m.Country,
                 m.Studio,
                 m.Language,
-                m.Genres.Select(g => g.Name),
+                m.Genres.Select(g => new GenreDto(g.Id.Id, g.Name)),
                 m.Medias
                     .Where(c => c.Type == MediaType.PosterImage)
-                    .Select(c => c.Url)
+                    .Select(c => new MediaDto(c.Id.Id, c.Type ,c.Url) )
                     .FirstOrDefault(),
                 m.Medias
-                    .Where(c =>c.Type == MediaType.BannerImage)
-                    .Select(c => c.Url)
+                    .Where(c => c.Type == MediaType.BannerImage)
+                    .Select(c => new MediaDto(c.Id.Id, c.Type ,c.Url))
                     .FirstOrDefault(),
                 m.Medias
                     .Where(c => c.Type == MediaType.Video)
-                    .Select(c => c.Url),
+                    .Select(c => new MediaDto(c.Id.Id, c.Type ,c.Url)),
                 m.Medias
                     .Where(c => c.Type == MediaType.Image)
-                    .Select(c => c.Url),
+                    .Select(c => new MediaDto(c.Id.Id, c.Type ,c.Url)),
                 m.Persons
                     .Select(p=> new PersonDto(
-                        p.Id,
+                        p.Id.Id,
                         p.Name,
                         p.PersonRole,
                         p.Media != null ? p.Media.Url : null
