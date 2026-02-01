@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using AbsoluteCinema.Domain.Entities;
 
-namespace AbsoluteCinema.Application.DTOs.User
+namespace AbsoluteCinema.Application.DTOs.Ticket
 {
-    public record UserDto(
-        UserId? Id,
-        string Email,
-        string Name
-        );
+    public record HallForTicketDto(
+        HallId Id,
+        string HallName
+    );
+
 }
