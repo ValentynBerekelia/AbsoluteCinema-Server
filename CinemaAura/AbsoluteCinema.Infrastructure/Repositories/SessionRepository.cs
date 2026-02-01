@@ -22,6 +22,7 @@ public class SessionRepository : BaseRepository<SessionId, Session, CinemaDbCont
     {
         return await _set // _set from BaseRepository
             .Include(s => s.TypePrices)
+            .Include( s=> s.Tickets)
             .FirstOrDefaultAsync(s => s.Id == id, ct);
     }
 
