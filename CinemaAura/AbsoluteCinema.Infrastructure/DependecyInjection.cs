@@ -81,6 +81,7 @@ public static class DependencyInjection
         services.AddScoped<IGetFeaturedMoviesDtoQuery, GetFeaturedMoviesDtoQuery>();
         services.AddScoped<IGetTicketQueryHandler, GetTicketDetailsQuery>();
         services.AddScoped<IGetGenresQuery,GetGenreDtoQuery>();
+<<<<<<< HEAD
         services.AddScoped<IGetSeatTypesQuery, GetSeatTypeDtoQuery>();
         services.AddScoped<IGetTicketsFromSessionDtoQuery, GetTicketsFromSessionDtoQuery>();
         return services;
