@@ -75,6 +75,25 @@ public class Session : AggregateRoot<SessionId>
         _typePrices.Add(price);
     }
 
+    public void ChangePrices(IEnumerable<TypePrice> incomingPrices)
+    {
+        if (_tickets.Any())
+            throw new DomainException("Cannot change prices after tickets have been sold.");
+        var incomingTypeIds =  incomingPrices.Select(t => t.SeatTypeId).ToList();
+
+        foreach (var incoming in incomingPrices)
+        {
+            var existing = _typePrices.FirstOrDefault(p => p.SeatTypeId == incoming.SeatTypeId);
+            if (existing != null)
+            {
+                existing.ChangePrice(incoming.Price);
+            }
+            else
+            {
+                AddPrice(incoming);
+            }
+        }
+    }
     public void RemovePrice(TypePrice price)
     {
         _typePrices.Remove(price);

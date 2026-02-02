@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace AbsoluteCinema.Application.Features.Sessions.Commands.CreateSession;
 

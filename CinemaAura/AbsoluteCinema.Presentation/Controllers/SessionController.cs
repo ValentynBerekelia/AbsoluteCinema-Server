@@ -21,50 +21,52 @@ public class SessionController : ControllerBase
     {
         _mediator = mediator;
     }
-    // 1. GET /api/admin/movies/{movieId}/sessions
-    [HttpGet("movies/{movieId:guid}/sessions")]
-    public async Task<IActionResult> GetSessionsByMovie(
-        Guid movieId,
-        [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] string sortColumn = "startDateTime",
-        [FromQuery] string sortOrder = "Asc",
-        CancellationToken ct = default)
-    {
-        if (!Enum.TryParse<SortOrder>(sortOrder, true, out var parsedSortOrder))
-        {
-            parsedSortOrder = SortOrder.Asc;
-        }
+   
+ // GET /api/admin/movies/{movieId}/sessions
+ [HttpGet("movies/{movieId:guid}/sessions")]
+ public async Task<IActionResult> GetSessionsByMovie(
+     Guid movieId,
+     [FromQuery] int pageNumber = 1,
+     [FromQuery] int pageSize = 10,
+     [FromQuery] string sortColumn = "startDateTime",
+     [FromQuery] string sortOrder = "Asc",
+     CancellationToken ct = default)
+ {
+     if (!Enum.TryParse<SortOrder>(sortOrder, true, out var parsedSortOrder))
+     {
+         parsedSortOrder = SortOrder.Asc;
+     }
 
-        var query = new GetSessionsListQuery
-        {
-            MovieId = movieId,
-            PageNumber = pageNumber,
-            PageSize = pageSize,
-            SortColumn = sortColumn,
-            SortOrder = parsedSortOrder
-        };
+     var query = new GetSessionsListQuery
+     {
+         MovieId = movieId,
+         PageNumber = pageNumber,
+         PageSize = pageSize,
+         SortColumn = sortColumn,
+         SortOrder = parsedSortOrder
+     };
 
-        var result = await _mediator.Send(query, ct);
-        return Ok(result);
-    }
+     var result = await _mediator.Send(query, ct);
+     return Ok(result);
+ }
 
-    [HttpPost("admin/sessions")]
-    public async Task<IActionResult> CreateSession(
-       [FromBody] CreateSessionCommand request,
-       CancellationToken ct)
-    {
-        var command = new CreateSessionCommand(
-            request.MovieId,
-            request.HallId,
-            request.Format,
-            request.StartTime,
-            request.Prices
-        );
+ [HttpPost("admin/sessions")]
+ public async Task<IActionResult> CreateSession(
+    [FromBody] CreateSessionCommand request,
+    CancellationToken ct)
+ {
+     var command = new CreateSessionCommand(
+         request.MovieId,
+         request.HallId,
+         request.Format,
+         request.StartTime,
+         request.Prices
+     );
 
-        var response = await _mediator.Send(command, ct);
-        return CreatedAtAction(nameof(GetSessionsByMovie), new { movieId = request.MovieId }, response);
-    }
+     var response = await _mediator.Send(command, ct);
+     return CreatedAtAction(nameof(GetSessionsByMovie), new { movieId = request.MovieId }, response);
+ }
+
 
     [HttpPut("admin/sessions/{id:guid}")]
     public async Task<IActionResult> UpdateFull(Guid id, [FromBody] SessionUpdateFullRequest request)

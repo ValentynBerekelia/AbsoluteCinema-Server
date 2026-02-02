@@ -1,4 +1,4 @@
-﻿using AbsoluteCinema.Application.DTOs;
+using AbsoluteCinema.Application.DTOs;
 using AbsoluteCinema.Application.Repository;
 using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Domain.Enums;
@@ -10,9 +10,10 @@ namespace AbsoluteCinema.Application.Features.Sessions.Queries;
 public record SessionListItemDto(
     Guid Id,
     Guid MovieId,
-    Guid HallId,//fix
+    Guid HallId,
     MovieFormat Format,
-    DateTime StartDateTime
+    DateTime StartDateTime,
+    List<SessionPriceDto> Prices
 );
 
 public record PagedSessionResponse(
@@ -58,7 +59,11 @@ public class GetSessionsListHandler : IRequestHandler<GetSessionsListQuery, Page
             s.MovieId.Id,
             s.HallId.Id,
             s.Format,
-            s.StartDateTime
+            s.StartDateTime,
+            s.TypePrices.Select(tp => new SessionPriceDto(
+                tp.SeatTypeId.Id,
+                tp.Price
+            )).ToList()
         )).ToList();
 
         return new PagedSessionResponse(sessionDtos, totalCount, request.PageNumber, request.PageSize);

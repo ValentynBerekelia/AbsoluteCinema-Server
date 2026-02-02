@@ -1,4 +1,4 @@
-﻿using AbsoluteCinema.Application.Repository;
+using AbsoluteCinema.Application.Repository;
 using AbsoluteCinema.Domain.Entities;
 using MediatR;
 

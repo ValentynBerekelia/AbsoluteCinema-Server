@@ -1,4 +1,4 @@
-﻿using AbsoluteCinema.Domain.Entities;
+using AbsoluteCinema.Domain.Entities;
 using MediatR;
 
 namespace AbsoluteCinema.Application.Features.Sessions.Commands.CreateSession;
