@@ -12,7 +12,8 @@ public record SessionListItemDto(
     Guid MovieId,
     Guid HallId,//fix
     MovieFormat Format,
-    DateTime StartDateTime
+    DateTime StartDateTime,
+    List<SessionPriceDto> Prices
 );
 
 public record PagedSessionResponse(
@@ -58,7 +59,11 @@ public class GetSessionsListHandler : IRequestHandler<GetSessionsListQuery, Page
             s.MovieId.Id,
             s.HallId.Id,
             s.Format,
-            s.StartDateTime
+            s.StartDateTime,
+            s.TypePrices.Select(tp => new SessionPriceDto(
+                tp.SeatTypeId.Id,
+                tp.Price
+            )).ToList()
         )).ToList();
 
         return new PagedSessionResponse(sessionDtos, totalCount, request.PageNumber, request.PageSize);

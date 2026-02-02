@@ -44,6 +44,7 @@ public class SessionRepository : BaseRepository<SessionId, Session, CinemaDbCont
     {
         IQueryable<Session> query = _set
             .Include(s => s.Hall)
+            .Include(s => s.TypePrices)
             .Where(s => s.MovieId == new MovieId(movieId))
             .AsNoTracking();
 

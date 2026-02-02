@@ -58,7 +58,7 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
             _db.Sessions
                 .Where(s => s.MovieId == m.Id && s.StartDateTime >= today)
                 .Select(s => new SessionDto (
-                    s.Id,
+                    s.Id.Id,
                     s.StartDateTime,
                     s.Format
                 ))
