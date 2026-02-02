@@ -1,10 +1,12 @@
 using AbsoluteCinema.Application.Features.Halls.Commands;
 using AbsoluteCinema.Application.Features.Halls.Queries;
+using AbsoluteCinema.Application.Features.SeatTypes.Queries;
 using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Requests;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using static AbsoluteCinema.Application.Features.Halls.Commands.CreateHallCommandHandler;
 
 namespace AbsoluteCinema.Controllers;
@@ -98,5 +100,13 @@ public class HallController(IMediator mediator) : ControllerBase
         var command = new DeleteHallCommand(hallId);
         await _mediator.Send(command, ct);
         return NoContent();
+    }
+
+    [HttpGet]
+    [Route("admin/seattype")]
+    public async Task<IActionResult> GetSeatType(CancellationToken ct)
+    {
+        var response = await _mediator.Send(new GetSeatTypesQuery(),ct);
+        return Ok(response);
     }
 }
