@@ -23,7 +23,7 @@ namespace AbsoluteCinema.Infrastructure.EFQueries
                     .AsNoTracking()
                     .OrderBy(g => g.Name)
                     .Select(g => new GenreDto(
-                        g.Id.Id,     // якщо GenreId має поле Id
+                        g.Id.Id,   
                         g.Name
                     ))
                     .ToListAsync(ct);
