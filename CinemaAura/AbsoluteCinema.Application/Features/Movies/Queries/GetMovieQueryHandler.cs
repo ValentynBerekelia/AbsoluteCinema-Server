@@ -1,4 +1,5 @@
 using AbsoluteCinema.Application.DTOs;
+using AbsoluteCinema.Application.DTOs.Movie;
 using AbsoluteCinema.Domain.Entities;
 using MediatR;
 
@@ -30,7 +31,7 @@ public record GetMovieQuery : IRequest<GetMovieQueryResponse>
 }
 
 public record GetMovieQueryResponse(
-    MovieId MovieId,
+    Guid MovieId,
     string Title,
     string Description,
     decimal Rate,
@@ -39,11 +40,11 @@ public record GetMovieQueryResponse(
     string Country,
     string Studio,
     string Language,
-    IEnumerable<string> Genres,
-    string? PosterUrl,
-    string? BannerUrl,
-    IEnumerable<string> TrailerUrls,
-    IEnumerable<string> ImageUrls,
+    IEnumerable<GenreDto> Genres,
+    MediaDto? Poster,
+    MediaDto? Banner,
+    IEnumerable<MediaDto> Trailers,
+    IEnumerable<MediaDto> Images,
     IEnumerable<PersonDto> Persons)
 {}
 

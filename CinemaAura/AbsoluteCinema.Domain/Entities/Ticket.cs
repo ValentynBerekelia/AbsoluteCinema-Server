@@ -71,6 +71,11 @@ public class Ticket : Entity<TicketId>
     {
         SessionId = newSessionId;
     }
+
+    public void ChangeUser(UserId newUserId)
+    {
+        UserId = newUserId;
+    }
 }
 
 public enum TicketStatus

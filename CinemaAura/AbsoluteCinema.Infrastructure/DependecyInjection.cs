@@ -2,6 +2,7 @@ using AbsoluteCinema.Application.DTOs.Hall;
 using AbsoluteCinema.Application.Features.Halls.Queries;
 using AbsoluteCinema.Application.Features.Movies.Command;
 using AbsoluteCinema.Application.Features.Movies.Queries;
+using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Application.Repository;
 using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
@@ -73,7 +74,7 @@ public static class DependencyInjection
         services.AddScoped<IGetHallsDtoQuery, GetHallsDtoQuery>();
         services.AddScoped<IGetHallQueryHandler, GetHallDetailsQuery>();
         services.AddScoped<IGetFeaturedMoviesDtoQuery, GetFeaturedMoviesDtoQuery>();
-        
+        services.AddScoped<IGetTicketQueryHandler, GetTicketDetailsQuery>();
         return services;
     }
 }

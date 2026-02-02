@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AbsoluteCinema.Application.Features.Movies.Command.DeleteMovie;
 using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Application.Features.Movies.Command.AttachMediaToMovie;
@@ -8,7 +9,6 @@ using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography.Xml;
 using static AbsoluteCinema.Application.Features.Movies.Command.UpdateMoviePartialCommandHandler;
 using AbsoluteCinema.Application.DTOs.Movie;
 using AbsoluteCinema.Application.Features.Movies.Command;
