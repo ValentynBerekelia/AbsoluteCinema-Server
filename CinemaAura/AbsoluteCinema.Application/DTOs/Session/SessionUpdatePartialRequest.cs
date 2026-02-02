@@ -6,5 +6,7 @@ public record SessionUpdatePartialRequest(
     MovieId? MovieID,
     HallId? HallId,
     MovieFormat? Format,
-    DateTime? StartDateTime
+    DateTime? StartDateTime,
+    Dictionary<Guid, decimal>? SeatPrices
+    
 );

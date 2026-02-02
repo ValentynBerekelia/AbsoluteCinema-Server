@@ -17,7 +17,7 @@ public class UpdateSessionPartialCommandHandler : IRequestHandler<UpdateSessionP
 
     public async Task Handle(UpdateSessionPartialCommand command, CancellationToken ct)
     {
-        var session = await _sessions.GetByIdAsync(command.Id, ct) 
+        var session = await _sessions.GetByIdWithPricesAsync(command.Id, ct) 
             ?? throw new Exception("Session not found");
 
         if (command.MovieId.HasValue)
@@ -40,6 +40,12 @@ public class UpdateSessionPartialCommandHandler : IRequestHandler<UpdateSessionP
             session.Reschedule(command.StartDateTime.Value);
         }
 
+        if (command.SeatPrices != null && command.SeatPrices.Any())
+        {
+            session.ChangePrices(command.SeatPrices.Select(p =>
+                TypePrice.Create(session.Id, new SeatTypeId(p.Key), p.Value)));
+        }
+
         await _unitOfWork.SaveChangesAsync(ct);
     }
 }
@@ -49,5 +55,6 @@ public record UpdateSessionPartialCommand(
     MovieId? MovieId,
     HallId? HallId,
     MovieFormat? Format,
-    DateTime? StartDateTime
+    DateTime? StartDateTime,
+    Dictionary<Guid, decimal>? SeatPrices
 ) : IRequest;
