@@ -17,13 +17,15 @@ public class UpdateSessionFullCommandHandler : IRequestHandler<UpdateSessionFull
 
     public async Task Handle(UpdateSessionFullCommand command, CancellationToken ct)
     {
-        var session = await _sessions.GetByIdAsync(command.Id, ct)
+        var session = await _sessions.GetByIdWithPricesAsync(command.Id, ct)
             ?? throw new Exception("Session not found");
 
         session.ChangeMovie(command.MovieId);
         session.ChangeHall(command.HallId);
         session.ChangeFormat(command.Format);
         session.Reschedule(command.StartDateTime);
+        session.ChangePrices(command.SeatPrices.Select(p => 
+            TypePrice.Create(session.Id, new SeatTypeId(p.Key), p.Value)));
 
         await _unitOfWork.SaveChangesAsync(ct);
     }
@@ -34,5 +36,6 @@ public record UpdateSessionFullCommand(
     MovieId MovieId,
     HallId HallId,
     MovieFormat Format,
-    DateTime StartDateTime
+    DateTime StartDateTime,
+    Dictionary<Guid, decimal> SeatPrices
 ) : IRequest;
