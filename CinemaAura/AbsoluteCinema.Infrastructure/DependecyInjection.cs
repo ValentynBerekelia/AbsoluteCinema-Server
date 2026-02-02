@@ -77,7 +77,10 @@ public static class DependencyInjection
         services.AddScoped<IGetFeaturedMoviesDtoQuery, GetFeaturedMoviesDtoQuery>();
         services.AddScoped<IGetTicketQueryHandler, GetTicketDetailsQuery>();
         services.AddScoped<IGetGenresQuery,GetGenreDtoQuery>();
+<<<<<<< HEAD
         services.AddScoped<IGetSeatTypesQuery, GetSeatTypeDtoQuery>();
+=======
+>>>>>>> ced908c (Add genre/get/post/put/delete)
         return services;
     }
 }
