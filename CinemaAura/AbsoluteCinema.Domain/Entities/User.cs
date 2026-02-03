@@ -11,6 +11,7 @@ public class User : AggregateRoot<UserId>
     
     private readonly List<Role> _roles = new List<Role>();
     public IReadOnlyCollection<Role> Roles => _roles;
+    public ICollection<RefreshToken> RefreshTokens { get; private set; }
 
     private User() { }
 
