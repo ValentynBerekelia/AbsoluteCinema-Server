@@ -3,6 +3,7 @@ using AbsoluteCinema.Application.Features.Genres.Queries;
 using AbsoluteCinema.Application.Features.Halls.Queries;
 using AbsoluteCinema.Application.Features.Movies.Command;
 using AbsoluteCinema.Application.Features.Movies.Queries;
+using AbsoluteCinema.Application.Features.SeatTypes.Queries;
 using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Application.Repository;
 using AbsoluteCinema.Infrastructure.EFQueries;
@@ -61,9 +62,8 @@ public static class DependencyInjection
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<ISeatRepository, SeatRepository>();
-        
+        services.AddScoped<ISeatTypeRepository, SeatTypeRepository>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork<CinemaDbContext>>();
-
         return services;
     }
     
@@ -77,6 +77,7 @@ public static class DependencyInjection
         services.AddScoped<IGetFeaturedMoviesDtoQuery, GetFeaturedMoviesDtoQuery>();
         services.AddScoped<IGetTicketQueryHandler, GetTicketDetailsQuery>();
         services.AddScoped<IGetGenresQuery,GetGenreDtoQuery>();
+        services.AddScoped<IGetSeatTypesQuery, GetSeatTypeDtoQuery>();
         return services;
     }
 }
