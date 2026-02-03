@@ -15,7 +15,6 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
 
     public async Task<List<MovieDto>> ExecuteAsync(GetMoviesQuery query, CancellationToken ct)
     {
-
         var newQuery = _db.Movies.AsNoTracking();
         if (!string.IsNullOrWhiteSpace(query.SearchTerm))
         {
@@ -49,12 +48,7 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
                 DateTimeKind.Utc).AddDays(1)
             : first.AddDays(1);
         
-        newQuery = newQuery.Where(m =>
-            _db.Sessions
-                .Where(s=> s.MovieId == m.Id)
-                .Any(s =>
-                s.StartDateTime >= first &&
-                s.StartDateTime < second));
+        
         
         newQuery = newQuery
             .Skip((query.PageNumber - 1) * query.PageSize)
