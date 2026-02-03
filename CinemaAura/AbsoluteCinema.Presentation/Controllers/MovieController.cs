@@ -8,6 +8,7 @@ using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using AbsoluteCinema.Application.Features.Movies.Command;
 
 namespace AbsoluteCinema.Controllers;
 
