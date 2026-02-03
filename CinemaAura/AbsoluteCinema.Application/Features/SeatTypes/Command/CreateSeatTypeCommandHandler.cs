@@ -25,6 +25,8 @@ namespace AbsoluteCinema.Application.Features.SeatTypes.Command
 
             return new CreateSeatTypeResponse(seatType.Id, seatType.TypeName);
         }
+        public record CreateSeatTypeRequest(
+            string Name);
         public record CreateSeatTypeCommand(
             string Name
         ) : IRequest<CreateSeatTypeResponse>;
