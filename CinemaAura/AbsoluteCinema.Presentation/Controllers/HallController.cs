@@ -114,7 +114,7 @@ public class HallController(IMediator mediator) : ControllerBase
 
     [HttpPost]
     [Route("admin/seattype")]
-    public async Task<IActionResult> CreateSeatType([FromBody]CreateSeatTypeRequest request,CancellationToken ct)
+    public async Task<IActionResult> CreateSeatType([FromBody] CreateSeatTypeRequest request, CancellationToken ct)
     {
         var command = new CreateSeatTypeCommand(request.Name);
         var response = await _mediator.Send(command, ct);
