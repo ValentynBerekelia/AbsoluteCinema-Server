@@ -1,13 +1,17 @@
+using AbsoluteCinema.Application.Abstractions;
 using AbsoluteCinema.Application.DTOs.Hall;
 using AbsoluteCinema.Application.Features.Genres.Queries;
 using AbsoluteCinema.Application.Features.Halls.Queries;
 using AbsoluteCinema.Application.Features.Movies.Command;
 using AbsoluteCinema.Application.Features.Movies.Queries;
+using AbsoluteCinema.Application.Features.SeatTypes.Queries;
 using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Application.Repository;
+using AbsoluteCinema.Domain.ValueObjects;
 using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using AbsoluteCinema.Infrastructure.Repositories;
+using AbsoluteCinema.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +32,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddAuthenticationInternal(this IServiceCollection services)
     {
-        //services.AddSingleton<IPasswordService, PasswordService>();
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
         
         return services;
     }
@@ -61,9 +65,8 @@ public static class DependencyInjection
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<ISeatRepository, SeatRepository>();
-        
+        services.AddScoped<ISeatTypeRepository, SeatTypeRepository>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork<CinemaDbContext>>();
-
         return services;
     }
     
@@ -77,6 +80,7 @@ public static class DependencyInjection
         services.AddScoped<IGetFeaturedMoviesDtoQuery, GetFeaturedMoviesDtoQuery>();
         services.AddScoped<IGetTicketQueryHandler, GetTicketDetailsQuery>();
         services.AddScoped<IGetGenresQuery,GetGenreDtoQuery>();
+        services.AddScoped<IGetSeatTypesQuery, GetSeatTypeDtoQuery>();
         return services;
     }
 }

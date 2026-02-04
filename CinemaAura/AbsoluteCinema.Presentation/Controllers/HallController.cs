@@ -1,11 +1,15 @@
 using AbsoluteCinema.Application.Features.Halls.Commands;
 using AbsoluteCinema.Application.Features.Halls.Queries;
+using AbsoluteCinema.Application.Features.SeatTypes.Command;
+using AbsoluteCinema.Application.Features.SeatTypes.Queries;
 using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Requests;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using static AbsoluteCinema.Application.Features.Halls.Commands.CreateHallCommandHandler;
+using static AbsoluteCinema.Application.Features.SeatTypes.Command.CreateSeatTypeCommandHandler;
 
 namespace AbsoluteCinema.Controllers;
 [Route("api")]
@@ -97,6 +101,39 @@ public class HallController(IMediator mediator) : ControllerBase
     {
         var command = new DeleteHallCommand(hallId);
         await _mediator.Send(command, ct);
+        return NoContent();
+    }
+
+    [HttpGet]
+    [Route("admin/seattype")]
+    public async Task<IActionResult> GetSeatType(CancellationToken ct)
+    {
+        var response = await _mediator.Send(new GetSeatTypesQuery(),ct);
+        return Ok(response);
+    }
+
+    [HttpPost]
+    [Route("admin/seattype")]
+    public async Task<IActionResult> CreateSeatType([FromBody] CreateSeatTypeRequest request, CancellationToken ct)
+    {
+        var command = new CreateSeatTypeCommand(request.Name);
+        var response = await _mediator.Send(command, ct);
+        return Ok(response);
+    }
+    [HttpPut]
+    [Route("admin/seattype/{seatTypeId:guid}")]
+    public async Task<IActionResult> UpdateSeatType([FromRoute] Guid seatTypeId, [FromBody] UpdateSeatTypeRequest request,CancellationToken ct)
+    {
+        var command = new UpdateSeatTypeCommand(seatTypeId,request.Name);
+        await _mediator.Send(command, ct);
+        return NoContent();
+    }
+    [HttpDelete]
+    [Route("admin/seattype/{seatTypeId:guid}")]
+    public async Task<IActionResult> DeleteSeatType([FromRoute] Guid seatTypeId, CancellationToken ct)
+    {
+        var commnd = new DeleteSeatTypeCommand(seatTypeId);
+        await _mediator.Send(commnd, ct);
         return NoContent();
     }
 }
