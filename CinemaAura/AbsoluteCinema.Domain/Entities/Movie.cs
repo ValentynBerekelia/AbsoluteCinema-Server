@@ -1,5 +1,6 @@
 using AbsoluteCinema.Domain.Exceptions;
 using AbsoluteCinema.Domain.Primitives;
+using System.Collections.Frozen;
 
 namespace AbsoluteCinema.Domain.Entities;
 
@@ -147,7 +148,8 @@ public class Movie : AggregateRoot<MovieId>
     public void RemoveGenre(GenreId genreId)
     {
         var genre = _genres.FirstOrDefault(g => g.Id == genreId);
-        if (genre != null) _genres.Remove(genre);
+        if (genre != null) 
+            _genres.Remove(genre);
     }
 
     public void ClearGenres()
