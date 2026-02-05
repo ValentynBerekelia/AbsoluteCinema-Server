@@ -1,4 +1,5 @@
 ﻿using AbsoluteCinema.Application.Features.Halls.Queries;
+using AbsoluteCinema.Application.Features.Sessions.Queries;
 using AbsoluteCinema.Application.Features.Tickets.Commands;
 using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Domain.Entities;
@@ -38,7 +39,7 @@ namespace AbsoluteCinema.Controllers
 
         [HttpPatch]
         [Route("ticket/{ticketId:guid}")]
-        public async Task<IActionResult> UpdateTicket([FromRoute] Guid ticketId, [FromBody] UpdateTicketRequest request,CancellationToken ct)
+        public async Task<IActionResult> UpdateTicket([FromRoute] Guid ticketId, [FromBody] UpdateTicketRequest request, CancellationToken ct)
         {
             var command = new UpdateTicketCommand(ticketId, request.SessionId, request.SeatId, request.UserId);
             await _mediator.Send(command, ct);
@@ -53,7 +54,15 @@ namespace AbsoluteCinema.Controllers
             await _mediator.Send(command, ct);
             return NoContent();
         }
+        [HttpGet]
+        [Route("sessions/{sessionId:guid}/tickets")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetTicketsFromSession([FromRoute] Guid sessionId, CancellationToken ct)
+        {
+            var result = await _mediator.Send(
+            new GetTicketsFromSessionQuery(new SessionId(sessionId)), ct);
+            return Ok(result);
+        }
 
-        
     }
 }
