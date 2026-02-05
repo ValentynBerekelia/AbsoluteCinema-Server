@@ -1,5 +1,5 @@
 ﻿using AbsoluteCinema.Application.DTOs.Ticket;
-using AbsoluteCinema.Application.Features.Sessions.Queries;
+using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
