@@ -13,7 +13,7 @@ namespace AbsoluteCinema.Application.Features.Movies.Command.CreateMovieAndAttac
     MediaType Type
 ) : IRequest<CreateAndAttachMediaResponse>;
 
-    public record CreateAndAttachMediaResponse(Guid MovieId);
+    public record CreateAndAttachMediaResponse(Guid MovieId, Guid MediaId);
 
     public class CreateAndAttachMediaCommandHandler(
     IMovieRepository movies,
@@ -46,7 +46,7 @@ namespace AbsoluteCinema.Application.Features.Movies.Command.CreateMovieAndAttac
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return new CreateAndAttachMediaResponse(command.MovieId);
+            return new CreateAndAttachMediaResponse(command.MovieId, media.Id.Id);
         }
     }
 }

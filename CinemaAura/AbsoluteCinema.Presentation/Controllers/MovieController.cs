@@ -13,6 +13,8 @@ using static AbsoluteCinema.Application.Features.Movies.Command.UpdateMovieParti
 using AbsoluteCinema.Application.DTOs.Movie;
 using AbsoluteCinema.Application.Features.Movies.Command;
 using AbsoluteCinema.Application.Features.Movies.Command.CreateMovieAndAttachMedia;
+using static AbsoluteCinema.Application.Features.Genres.Commands.AttachGenreToMovie.AttachGenreToMovieCommandHandler;
+using AbsoluteCinema.Application.Features.Genres.Commands;
 
 namespace AbsoluteCinema.Controllers;
 
@@ -141,5 +143,46 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         var response = await _mediator.Send(new GetFeaturedMoviesQuery(), ct);
 
         return Ok(response);
+    }
+
+
+    [HttpPost("admin/movies/{movieId:guid}/genre/attach")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> AttachGenreToMovie(
+    [FromRoute] Guid movieId,
+    [FromBody] AttachGenreRequest request,
+    CancellationToken ct)
+    {
+        var command = new AttachGenreToMovieCommand(movieId, request.genreId);
+        await _mediator.Send(command, ct);
+        return NoContent();
+    }
+
+    [HttpPost("admin/movies/{movieId:guid}/genre")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CreateGenreToMovie(
+    [FromRoute] Guid movieId,
+    [FromBody] CreateGenreToMovieRequest request,
+    CancellationToken ct)
+    {
+        var command = new CreateGenreToMovieCommand(movieId,request.Name);
+        await _mediator.Send(command, ct);
+        return NoContent();
+    }
+
+    [HttpDelete("admin/movies/{movieId:guid}/genre/{genreId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DetachGenreFromMovie(
+        [FromRoute] Guid movieId,
+        [FromRoute] Guid genreId,
+        CancellationToken ct)
+    {
+        await _mediator.Send(new DetachGenreFromMovieCommand(movieId, genreId), ct);
+        return NoContent();
     }
 }
