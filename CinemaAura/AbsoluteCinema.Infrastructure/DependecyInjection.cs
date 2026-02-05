@@ -5,6 +5,7 @@ using AbsoluteCinema.Application.Features.Halls.Queries;
 using AbsoluteCinema.Application.Features.Movies.Command;
 using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Application.Features.SeatTypes.Queries;
+using AbsoluteCinema.Application.Features.Sessions.Queries;
 using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Application.Repository;
 using AbsoluteCinema.Domain.ValueObjects;
@@ -82,7 +83,6 @@ public static class DependencyInjection
         services.AddScoped<IGetGenresQuery,GetGenreDtoQuery>();
         services.AddScoped<IGetSeatTypesQuery, GetSeatTypeDtoQuery>();
         services.AddScoped<IGetTicketsFromSessionDtoQuery, GetTicketsFromSessionDtoQuery>();
-        services.AddScoped<IGetTicketShortQuery, GetTicketShortDtoQuery>();
         return services;
     }
 }

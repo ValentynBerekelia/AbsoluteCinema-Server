@@ -73,5 +73,6 @@ namespace AbsoluteCinema.Controllers
             var result = await _mediator.Send(new GetTicketsQuery(new SessionId(sessionId)),ct);
             return Ok(result);
         }
+
     }
 }
