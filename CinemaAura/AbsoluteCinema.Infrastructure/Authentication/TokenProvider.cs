@@ -48,4 +48,11 @@ public sealed class TokenProvider(JwtOptions options) : ITokenProvider
 
         return (token, hash);
     }
+
+    public string HashRefreshToken(string token)
+    {
+        var bytes = Convert.FromBase64String(token);
+        var hashBytes = SHA256.HashData(bytes);
+        return Convert.ToHexString(hashBytes);
+    }
 }
