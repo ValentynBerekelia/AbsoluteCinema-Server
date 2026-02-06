@@ -1,16 +1,12 @@
-﻿using AbsoluteCinema.Domain.Enums;
+using AbsoluteCinema.Domain.Enums;
 using FluentValidation;
 
-namespace AbsoluteCinema.Application.Features.Persons.Commands.CreateAndAttachPersonToMovie;
+namespace AbsoluteCinema.Application.Features.Persons.Commands.CreatePerson;
 
-public class CreateAndAttachPersonToMovieCommandValidator : AbstractValidator<CreateAndAttachPersonToMovieCommand>
+public class CreatePersonCommandValidator : AbstractValidator<CreatePersonCommand>
 {
-    public CreateAndAttachPersonToMovieCommandValidator()
+    public CreatePersonCommandValidator()
     {
-        RuleFor(x => x.MovieId)
-            .NotEmpty()
-            .WithMessage("Movie ID is required.");
-
         RuleFor(x => x.FullName)
             .NotEmpty()
             .WithMessage("Full name is required.")

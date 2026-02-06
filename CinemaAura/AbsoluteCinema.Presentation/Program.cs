@@ -1,10 +1,9 @@
 using AbsoluteCinema.Application;
 using AbsoluteCinema.Application.Features.Movies.Queries;
+using AbsoluteCinema.Application.Features.Persons.Queries;
 using AbsoluteCinema.Infrastructure;
 using AbsoluteCinema.Infrastructure.EFQueries;
-using AbsoluteCinema.Infrastructure.Persistence;
 using Mapster;
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Text.Json;
 
@@ -52,6 +51,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddTransient<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
+builder.Services.AddTransient<IGetPersonDtoQuery, GetPersonDtoQuery>();
+builder.Services.AddTransient<IGetPersonsDtoQuery, GetPersonsDtoQuery>();
 
 var app = builder.Build();
 
