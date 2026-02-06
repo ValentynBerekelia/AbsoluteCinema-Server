@@ -6,13 +6,15 @@ using AbsoluteCinema.Infrastructure.EFQueries;
 using Mapster;
 using System.Reflection;
 using System.Text.Json;
+using AbsoluteCinema;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services
     .AddApplication()
-    .AddInfrastucture(builder.Configuration);
+    .AddInfrastucture(builder.Configuration)
+    .AddPresentation(builder.Configuration);
 
 
 var config = TypeAdapterConfig.GlobalSettings;
@@ -24,7 +26,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowViteFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("http://localhost:5174")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
