@@ -48,8 +48,6 @@ public class GetMoviesDtoQuery(CinemaDbContext db) : IGetMoviesDtoQuery
                 DateTimeKind.Utc).AddDays(1)
             : first.AddDays(1);
         
-        
-        
         newQuery = newQuery
             .Skip((query.PageNumber - 1) * query.PageSize)
             .Take(query.PageSize);

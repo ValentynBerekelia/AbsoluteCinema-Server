@@ -39,6 +39,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Features\Auth\Queries\" />
       <Folder Include="Features\Halls\Queries\" />
       <Folder Include="Features\SeatTypes\Command\" />
     </ItemGroup>

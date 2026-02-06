@@ -1,5 +1,6 @@
 using AbsoluteCinema.Application.Abstractions;
 using AbsoluteCinema.Application.DTOs.Hall;
+using AbsoluteCinema.Application.Features.Auth;
 using AbsoluteCinema.Application.Features.Genres.Queries;
 using AbsoluteCinema.Application.Features.Halls.Queries;
 using AbsoluteCinema.Application.Features.Movies.Command;
@@ -8,7 +9,7 @@ using AbsoluteCinema.Application.Features.SeatTypes.Queries;
 using AbsoluteCinema.Application.Features.Sessions.Queries;
 using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Application.Repository;
-using AbsoluteCinema.Domain.ValueObjects;
+using Microsoft.Extensions.DependencyInjection;
 using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using AbsoluteCinema.Infrastructure.Repositories;
@@ -33,7 +34,6 @@ public static class DependencyInjection
     private static IServiceCollection AddAuthenticationInternal(this IServiceCollection services)
     {
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
-        
         return services;
     }
 
@@ -48,6 +48,13 @@ public static class DependencyInjection
                 builder.MigrationsAssembly(typeof(CinemaDbContext).Assembly.FullName);
             });
         });    
+        
+        return services;
+    }
+
+    private static IServiceCollection AddAuthentication(this IServiceCollection services)
+    {
+        services.AddScoped<ITokenProvider, TokenProvider>();
         
         return services;
     }
@@ -81,6 +88,8 @@ public static class DependencyInjection
         services.AddScoped<IGetTicketQueryHandler, GetTicketDetailsQuery>();
         services.AddScoped<IGetGenresQuery,GetGenreDtoQuery>();
         services.AddScoped<IGetSeatTypesQuery, GetSeatTypeDtoQuery>();
+        services.AddScoped<ICreateUserCommand, RegisterUserCommand>();
+        
         services.AddScoped<IGetTicketsFromSessionDtoQuery, GetTicketsFromSessionDtoQuery>();
         services.AddScoped<IGetTicketShortQuery, GetTicketShortDtoQuery>();
         return services;
