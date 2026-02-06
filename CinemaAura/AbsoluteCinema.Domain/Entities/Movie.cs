@@ -1,5 +1,6 @@
 using AbsoluteCinema.Domain.Exceptions;
 using AbsoluteCinema.Domain.Primitives;
+using System.Collections.Frozen;
 
 namespace AbsoluteCinema.Domain.Entities;
 
@@ -10,7 +11,7 @@ public class Movie : AggregateRoot<MovieId>
     public decimal Rate { get; private set; }
     public int AgeLimit { get; private set; }
     public TimeSpan Duration { get; private set; }
-    
+
     //In my opinion, creating new entities for the fields below is too much.
     public string Country { get; private set; }
     public string Studio { get; private set; }
@@ -80,7 +81,7 @@ public class Movie : AggregateRoot<MovieId>
         }
         Name = name;
     }
-    
+
     public void ChangeCountry(string country)
     {
         if (string.IsNullOrWhiteSpace(country))
@@ -147,7 +148,8 @@ public class Movie : AggregateRoot<MovieId>
     public void RemoveGenre(GenreId genreId)
     {
         var genre = _genres.FirstOrDefault(g => g.Id == genreId);
-        if (genre != null) _genres.Remove(genre);
+        if (genre != null)
+            _genres.Remove(genre);
     }
 
     public void ClearGenres()
@@ -157,14 +159,14 @@ public class Movie : AggregateRoot<MovieId>
 
     public void AddMedia(Media media)
     {
-        if(_medias.All(m => m.Id != media.Id))
+        if (_medias.All(m => m.Id != media.Id))
             _medias.Add(media);
     }
 
     public void RemoveMedia(MediaId mediaId)
     {
         var media = _medias.FirstOrDefault(m => m.Id == mediaId);
-        if (media != null)_medias.Remove(media);
+        if (media != null) _medias.Remove(media);
     }
 
     public void ClearMedias()
@@ -186,11 +188,17 @@ public class Movie : AggregateRoot<MovieId>
             _persons.Remove(person);
     }
 
+    public void RemovePersonById(PersonId personId)
+    {
+        var person = _persons.FirstOrDefault(p => p.Id == personId);
+        if (person != null)
+            _persons.Remove(person);
+    }
+
     public void ClearPersons()
     {
         _persons.Clear();
     }
-
 }
 
 public record struct MovieId(Guid Id)

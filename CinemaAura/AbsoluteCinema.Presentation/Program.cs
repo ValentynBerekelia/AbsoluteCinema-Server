@@ -56,3 +56,29 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddTransient<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
 
 
+//using (var scope = app.Services.CreateScope())
+//{
+    //var dbContext = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();
+    //await dbContext.Database.MigrateAsync();
+    //InitialDataSeeder.Seed(dbContext);
+//}
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "AbsoluteCinema API v1");
+        options.RoutePrefix = "swagger";
+    });
+}
+
+app.UseHttpsRedirection();
+
+app.UseCors("AllowViteFrontend");
+
+app.MapControllers();
+
+
+app.Run();
