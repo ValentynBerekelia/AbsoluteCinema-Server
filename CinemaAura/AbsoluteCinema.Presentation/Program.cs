@@ -52,10 +52,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Cinema booking system API"
     });
 });
-
-builder.Services.AddTransient<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
-
-
+var  app = builder.Build();
 //using (var scope = app.Services.CreateScope())
 //{
     //var dbContext = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();

@@ -28,6 +28,7 @@ public static class DependencyInjection
         services
             .AddDbContext(configuration)
             .AddAuthenticationInternal()
+            .AddTokenProvider()
             .AddRepositories()
             .AddQueries();
 
@@ -52,10 +53,9 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddAuthentication(this IServiceCollection services)
+    private static IServiceCollection AddTokenProvider(this IServiceCollection services)
     {
         services.AddScoped<ITokenProvider, TokenProvider>();
-        
         return services;
     }
 

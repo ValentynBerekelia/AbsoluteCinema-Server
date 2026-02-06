@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using AbsoluteCinema.Application.Abstractions;
 using AbsoluteCinema.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -37,13 +38,14 @@ public sealed class TokenProvider(JwtOptions options) : ITokenProvider
         return tokenHandler.WriteToken(token);
     }
     
-    public string GenerateRefreshToken()
+    public (string Token, string Hash) GenerateRefreshToken()
     {
-        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-    }
+        var bytes = RandomNumberGenerator.GetBytes(64);
+        var token = Convert.ToBase64String(bytes);
 
-    public string HashRefreshToken(string token)
-    {
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token)));
+        var hashBytes = SHA256.HashData(bytes);
+        var hash = Convert.ToHexString(hashBytes);
+
+        return (token, hash);
     }
 }

@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
 using AbsoluteCinema.Application.Abstractions;
 using AbsoluteCinema.Application.Features.Auth;
 using AbsoluteCinema.Domain.Entities;
@@ -25,21 +23,19 @@ public class RegisterUserCommand(CinemaDbContext db, ITokenProvider tokenProvide
             throw new UserAlreadyExistsException(request.Email);
         }
 
-
-        var passHash = Encoding.UTF8.GetBytes(_hasher.Hash(request.Password));
-        var salt = Encoding.UTF8.GetBytes(_hasher.Hash(RandomNumberGenerator.GetBytes(16).ToString()!));
-        var user = User.Create(request.UserName, PasswordHash.Create(passHash, salt), request.Email);
+        var passwordHash = _hasher.Hash(request.Password);
+        var user = User.Create(request.UserName, passwordHash, request.Email);
 
         db.Users.Add(user);
 
         var accessToken = _tokenProvider.GenerateAccessToken(user);
-        var refreshToken = _tokenProvider.GenerateRefreshToken();
+        var (refreshToken, refreshTokenHash) = _tokenProvider.GenerateRefreshToken();
 
         var now = DateTime.UtcNow;
 
         var rt = RefreshToken.Create(
             user.Id,
-            refreshToken,
+            refreshTokenHash,
             expiresAt: now.AddDays(14),
             createdByIp: _requestContext.IpAddress
         );
