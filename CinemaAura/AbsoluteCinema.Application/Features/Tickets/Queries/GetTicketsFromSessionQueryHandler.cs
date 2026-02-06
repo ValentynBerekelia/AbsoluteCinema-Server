@@ -2,7 +2,7 @@
 using AbsoluteCinema.Domain.Entities;
 using MediatR;
 
-namespace AbsoluteCinema.Application.Features.Sessions.Queries
+namespace AbsoluteCinema.Application.Features.Tickets.Queries
 {
     public class GetTicketsFromSessionQueryHandler(IGetTicketsFromSessionDtoQuery query)
         : IRequestHandler<GetTicketsFromSessionQuery, List<GetTicketDetailsResponse>>

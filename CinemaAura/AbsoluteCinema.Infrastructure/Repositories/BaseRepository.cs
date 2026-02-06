@@ -101,7 +101,7 @@ public class BaseRepository<TKey, TEntity, TContext> :
     }
 
     /// <summary>
-    /// Add entity by ID.
+    /// Add entity.
     /// </summary>
     public Task AddAsync(TEntity entity, CancellationToken ct = default)
     {

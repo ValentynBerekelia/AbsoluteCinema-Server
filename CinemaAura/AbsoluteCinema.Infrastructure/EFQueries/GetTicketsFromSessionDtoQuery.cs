@@ -1,5 +1,6 @@
 ﻿using AbsoluteCinema.Application.DTOs.Ticket;
 using AbsoluteCinema.Application.Features.Sessions.Queries;
+using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +10,7 @@ namespace AbsoluteCinema.Infrastructure.EFQueries
     {
         private readonly CinemaDbContext _db = db;
 
-        public async Task<List<GetTicketDetailsResponse>?> ExecuteAsync(GetTicketsFromSessionQuery query,CancellationToken ct)
+        public async Task<List<GetTicketDetailsResponse>?> ExecuteAsync(GetTicketsFromSessionQuery query, CancellationToken ct)
         {
             return await _db.Tickets
                 .AsNoTracking()

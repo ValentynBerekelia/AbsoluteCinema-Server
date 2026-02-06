@@ -3,6 +3,7 @@ using AbsoluteCinema.Application.Features.Sessions.Queries;
 using AbsoluteCinema.Application.Features.Tickets.Commands;
 using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Domain.Entities;
+using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Requests;
 using Mapster;
 using MediatR;
@@ -61,6 +62,15 @@ namespace AbsoluteCinema.Controllers
         {
             var result = await _mediator.Send(
             new GetTicketsFromSessionQuery(new SessionId(sessionId)), ct);
+            return Ok(result);
+        }
+        [HttpGet]
+        [Route("sessions/{sessionId:guid}/tickets/short")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetTicketsShort([FromRoute] Guid sessionId,CancellationToken ct)
+        {
+            var result = await _mediator.Send(new GetTicketsQuery(new SessionId(sessionId)),ct);
             return Ok(result);
         }
 

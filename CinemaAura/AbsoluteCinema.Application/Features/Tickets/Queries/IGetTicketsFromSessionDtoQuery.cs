@@ -1,6 +1,6 @@
 ﻿using AbsoluteCinema.Application.DTOs.Ticket;
 
-namespace AbsoluteCinema.Application.Features.Sessions.Queries
+namespace AbsoluteCinema.Application.Features.Tickets.Queries
 {
     public interface IGetTicketsFromSessionDtoQuery
     {
