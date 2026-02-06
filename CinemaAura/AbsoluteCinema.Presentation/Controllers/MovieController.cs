@@ -1,20 +1,22 @@
-using System.ComponentModel.DataAnnotations;
-using AbsoluteCinema.Application.Features.Movies.Command.DeleteMovie;
-using AbsoluteCinema.Application.Features.Movies.Queries;
+using AbsoluteCinema.Application.DTOs.Movie;
+using AbsoluteCinema.Application.Features.Genres.Commands;
+using AbsoluteCinema.Application.Features.Movies.Command;
 using AbsoluteCinema.Application.Features.Movies.Command.AttachMediaToMovie;
+using AbsoluteCinema.Application.Features.Movies.Command.CreateMovieAndAttachMedia;
+using AbsoluteCinema.Application.Features.Movies.Command.DeleteMovie;
 using AbsoluteCinema.Application.Features.Movies.Command.DetachMediaFromMovie;
+using AbsoluteCinema.Application.Features.Movies.Queries;
+using AbsoluteCinema.Application.Features.Persons.Commands.AttachPersonToMovie;
+using AbsoluteCinema.Application.Features.Persons.Commands.CreateAndAttachPersonToMovie;
+using AbsoluteCinema.Application.Features.Persons.Commands.DetachPersonFromMovie;
 using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Requests;
 using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using static AbsoluteCinema.Application.Features.Movies.Command.UpdateMoviePartialCommandHandler;
-using AbsoluteCinema.Application.DTOs.Movie;
-using AbsoluteCinema.Application.Features.Movies.Command;
-using AbsoluteCinema.Application.Features.Movies.Command.CreateMovieAndAttachMedia;
 using static AbsoluteCinema.Application.Features.Genres.Commands.AttachGenreToMovie.AttachGenreToMovieCommandHandler;
-using AbsoluteCinema.Application.Features.Genres.Commands;
+using static AbsoluteCinema.Application.Features.Movies.Command.UpdateMoviePartialCommandHandler;
 
 namespace AbsoluteCinema.Controllers;
 
@@ -169,7 +171,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
     [FromBody] CreateGenreToMovieRequest request,
     CancellationToken ct)
     {
-        var command = new CreateGenreToMovieCommand(movieId,request.Name);
+        var command = new CreateGenreToMovieCommand(movieId, request.Name);
         await _mediator.Send(command, ct);
         return NoContent();
     }
@@ -183,6 +185,52 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         CancellationToken ct)
     {
         await _mediator.Send(new DetachGenreFromMovieCommand(movieId, genreId), ct);
+        return NoContent();
+    }
+
+    [HttpPost("admin/movies/{movieId:guid}/persons/attach")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> AttachPersonToMovie(
+    [FromRoute] Guid movieId,
+    [FromBody] AttachPersonRequest request,
+    CancellationToken ct)
+    {
+        var command = new AttachPersonToMovieCommand(movieId, request.PersonId, request.Role);
+        await _mediator.Send(command, ct);
+        return NoContent();
+    }
+
+    [HttpPost("admin/movies/{movieId:guid}/persons")]
+    [ProducesResponseType(typeof(CreateAndAttachPersonToMovieResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CreateAndAttachPersonToMovie(
+    [FromRoute] Guid movieId,
+    [FromBody] CreatePersonRequest request,
+    CancellationToken ct)
+    {
+        var command = new CreateAndAttachPersonToMovieCommand(
+            movieId,
+            request.FullName,
+            request.Bio,
+            request.BirthDate,
+            request.Role
+        );
+        var response = await _mediator.Send(command, ct);
+        return Ok(response);
+    }
+
+    [HttpDelete("admin/movies/{movieId:guid}/persons/{personId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DetachPersonFromMovie(
+    [FromRoute] Guid movieId,
+    [FromRoute] Guid personId,
+    CancellationToken ct)
+    {
+        await _mediator.Send(new DetachPersonFromMovieCommand(movieId, personId), ct);
         return NoContent();
     }
 }
