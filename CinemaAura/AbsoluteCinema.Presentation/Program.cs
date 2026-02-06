@@ -7,13 +7,15 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Text.Json;
+using AbsoluteCinema;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services
     .AddApplication()
-    .AddInfrastucture(builder.Configuration);
+    .AddInfrastucture(builder.Configuration)
+    .AddPresentation(builder.Configuration);
 
 
 var config = TypeAdapterConfig.GlobalSettings;
@@ -25,7 +27,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowViteFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("http://localhost:5174")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
@@ -53,27 +55,4 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddTransient<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
 
-var app = builder.Build();
 
-
-
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "AbsoluteCinema API v1");
-        options.RoutePrefix = "swagger";
-    });
-}
-
-app.UseHttpsRedirection();
-
-app.UseCors("AllowViteFrontend");
-
-app.MapControllers();
-
-
-app.Run();
