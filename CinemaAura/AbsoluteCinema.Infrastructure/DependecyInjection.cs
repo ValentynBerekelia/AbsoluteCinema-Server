@@ -16,7 +16,6 @@ using AbsoluteCinema.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
 namespace AbsoluteCinema.Infrastructure;
 
 public static class DependencyInjection
@@ -83,6 +82,7 @@ public static class DependencyInjection
         services.AddScoped<IGetGenresQuery,GetGenreDtoQuery>();
         services.AddScoped<IGetSeatTypesQuery, GetSeatTypeDtoQuery>();
         services.AddScoped<IGetTicketsFromSessionDtoQuery, GetTicketsFromSessionDtoQuery>();
+        services.AddScoped<IGetTicketShortQuery, GetTicketShortDtoQuery>();
         return services;
     }
 }
