@@ -7,13 +7,15 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Text.Json;
+using AbsoluteCinema;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services
     .AddApplication()
-    .AddInfrastucture(builder.Configuration);
+    .AddInfrastucture(builder.Configuration)
+    .AddPresentation(builder.Configuration);
 
 
 var config = TypeAdapterConfig.GlobalSettings;
@@ -25,7 +27,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowViteFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("http://localhost:5174")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
@@ -50,11 +52,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Cinema booking system API"
     });
 });
-
-builder.Services.AddTransient<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
-
-var app = builder.Build();
-
+var  app = builder.Build();
 //using (var scope = app.Services.CreateScope())
 //{
     //var dbContext = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();

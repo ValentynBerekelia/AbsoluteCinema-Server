@@ -1,7 +1,11 @@
+using AbsoluteCinema.Domain.ValueObjects;
+
 namespace AbsoluteCinema.Application.Abstractions;
 
 public interface IPasswordHasher
 {
-    string Hash(string password);
-    bool Verify(string password, string passwordHash);
+
+    PasswordHash Hash(string password);
+
+    bool Verify(string password, PasswordHash passwordHash);
 }
