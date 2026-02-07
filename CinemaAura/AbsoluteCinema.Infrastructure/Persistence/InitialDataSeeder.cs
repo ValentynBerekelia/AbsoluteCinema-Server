@@ -29,14 +29,26 @@ public static class InitialDataSeeder
         if (context.Movies.Any()) return;
 
         // --- GENRES ---
-        var action = Genre.Create("Action");
-        var drama = Genre.Create("Drama");
-        var scifi = Genre.Create("Sci-Fi");
-        var adventure = Genre.Create("Adventure");
-        var comedy = Genre.Create("Comedy");
-        var thriller = Genre.Create("Thriller");
+        var genreNames = new[]
+        {
+            "Action", "Adventure", "Animation", "Biography", "Comedy",
+            "Crime", "Documentary", "Drama", "Family", "Fantasy",
+            "Film Noir", "History", "Horror", "Music", "Musical",
+            "Mystery", "Romance", "Sci-Fi", "Short", "Sport",
+            "Superhero", "Thriller", "War", "Western", "Cyberpunk",
+            "Steampunk", "Slice of Life", "Dark Fantasy", "Urban", "Political"
+        };
 
-        context.Genres.AddRange(action, drama, scifi, adventure, comedy, thriller);
+        var genres = genreNames.Select(name => Genre.Create(name)).ToList();
+        context.Genres.AddRange(genres);
+        context.SaveChanges();
+
+        var action = genres.First(g => g.Name == "Action");
+        var drama = genres.First(g => g.Name == "Drama");
+        var scifi = genres.First(g => g.Name == "Sci-Fi");
+        var adventure = genres.First(g => g.Name == "Adventure");
+        var comedy = genres.First(g => g.Name == "Comedy");
+        var thriller = genres.First(g => g.Name == "Thriller");
 
         // --- SEAT TYPES ---
         var standardType = SeatType.Create("Standard");
