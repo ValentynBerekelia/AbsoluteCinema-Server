@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowViteFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5174")
+        policy.WithOrigins("http://localhost:5173")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
@@ -55,9 +55,9 @@ builder.Services.AddSwaggerGen(options =>
 var  app = builder.Build();
 //using (var scope = app.Services.CreateScope())
 //{
-    //var dbContext = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();
-    //await dbContext.Database.MigrateAsync();
-    //InitialDataSeeder.Seed(dbContext);
+//    var dbContext = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();
+//    await dbContext.Database.MigrateAsync();
+//InitialDataSeeder.Seed(dbContext);
 //}
 
 // Configure the HTTP request pipeline.
