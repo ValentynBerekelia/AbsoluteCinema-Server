@@ -8,6 +8,7 @@ using AbsoluteCinema.Application.Features.Auth.Queries.GetCurrentUser;
 using AbsoluteCinema.Requests;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbsoluteCinema.Controllers;
@@ -18,6 +19,13 @@ public class AuthController(IMediator mediator, IRequestContext requestContext) 
     private readonly IMediator _mediator = mediator;
     private readonly IRequestContext _requestContext = requestContext;
 
+    [Microsoft.AspNetCore.Authorization.Authorize]
+    [HttpGet("debug/claims")]
+    public IActionResult DebugClaims()
+    {
+        return Ok(User.Claims.Select(c => new { c.Type, c.Value }));
+    }
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody]RegisterUserRequest request)
     {
@@ -38,7 +46,7 @@ public class AuthController(IMediator mediator, IRequestContext requestContext) 
         
         return Ok(response);
     }
-
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody]LoginUserRequest request)
     {
@@ -59,7 +67,7 @@ public class AuthController(IMediator mediator, IRequestContext requestContext) 
         
         return Ok(response);
     }
-
+    [AllowAnonymous]
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh()
     {
@@ -85,7 +93,7 @@ public class AuthController(IMediator mediator, IRequestContext requestContext) 
         
         return Ok(response);
     }
-
+    [Authorize]
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
@@ -99,7 +107,7 @@ public class AuthController(IMediator mediator, IRequestContext requestContext) 
         return Ok();
     }
 
-    [Microsoft.AspNetCore.Authorization.Authorize]
+    [Authorize]
     [HttpPost("revoke-all")]
     public async Task<IActionResult> RevokeAll()
     {
@@ -113,8 +121,7 @@ public class AuthController(IMediator mediator, IRequestContext requestContext) 
         await _mediator.Send(command);
         return Ok();
     }
-
-    [Microsoft.AspNetCore.Authorization.Authorize]
+    [Authorize]
     [HttpGet("me")]
     public async Task<IActionResult> Me()
     {

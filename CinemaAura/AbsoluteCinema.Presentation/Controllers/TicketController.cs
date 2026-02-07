@@ -4,9 +4,11 @@ using AbsoluteCinema.Application.Features.Tickets.Commands;
 using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Infrastructure.EFQueries;
+using AbsoluteCinema.Infrastructure.Security;
 using AbsoluteCinema.Requests;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static AbsoluteCinema.Application.Features.Tickets.Commands.CreateTicketCommandHandler;
 namespace AbsoluteCinema.Controllers
@@ -16,7 +18,7 @@ namespace AbsoluteCinema.Controllers
     public class TicketController(IMediator mediator) : ControllerBase
     {
         private readonly IMediator _mediator = mediator;
-
+        [Authorize]
         [HttpGet]
         [Route("ticket{ticketId:guid}")]
         public async Task<IActionResult> GetTicket(Guid ticketId, CancellationToken ct)
@@ -25,6 +27,7 @@ namespace AbsoluteCinema.Controllers
             var response = await _mediator.Send(query, ct);
             return Ok(response);
         }
+        [Authorize(Policy = Permissions.TicketsCreate)]
         [HttpPost]
         [Route("ticket")]
         public async Task<IActionResult> CreateTicket([FromBody] CreateTicketCommand request, CancellationToken ct)
@@ -37,7 +40,7 @@ namespace AbsoluteCinema.Controllers
             var response = await _mediator.Send(command, ct);
             return Ok(response);
         }
-
+        [Authorize(Policy = Permissions.TicketsManage)]
         [HttpPatch]
         [Route("ticket/{ticketId:guid}")]
         public async Task<IActionResult> UpdateTicket([FromRoute] Guid ticketId, [FromBody] UpdateTicketRequest request, CancellationToken ct)
@@ -46,7 +49,7 @@ namespace AbsoluteCinema.Controllers
             await _mediator.Send(command, ct);
             return NoContent();
         }
-
+        [Authorize(Policy = Permissions.TicketsManage)]
         [HttpDelete]
         [Route("ticket/{ticketId:guid}")]
         public async Task<IActionResult> DeleteTicket([FromRoute] Guid ticketId, CancellationToken ct)
@@ -55,6 +58,7 @@ namespace AbsoluteCinema.Controllers
             await _mediator.Send(command, ct);
             return NoContent();
         }
+        [AllowAnonymous]
         [HttpGet]
         [Route("sessions/{sessionId:guid}/tickets")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -64,6 +68,7 @@ namespace AbsoluteCinema.Controllers
             new GetTicketsFromSessionQuery(new SessionId(sessionId)), ct);
             return Ok(result);
         }
+        [AllowAnonymous]
         [HttpGet]
         [Route("sessions/{sessionId:guid}/tickets/short")]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -10,10 +10,12 @@ using AbsoluteCinema.Application.Features.Persons.Commands.AttachPersonToMovie;
 using AbsoluteCinema.Application.Features.Persons.Commands.CreateAndAttachPersonToMovie;
 using AbsoluteCinema.Application.Features.Persons.Commands.DetachPersonFromMovie;
 using AbsoluteCinema.Domain.Entities;
+using AbsoluteCinema.Infrastructure.Security;
 using AbsoluteCinema.Requests;
 using Mapster;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static AbsoluteCinema.Application.Features.Genres.Commands.AttachGenreToMovie.AttachGenreToMovieCommandHandler;
 using static AbsoluteCinema.Application.Features.Movies.Command.UpdateMoviePartialCommandHandler;
@@ -28,7 +30,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
     private readonly IMediator _mediator = mediator;
     private readonly IMapper _mapper = mapper;
 
-
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpPost]
     [Route("admin/movies")]
     public async Task<IActionResult> CreateMovie([FromBody] MovieCreateRequest request, CancellationToken ct)
@@ -49,7 +51,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
 
         return Ok(response);
     }
-
+    [AllowAnonymous]
     [HttpGet]
     [Route("movies")]
     public async Task<IActionResult> GetMovies([FromQuery] MoviesQueryParameters filter, CancellationToken ct)
@@ -58,7 +60,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         var response = await _mediator.Send(query, ct);
         return Ok(response);
     }
-
+    [AllowAnonymous]
     [HttpGet]
     [Route("movie/{id:guid}")]
     public async Task<IActionResult> GetMovie(Guid id, CancellationToken ct)
@@ -68,7 +70,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         var response = await _mediator.Send(query, ct);
         return Ok(response);
     }
-
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpDelete("admin/movies/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -77,7 +79,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         await _mediator.Send(new DeleteMovieCommand(id), ct);
         return NoContent();
     }
-
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpPost("admin/movies/{movieId:guid}/media/attach")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -91,7 +93,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         await _mediator.Send(command, ct);
         return NoContent();
     }
-
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpPost("admin/movies/{movieId:guid}/media")]
     [ProducesResponseType(typeof(CreateAndAttachMediaResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -106,6 +108,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(response);
     }
 
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpDelete("admin/movies/{movieId:guid}/media/{mediaId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -118,6 +121,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         return NoContent();
     }
 
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpPut("admin/movies/{movieId:guid}")]
     public async Task<IActionResult> UpdateMovieFull(
         [FromRoute] Guid movieId,
@@ -128,7 +132,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         return NoContent();
     }
 
-
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpPatch("admin/movies/{movieId:guid}")]
     public async Task<IActionResult> UpdateMoviePartial(
     [FromRoute] Guid movieId,
@@ -139,6 +143,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         return NoContent();
     }
 
+    [AllowAnonymous]
     [HttpGet("movies/features")]
     public async Task<IActionResult> GetMoviesFeatured([FromQuery] GetFeaturedMoviesQuery request, CancellationToken ct)
     {
@@ -147,7 +152,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(response);
     }
 
-
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpPost("admin/movies/{movieId:guid}/genre/attach")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -161,7 +166,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         await _mediator.Send(command, ct);
         return NoContent();
     }
-
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpPost("admin/movies/{movieId:guid}/genre")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -175,7 +180,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         await _mediator.Send(command, ct);
         return NoContent();
     }
-
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpDelete("admin/movies/{movieId:guid}/genre/{genreId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -187,7 +192,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         await _mediator.Send(new DetachGenreFromMovieCommand(movieId, genreId), ct);
         return NoContent();
     }
-
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpPost("admin/movies/{movieId:guid}/persons/attach")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -201,7 +206,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         await _mediator.Send(command, ct);
         return NoContent();
     }
-
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpPost("admin/movies/{movieId:guid}/persons")]
     [ProducesResponseType(typeof(CreateAndAttachPersonToMovieResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -221,7 +226,7 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         var response = await _mediator.Send(command, ct);
         return Ok(response);
     }
-
+    [Authorize(Policy = Permissions.MoviesManage)]
     [HttpDelete("admin/movies/{movieId:guid}/persons/{personId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -1,12 +1,11 @@
-using AbsoluteCinema.Domain.Entities;
+using System.Security.Claims;
 
 namespace AbsoluteCinema.Application.Abstractions;
 
 public interface ITokenProvider
 {
-    string GenerateAccessToken(User user);
-    (string Token, string Hash) GenerateRefreshToken();
-    
-    string HashRefreshToken(string token);
-}
+    string GenerateAccessToken(IEnumerable<Claim> claims);
 
+    (string token, string tokenHash) GenerateRefreshToken();
+    string HashRefreshToken(string refreshToken);
+}

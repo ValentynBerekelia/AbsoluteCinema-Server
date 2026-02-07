@@ -21,8 +21,8 @@ public record LoginUserCommand : IRequest<LoginUserResponse>
 public record LoginUserResponse
 (
     Guid UserId,
-    string Token,
     string UserName,
+    string Email,
     string RefreshToken,
     string AccessToken
 );
