@@ -1,3 +1,4 @@
+using AbsoluteCinema;
 using AbsoluteCinema.Application;
 using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Infrastructure;
@@ -5,9 +6,10 @@ using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text.Json;
-using AbsoluteCinema;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,14 +53,39 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "Cinema booking system API"
     });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter JWT like: Bearer {your_token}"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
+
 var  app = builder.Build();
 //using (var scope = app.Services.CreateScope())
 //{
 //    var dbContext = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();
-//    await dbContext.Database.MigrateAsync();
-//InitialDataSeeder.Seed(dbContext);
-//}
+ //    await dbContext.Database.MigrateAsync();
+//    InitialDataSeeder.Seed(dbContext);
+//
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -70,6 +97,8 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = "swagger";
     });
 }
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 

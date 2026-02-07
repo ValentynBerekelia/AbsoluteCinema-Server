@@ -3,56 +3,49 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using AbsoluteCinema.Application.Abstractions;
-using AbsoluteCinema.Domain.Entities;
+using AbsoluteCinema.Infrastructure.Security;
 using Microsoft.IdentityModel.Tokens;
-using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
-namespace AbsoluteCinema.Infrastructure.Security;
+namespace AbsoluteCinema.Infrastructure.Authentication;
 
-public sealed class TokenProvider(JwtOptions options) : ITokenProvider
+public class TokenProvider : ITokenProvider
 {
-    public string GenerateAccessToken(User user)
+    private readonly JwtOptions _jwtOptions;
+
+    public TokenProvider(JwtOptions jwtOptions)
     {
-        var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new("name", user.UserName)
-        };
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Key));
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(options.AccessTokenMinutes),
-            Issuer = options.Issuer,
-            Audience = options.Audience,
-            SigningCredentials = credentials
-        };
-        
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-
-        return tokenHandler.WriteToken(token);
+        _jwtOptions = jwtOptions;
     }
-    
-    public (string Token, string Hash) GenerateRefreshToken()
+
+    public string GenerateAccessToken(IEnumerable<Claim> claims)
+    {
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(_jwtOptions.Key));
+
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: _jwtOptions.Issuer,
+            audience: _jwtOptions.Audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(15),
+            signingCredentials: creds
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public (string token, string tokenHash) GenerateRefreshToken()
     {
         var bytes = RandomNumberGenerator.GetBytes(64);
         var token = Convert.ToBase64String(bytes);
-
-        var hashBytes = SHA256.HashData(bytes);
-        var hash = Convert.ToHexString(hashBytes);
-
-        return (token, hash);
+        return (token, HashRefreshToken(token));
     }
 
-    public string HashRefreshToken(string token)
+    public string HashRefreshToken(string refreshToken)
     {
-        var bytes = Convert.FromBase64String(token);
-        var hashBytes = SHA256.HashData(bytes);
-        return Convert.ToHexString(hashBytes);
+        using var sha = SHA256.Create();
+        var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(refreshToken));
+        return Convert.ToBase64String(bytes);
     }
 }
