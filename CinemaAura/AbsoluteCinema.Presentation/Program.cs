@@ -1,13 +1,10 @@
 using AbsoluteCinema;
 using AbsoluteCinema.Application;
 using AbsoluteCinema.Application.Features.Movies.Queries;
+using AbsoluteCinema.Application.Features.Persons.Queries;
 using AbsoluteCinema.Infrastructure;
 using AbsoluteCinema.Infrastructure.EFQueries;
-using AbsoluteCinema.Infrastructure.Persistence;
 using Mapster;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text.Json;
 
@@ -79,7 +76,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-var  app = builder.Build();
+builder.Services.AddTransient<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
+builder.Services.AddTransient<IGetPersonDtoQuery, GetPersonDtoQuery>();
+builder.Services.AddTransient<IGetPersonsDtoQuery, GetPersonsDtoQuery>();
+
+var app = builder.Build();
+
 //using (var scope = app.Services.CreateScope())
 //{
 //    var dbContext = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();
