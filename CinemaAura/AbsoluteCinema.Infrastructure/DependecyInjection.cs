@@ -7,8 +7,6 @@ using AbsoluteCinema.Application.Features.Auth.Command.RefreshToken;
 using AbsoluteCinema.Application.Features.Auth.Command.RevokeAllRefreshTokens;
 using AbsoluteCinema.Application.Features.Auth.Queries.GetCurrentUser;
 using AbsoluteCinema.Application.Features.Genres.Queries;
-using RefreshTokenCommandHandlerInfra = AbsoluteCinema.Infrastructure.EFQueries.RefreshTokenCommandHandler;
-using RevokeAllRefreshTokensCommandHandlerInfra = AbsoluteCinema.Infrastructure.EFQueries.RevokeAllRefreshTokensCommandHandler;
 using AbsoluteCinema.Application.Features.Halls.Queries;
 using AbsoluteCinema.Application.Features.Movies.Command;
 using AbsoluteCinema.Application.Features.Movies.Queries;
@@ -16,13 +14,16 @@ using AbsoluteCinema.Application.Features.SeatTypes.Queries;
 using AbsoluteCinema.Application.Features.Sessions.Queries;
 using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Application.Repository;
-using Microsoft.Extensions.DependencyInjection;
+using AbsoluteCinema.Infrastructure.Authentication;
 using AbsoluteCinema.Infrastructure.EFQueries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using AbsoluteCinema.Infrastructure.Repositories;
 using AbsoluteCinema.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using RefreshTokenCommandHandlerInfra = AbsoluteCinema.Infrastructure.EFQueries.RefreshTokenCommandHandler;
+using RevokeAllRefreshTokensCommandHandlerInfra = AbsoluteCinema.Infrastructure.EFQueries.RevokeAllRefreshTokensCommandHandler;
 
 namespace AbsoluteCinema.Infrastructure;
 

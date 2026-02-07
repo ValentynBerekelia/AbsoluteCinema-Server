@@ -5,8 +5,10 @@ using AbsoluteCinema.Application.Features.Sessions.Commands.DeleteSession;
 using AbsoluteCinema.Application.Features.Sessions.Queries;
 using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Domain.Enums;
+using AbsoluteCinema.Infrastructure.Security;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbsoluteCinema.Controllers;
@@ -21,53 +23,53 @@ public class SessionController : ControllerBase
     {
         _mediator = mediator;
     }
-   
- // GET /api/admin/movies/{movieId}/sessions
- [HttpGet("movies/{movieId:guid}/sessions")]
- public async Task<IActionResult> GetSessionsByMovie(
-     Guid movieId,
-     [FromQuery] int pageNumber = 1,
-     [FromQuery] int pageSize = 10,
-     [FromQuery] string sortColumn = "startDateTime",
-     [FromQuery] string sortOrder = "Asc",
-     CancellationToken ct = default)
- {
-     if (!Enum.TryParse<SortOrder>(sortOrder, true, out var parsedSortOrder))
-     {
-         parsedSortOrder = SortOrder.Asc;
-     }
+    [Authorize(Policy = Permissions.SessionsRead)]
+    // GET /api/admin/movies/{movieId}/sessions
+    [HttpGet("movies/{movieId:guid}/sessions")]
+    public async Task<IActionResult> GetSessionsByMovie(
+        Guid movieId,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string sortColumn = "startDateTime",
+        [FromQuery] string sortOrder = "Asc",
+        CancellationToken ct = default)
+    {
+        if (!Enum.TryParse<SortOrder>(sortOrder, true, out var parsedSortOrder))
+        {
+            parsedSortOrder = SortOrder.Asc;
+        }
 
-     var query = new GetSessionsListQuery
-     {
-         MovieId = movieId,
-         PageNumber = pageNumber,
-         PageSize = pageSize,
-         SortColumn = sortColumn,
-         SortOrder = parsedSortOrder
-     };
+        var query = new GetSessionsListQuery
+        {
+            MovieId = movieId,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            SortColumn = sortColumn,
+            SortOrder = parsedSortOrder
+        };
 
-     var result = await _mediator.Send(query, ct);
-     return Ok(result);
- }
+        var result = await _mediator.Send(query, ct);
+        return Ok(result);
+    }
+    [Authorize(Policy = Permissions.SessionsManage)]
+    [HttpPost("admin/sessions")]
+    public async Task<IActionResult> CreateSession(
+       [FromBody] CreateSessionCommand request,
+       CancellationToken ct)
+    {
+        var command = new CreateSessionCommand(
+            request.MovieId,
+            request.HallId,
+            request.Format,
+            request.StartTime,
+            request.Prices
+        );
 
- [HttpPost("admin/sessions")]
- public async Task<IActionResult> CreateSession(
-    [FromBody] CreateSessionCommand request,
-    CancellationToken ct)
- {
-     var command = new CreateSessionCommand(
-         request.MovieId,
-         request.HallId,
-         request.Format,
-         request.StartTime,
-         request.Prices
-     );
+        var response = await _mediator.Send(command, ct);
+        return CreatedAtAction(nameof(GetSessionsByMovie), new { movieId = request.MovieId }, response);
+    }
 
-     var response = await _mediator.Send(command, ct);
-     return CreatedAtAction(nameof(GetSessionsByMovie), new { movieId = request.MovieId }, response);
- }
-
-
+    [Authorize(Policy = Permissions.SessionsManage)]
     [HttpPut("admin/sessions/{id:guid}")]
     public async Task<IActionResult> UpdateFull(Guid id, [FromBody] SessionUpdateFullRequest request)
     {
@@ -77,7 +79,7 @@ public class SessionController : ControllerBase
         await _mediator.Send(finalCommand);
         return NoContent();
     }
-
+    [Authorize(Policy = Permissions.SessionsManage)]
     [HttpPatch("admin/sessions/{id:guid}")]
     public async Task<IActionResult> UpdatePartial(Guid id, [FromBody] SessionUpdatePartialRequest request)
     {
@@ -87,7 +89,7 @@ public class SessionController : ControllerBase
         await _mediator.Send(finalCommand);
         return NoContent();
     }
-
+    [Authorize(Policy = Permissions.SessionsManage)]
     [HttpDelete("sessions/{sessionId:guid}")]
     public async Task<IActionResult> DeleteSession(Guid sessionId, CancellationToken ct)
     {
