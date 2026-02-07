@@ -3,9 +3,11 @@ using AbsoluteCinema.Application.Features.Halls.Queries;
 using AbsoluteCinema.Application.Features.SeatTypes.Command;
 using AbsoluteCinema.Application.Features.SeatTypes.Queries;
 using AbsoluteCinema.Domain.Entities;
+using AbsoluteCinema.Infrastructure.Security;
 using AbsoluteCinema.Requests;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using static AbsoluteCinema.Application.Features.Halls.Commands.CreateHallCommandHandler;
@@ -17,6 +19,7 @@ namespace AbsoluteCinema.Controllers;
 public class HallController(IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
+    [Authorize(Policy = Permissions.HallsRead)]
     [HttpGet]
     [Route("halls")]
     public async Task<IActionResult> GetHalls(CancellationToken ct)
@@ -24,7 +27,7 @@ public class HallController(IMediator mediator) : ControllerBase
         var response = await _mediator.Send(new GetHallsQuery(),ct);
         return Ok(response);
     }
-
+    [Authorize(Policy = Permissions.HallsManage)]
     [HttpPost]
     [Route("admin/halls/seats")]
     [ProducesResponseType(typeof(AddSeatToHallResponse), StatusCodes.Status200OK)]
@@ -41,7 +44,7 @@ public class HallController(IMediator mediator) : ControllerBase
         var response = await _mediator.Send(command, ct);
         return Ok(response);
     }
-
+    [Authorize(Policy = Permissions.HallsManage)]
     [HttpPut]
     [Route("admin/halls/{hallId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -53,7 +56,7 @@ public class HallController(IMediator mediator) : ControllerBase
         await _mediator.Send(command, ct);
         return NoContent();
     }
-
+    [Authorize(Policy = Permissions.HallsManage)]
     [HttpDelete]
     [Route("admin/halls/{seatId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -64,7 +67,7 @@ public class HallController(IMediator mediator) : ControllerBase
         await _mediator.Send(command, ct);
         return NoContent();
     }
-    
+    [Authorize(Policy = Permissions.HallsRead)]
     [HttpGet]
     [Route("halls/{id:guid}")]
     public async Task<IActionResult> GetHall(Guid id,CancellationToken ct)
@@ -73,6 +76,7 @@ public class HallController(IMediator mediator) : ControllerBase
         var response = await _mediator.Send(query, ct);
         return Ok(response);
     }
+    [Authorize(Policy = Permissions.HallsManage)]
     [HttpPost]
     [Route("admin/halls")]
     [ProducesResponseType(typeof(CreateHallResponse), StatusCodes.Status200OK)]
@@ -83,6 +87,7 @@ public class HallController(IMediator mediator) : ControllerBase
         var result = await _mediator.Send(new CreateHallCommand(request.Name), ct);
         return CreatedAtAction(nameof(GetHall), new { id = result.Id }, result);
     }
+    [Authorize(Policy = Permissions.HallsManage)]
     [HttpPut]
     [Route("admin/halls/{hallId:guid}/seats/{seatId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -93,6 +98,7 @@ public class HallController(IMediator mediator) : ControllerBase
         await _mediator.Send(new UpdateSeatCommand(hallId, seatId,request.Row,request.Number,request.SeatTypeId), ct);
         return NoContent();
     }
+    [Authorize(Policy = Permissions.HallsManage)]
     [HttpDelete]
     [Route("admin/hall/{hallId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -103,7 +109,7 @@ public class HallController(IMediator mediator) : ControllerBase
         await _mediator.Send(command, ct);
         return NoContent();
     }
-
+    [Authorize(Policy = Permissions.HallsRead)]
     [HttpGet]
     [Route("admin/seattype")]
     public async Task<IActionResult> GetSeatType(CancellationToken ct)
@@ -111,7 +117,7 @@ public class HallController(IMediator mediator) : ControllerBase
         var response = await _mediator.Send(new GetSeatTypesQuery(),ct);
         return Ok(response);
     }
-
+    [Authorize(Policy = Permissions.HallsManage)]
     [HttpPost]
     [Route("admin/seattype")]
     public async Task<IActionResult> CreateSeatType([FromBody] CreateSeatTypeRequest request, CancellationToken ct)
@@ -120,6 +126,7 @@ public class HallController(IMediator mediator) : ControllerBase
         var response = await _mediator.Send(command, ct);
         return Ok(response);
     }
+    [Authorize(Policy = Permissions.HallsManage)]
     [HttpPut]
     [Route("admin/seattype/{seatTypeId:guid}")]
     public async Task<IActionResult> UpdateSeatType([FromRoute] Guid seatTypeId, [FromBody] UpdateSeatTypeRequest request,CancellationToken ct)
@@ -128,6 +135,7 @@ public class HallController(IMediator mediator) : ControllerBase
         await _mediator.Send(command, ct);
         return NoContent();
     }
+    [Authorize(Policy = Permissions.HallsManage)]
     [HttpDelete]
     [Route("admin/seattype/{seatTypeId:guid}")]
     public async Task<IActionResult> DeleteSeatType([FromRoute] Guid seatTypeId, CancellationToken ct)
