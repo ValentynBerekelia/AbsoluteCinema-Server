@@ -21,7 +21,7 @@ namespace AbsoluteCinema.Controllers
         }
 
         [HttpPost]
-        [Route("/genres")]
+        [Route("genres")]
         public async Task<IActionResult> CreateGenre([FromBody] CreateGenreRequest request, CancellationToken ct)
         {
             var result = await _mediator.Send(new CreateGenreCommand(request.GenreName),ct);
