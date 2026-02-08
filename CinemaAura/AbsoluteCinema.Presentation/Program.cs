@@ -5,6 +5,7 @@ using AbsoluteCinema.Application.Features.Persons.Queries;
 using AbsoluteCinema.Infrastructure;
 using AbsoluteCinema.Infrastructure.EFQueries;
 using Mapster;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text.Json;
 
@@ -13,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddApplication()
-    .AddInfrastucture(builder.Configuration)
+    .AddInfrastructure(builder.Configuration)
     .AddPresentation(builder.Configuration);
 
 
@@ -44,7 +45,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "AbsoluteCinema API",
         Version = "v1",

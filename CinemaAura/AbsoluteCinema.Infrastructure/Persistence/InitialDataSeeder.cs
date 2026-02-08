@@ -251,6 +251,7 @@ public static class InitialDataSeeder
             Permission.Create(PermissionCode.Create("movies.read")),
             Permission.Create(PermissionCode.Create("movies.update")),
             Permission.Create(PermissionCode.Create("movies.delete")),
+            Permission.Create(PermissionCode.Create("movies.manage")),
 
             Permission.Create(PermissionCode.Create("sessions.create")),
             Permission.Create(PermissionCode.Create("sessions.read")),

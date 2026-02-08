@@ -33,7 +33,8 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
     [Authorize(Policy = Permissions.MoviesManage)]
     [HttpPost]
     [Route("admin/movies")]
-    public async Task<IActionResult> CreateMovie([FromBody] MovieCreateRequest request, CancellationToken ct)
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> CreateMovie([FromForm] MovieCreateRequest request, IFormFile? poster, CancellationToken ct)
     {
         var command = new CreateMovieCommand(
             request.MovieName,
@@ -44,13 +45,16 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
             request.Country,
             request.Studio,
             request.Language,
-            request.Genres
+            request.Genres,
+            poster?.OpenReadStream(),
+            poster?.FileName
         );
 
         var response = await _mediator.Send(command, ct);
 
         return Ok(response);
     }
+
     [AllowAnonymous]
     [HttpGet]
     [Route("movies")]
