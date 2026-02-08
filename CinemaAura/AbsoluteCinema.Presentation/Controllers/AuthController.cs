@@ -41,7 +41,6 @@ public class AuthController(IMediator mediator, IRequestContext requestContext) 
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddDays(14),
-                Path = "/api/auth"
             });
         
         return Ok(response);
@@ -62,7 +61,6 @@ public class AuthController(IMediator mediator, IRequestContext requestContext) 
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddDays(14),
-                Path = "/api/auth"
             });
         
         return Ok(response);
@@ -88,7 +86,6 @@ public class AuthController(IMediator mediator, IRequestContext requestContext) 
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddDays(14),
-                Path = "/api/auth"
             });
         
         return Ok(response);

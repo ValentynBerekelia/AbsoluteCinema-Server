@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AbsoluteCinema.Infrastructure.EFQueries;
 
-public class LogoutCommandHandler(
+public class LogoutCommand(
     CinemaDbContext db,
     ITokenProvider tokenProvider,
     IRequestContext requestContext) : ILogoutCommand
@@ -14,7 +14,7 @@ public class LogoutCommandHandler(
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly IRequestContext _requestContext = requestContext;
 
-    public async Task ExecuteAsync(LogoutCommand command, CancellationToken ct)
+    public async Task ExecuteAsync(Application.Features.Auth.Command.Logout.LogoutCommand command, CancellationToken ct)
     {
         string tokenHash;
         try

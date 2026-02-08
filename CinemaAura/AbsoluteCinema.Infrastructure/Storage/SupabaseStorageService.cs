@@ -15,6 +15,21 @@ public class SupabaseStorageService : IStorageService
         _bucket = configuration["Supabase:BucketName"] ?? string.Empty;
     }
 
+    public async Task DeleteFileAsync(string relativePath)
+    {
+        var options = new Supabase.SupabaseOptions { AutoConnectRealtime = false };
+        var client = new Supabase.Client(_url, _key, options);
+        await client.InitializeAsync();
+        try
+        {
+            await client.Storage.From(_bucket).Remove(relativePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting file from Supabase: {ex.Message}");
+        }
+    }
+
     public async Task<string> UploadImageAsync(Stream fileStream, string fileName)
     {
         var options = new Supabase.SupabaseOptions { AutoConnectRealtime = false };

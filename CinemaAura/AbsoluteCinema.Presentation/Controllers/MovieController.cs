@@ -97,17 +97,26 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         await _mediator.Send(command, ct);
         return NoContent();
     }
+
     [Authorize(Policy = Permissions.MoviesManage)]
     [HttpPost("admin/movies/{movieId:guid}/media")]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(CreateAndAttachMediaResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CreateAndAttachMediaToMovie(
     [FromRoute] Guid movieId,
-    [FromBody] CreateMediaRequest request,
+    [FromForm] CreateMediaRequest request,
     CancellationToken ct)
     {
-        var command = new CreateAndAttachMediaCommand(movieId, request.Url, request.Type);
+        var command = new CreateAndAttachMediaCommand(
+            movieId,
+            request.Type,
+            request.File?.OpenReadStream(),
+            request.File?.FileName,
+            request.Url
+        );
+
         var response = await _mediator.Send(command, ct);
         return Ok(response);
     }

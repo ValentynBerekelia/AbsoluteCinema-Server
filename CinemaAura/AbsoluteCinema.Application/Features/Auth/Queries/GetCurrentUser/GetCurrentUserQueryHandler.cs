@@ -16,6 +16,7 @@ public record GetCurrentUserQuery(Guid UserId) : IRequest<GetCurrentUserResponse
 
 public record GetCurrentUserResponse(
     Guid UserId,
+    string UserName,
     IReadOnlyList<string> Roles,
     IReadOnlyList<string> Permissions
 );

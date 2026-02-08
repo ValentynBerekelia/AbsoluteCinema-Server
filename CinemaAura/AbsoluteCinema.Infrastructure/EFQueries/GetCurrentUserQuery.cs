@@ -30,6 +30,7 @@ public class GetCurrentUserQueryInfra(CinemaDbContext db) : IGetCurrentUserQuery
 
         return new GetCurrentUserResponse(
             user.Id.Id,
+            user.UserName,
             roles,
             permissions
         );

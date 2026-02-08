@@ -23,7 +23,7 @@ using AbsoluteCinema.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RefreshTokenCommandHandlerInfra = AbsoluteCinema.Infrastructure.EFQueries.RefreshTokenCommandHandler;
+using RefreshTokenCommandHandlerInfra = AbsoluteCinema.Infrastructure.EFQueries.RefreshTokenCommand;
 using RevokeAllRefreshTokensCommandHandlerInfra = AbsoluteCinema.Infrastructure.EFQueries.RevokeAllRefreshTokensCommandHandler;
 
 namespace AbsoluteCinema.Infrastructure;
@@ -101,7 +101,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateUserCommand, RegisterUserCommand>();
         services.AddScoped<ILoginUserCommand, LogInUserCommand>();
         services.AddScoped<IRefreshTokenCommand, RefreshTokenCommandHandlerInfra>();
-        services.AddScoped<ILogoutCommand, AbsoluteCinema.Infrastructure.EFQueries.LogoutCommandHandler>();
+        services.AddScoped<ILogoutCommand, AbsoluteCinema.Infrastructure.EFQueries.LogoutCommand>();
         services.AddScoped<IRevokeAllRefreshTokensCommand, RevokeAllRefreshTokensCommandHandlerInfra>();
         services.AddScoped<IGetCurrentUserQuery, AbsoluteCinema.Infrastructure.EFQueries.GetCurrentUserQueryInfra>();
 
