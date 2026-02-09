@@ -34,7 +34,11 @@ public class CreateMovieCommandHandler(
         string? posterUrl = null;
         if (command.PosterStream != null && command.FileName != null)
         {
-            var extension = Path.GetExtension(command.FileName) ?? ".jpg";
+            var extension = Path.GetExtension(command.FileName);
+            if (string.IsNullOrEmpty(extension))
+            {
+                extension = ".jpg";
+            }
             var fileName = $"posters/{newMovie.Id.Id}{extension}";
             posterUrl = await storageService.UploadImageAsync(command.PosterStream, fileName);
         }

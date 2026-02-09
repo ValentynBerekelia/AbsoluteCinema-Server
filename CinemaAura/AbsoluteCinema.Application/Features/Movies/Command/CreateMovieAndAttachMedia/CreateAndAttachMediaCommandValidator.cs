@@ -40,8 +40,12 @@ namespace AbsoluteCinema.Application.Features.Movies.Command.CreateMovieAndAttac
                     .WithMessage($"Invalid file type. Allowed: {string.Join(", ", _allowedImageExtensions)}");
 
                 RuleFor(x => x.FileStream!.Length)
-                    .ExclusiveBetween(0, 10 * 1024 * 1024)
+                    .GreaterThan(0)
                     .WithMessage("File cannot be empty.");
+
+                RuleFor(x => x.FileStream!.Length)
+                    .LessThanOrEqualTo(10 * 1024 * 1024)
+                    .WithMessage("File size cannot exceed 10 MB.");
             });
 
         }
