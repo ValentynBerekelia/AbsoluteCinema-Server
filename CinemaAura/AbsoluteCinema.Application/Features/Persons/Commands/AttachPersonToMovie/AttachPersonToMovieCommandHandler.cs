@@ -28,13 +28,12 @@ namespace AbsoluteCinema.Application.Features.Persons.Commands.AttachPersonToMov
             var movie = await _movies.GetBySpecificationAsync(new MovieWithPersonsSpec(movieId), ct)
                 ?? throw new DomainException($"Movie with ID {command.MovieId} not found.");
 
-            var person = await _persons.GetByIdAsync(personId, ct)
+            var person = await _persons.GetByIdForUpdateAsync(personId, ct)
                 ?? throw new DomainException($"Person with ID {command.PersonId} not found.");
 
             if (person.PersonRole != command.Role)
             {
                 person.ChangePersonRole(command.Role);
-                _persons.Update(person);
             }
 
             movie.AddPerson(person);

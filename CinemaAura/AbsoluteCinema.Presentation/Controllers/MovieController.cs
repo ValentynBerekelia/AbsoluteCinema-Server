@@ -74,6 +74,17 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
         var response = await _mediator.Send(query, ct);
         return Ok(response);
     }
+
+    [Authorize(Policy = Permissions.MoviesManage)]
+    [HttpGet]
+    [Route("admin/movies/stats")]
+    public async Task<IActionResult> GetAdminMoviesStats([FromQuery] AdminMoviesStatsParameters filter, CancellationToken ct)
+    {
+        var query = filter.Adapt<GetAdminMovieStatsQueryRequest>();
+        var response = await _mediator.Send(query, ct);
+        return Ok(response);
+    }
+
     [Authorize(Policy = Permissions.MoviesManage)]
     [HttpDelete("admin/movies/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
