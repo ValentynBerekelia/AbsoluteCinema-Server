@@ -15,9 +15,7 @@ public class GetAdminMoviesStatsQuery(CinemaDbContext db) : IGetAdminMoviesStats
     {
         var today = DateTime.UtcNow.Date;
 
-        var baseQuery = _db.Movies
-            .AsNoTracking()
-            .Where(m => _db.Sessions.Any(s => s.MovieId == m.Id));
+        var baseQuery = _db.Movies.AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(query.SearchTerm))
         {
