@@ -10,27 +10,37 @@ public record DetachMediaFromMovieCommand(Guid MovieId, Guid MediaId) : IRequest
 
 public class DetachMediaFromMovieCommandHandler(
     IMovieRepository movies,
+    IMediaRepository medias,
+    IStorageService storageService,
     IUnitOfWork unitOfWork) : IRequestHandler<DetachMediaFromMovieCommand, Unit>
 {
-    private readonly IMovieRepository _movies = movies;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<Unit> Handle(DetachMediaFromMovieCommand command, CancellationToken ct)
     {
         var movieId = new MovieId(command.MovieId);
         var mediaId = new MediaId(command.MediaId);
 
-        var movie = await _movies.GetBySpecificationAsync(new MovieWithMediasSpec(movieId), ct)
+        var movie = await movies.GetBySpecificationAsync(new MovieWithMediasSpec(movieId), ct)
             ?? throw new DomainException($"Movie with ID {command.MovieId} not found.");
 
-        if (!movie.Medias.Any(m => m.Id == mediaId))
-            throw new DomainException($"Media with ID {command.MediaId} is not attached to movie {command.MovieId}.");
+        var media = movie.Medias.FirstOrDefault(m => m.Id == mediaId)
+            ?? throw new DomainException($"Media with ID {command.MediaId} not found in this movie.");
+
+        if (IsSupabaseInternalFile(media.Url))
+        {
+            var relativePath = ExtractRelativePath(media.Url);
+            await storageService.DeleteFileAsync(relativePath);
+        }
 
         movie.RemoveMedia(mediaId);
-
-        _movies.Update(movie);
-        await _unitOfWork.SaveChangesAsync(ct);
-
+        await medias.DeleteAsync(media.Id, ct);
+        await unitOfWork.SaveChangesAsync(ct);
         return Unit.Value;
+    }
+
+    private bool IsSupabaseInternalFile(string url) => url.Contains("supabase.co");
+    
+    private string ExtractRelativePath(string url) 
+    {
+        return url.Split("/public/Images/").Last();
     }
 }

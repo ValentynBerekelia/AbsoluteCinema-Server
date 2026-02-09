@@ -4,7 +4,10 @@ using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Application.Features.Persons.Queries;
 using AbsoluteCinema.Infrastructure;
 using AbsoluteCinema.Infrastructure.EFQueries;
+using AbsoluteCinema.Infrastructure.Persistence;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text.Json;
 
@@ -13,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddApplication()
-    .AddInfrastucture(builder.Configuration)
+    .AddInfrastructure(builder.Configuration)
     .AddPresentation(builder.Configuration);
 
 
@@ -44,7 +47,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "AbsoluteCinema API",
         Version = "v1",
@@ -82,12 +85,12 @@ builder.Services.AddTransient<IGetPersonsDtoQuery, GetPersonsDtoQuery>();
 
 var app = builder.Build();
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var dbContext = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();
- //    await dbContext.Database.MigrateAsync();
-//    InitialDataSeeder.Seed(dbContext);
-//
+// using (var scope = app.Services.CreateScope())
+// {
+//     var dbContext = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();
+//     await dbContext.Database.MigrateAsync();
+//     InitialDataSeeder.Seed(dbContext);
+// }
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

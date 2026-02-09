@@ -1,4 +1,5 @@
-﻿using AbsoluteCinema.Domain.Enums;
+﻿using System.Security.Cryptography.X509Certificates;
+using AbsoluteCinema.Domain.Enums;
 
 namespace AbsoluteCinema.Requests
 {
@@ -8,7 +9,8 @@ namespace AbsoluteCinema.Requests
     /// <param name="Url"></param>
     /// <param name="Type"></param>
     public record CreateMediaRequest(
-        string Url,
-        MediaType Type
+        string? Url = null,
+        IFormFile? File = null,
+        MediaType Type = 0
     );
 }

@@ -63,9 +63,13 @@ public class LogInUserCommand(
             expiresAt: now.AddDays(14),
             createdByIp: _requestContext.IpAddress
         );
+
+        _db.RefreshTokens.Add(rt);
+        await _db.SaveChangesAsync(ct);
+
         return new LoginUserResponse(
             UserId: user.Id.Id,
-            Email: accessToken,
+            Email: user.Email,
             UserName: user.UserName,
             RefreshToken: refreshToken,
             AccessToken: accessToken
