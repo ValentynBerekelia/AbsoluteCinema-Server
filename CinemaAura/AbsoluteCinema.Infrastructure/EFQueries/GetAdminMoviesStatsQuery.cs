@@ -19,7 +19,7 @@ public class GetAdminMoviesStatsQuery(CinemaDbContext db) : IGetAdminMoviesStats
 
         if (!string.IsNullOrWhiteSpace(query.SearchTerm))
         {
-            baseQuery = baseQuery.Where(m => m.Name.Contains(query.SearchTerm));
+            baseQuery = baseQuery.Where(m => m.Name.ToLower().Contains(query.SearchTerm.ToLower()));
         }
 
         if (query.LastMovieId.HasValue)
