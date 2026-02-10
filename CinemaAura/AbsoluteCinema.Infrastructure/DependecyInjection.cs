@@ -91,6 +91,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
         services.AddScoped<IGetMovieDetailsQuery, GetMovieDetailsQuery>();
+        services.AddScoped<IGetAdminMoviesStatsQuery, GetAdminMoviesStatsQuery>();
         services.AddScoped<ICreateGenreCommend, CreateGenreCommand>();
         services.AddScoped<IGetHallsDtoQuery, GetHallsDtoQuery>();
         services.AddScoped<IGetHallQueryHandler, GetHallDetailsQuery>();
@@ -101,9 +102,9 @@ public static class DependencyInjection
         services.AddScoped<ICreateUserCommand, RegisterUserCommand>();
         services.AddScoped<ILoginUserCommand, LogInUserCommand>();
         services.AddScoped<IRefreshTokenCommand, RefreshTokenCommandHandlerInfra>();
-        services.AddScoped<ILogoutCommand, AbsoluteCinema.Infrastructure.EFQueries.LogoutCommand>();
+        services.AddScoped<ILogoutCommand, EFQueries.LogoutCommand>();
         services.AddScoped<IRevokeAllRefreshTokensCommand, RevokeAllRefreshTokensCommandHandlerInfra>();
-        services.AddScoped<IGetCurrentUserQuery, AbsoluteCinema.Infrastructure.EFQueries.GetCurrentUserQueryInfra>();
+        services.AddScoped<IGetCurrentUserQuery, GetCurrentUserQueryInfra>();
 
         services.AddScoped<IGetTicketsFromSessionDtoQuery, GetTicketsFromSessionDtoQuery>();
         services.AddScoped<IGetTicketShortQuery, GetTicketShortDtoQuery>();
