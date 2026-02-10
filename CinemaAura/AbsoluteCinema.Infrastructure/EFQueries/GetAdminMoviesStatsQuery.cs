@@ -10,43 +10,55 @@ namespace AbsoluteCinema.Infrastructure.EFQueries;
 public class GetAdminMoviesStatsQuery(CinemaDbContext db) : IGetAdminMoviesStatsQuery
 {
     private readonly CinemaDbContext _db = db;
-
     public async Task<GetAdminMovieStatsResponse> ExecuteAsync(GetAdminMovieStatsQueryRequest query, CancellationToken ct)
     {
         var today = DateTime.UtcNow.Date;
-
         var baseQuery = _db.Movies.AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(query.SearchTerm))
         {
-            baseQuery = baseQuery.Where(m => m.Name.ToLower().Contains(query.SearchTerm.ToLower()));
+            var search = query.SearchTerm.ToLower();
+            baseQuery = baseQuery.Where(m => m.Name.ToLower().Contains(search));
         }
 
         if (query.LastMovieId.HasValue)
         {
-            var lastId = new MovieId(query.LastMovieId.Value);
-            baseQuery = baseQuery.Where(m => m.Id.Id.CompareTo(lastId.Id) < 0);
+            var lastIdGuid = query.LastMovieId.Value;
+
+            baseQuery = baseQuery.Where(m => (Guid)(object)m.Id < lastIdGuid);
         }
 
         var moviesData = await baseQuery
             .OrderByDescending(m => m.Id)
-            .Take(query.PageSize)
+            .Take(query.PageSize + 1)
             .Select(m => new
             {
                 m.Id,
                 m.Name,
                 m.Duration,
                 m.AgeLimit,
-                PosterUrl = m.Medias.Where(c => c.Type == MediaType.PosterImage).Select(c => c.Url).FirstOrDefault() ?? ""
+                PosterUrl = m.Medias
+                    .Where(c => c.Type == MediaType.PosterImage)
+                    .Select(c => c.Url)
+                    .FirstOrDefault() ?? ""
             })
             .ToListAsync(ct);
 
         if (!moviesData.Any())
             return new GetAdminMovieStatsResponse(new List<AdminMovieStatsDto>(), null);
 
+        bool hasNextPage = moviesData.Count > query.PageSize;
+        Guid? nextCursor = null;
+
+        if (hasNextPage)
+        {
+            nextCursor = moviesData[moviesData.Count - 2].Id.Id;
+            moviesData.RemoveAt(moviesData.Count - 1);
+        }
+
         var movieIds = moviesData.Select(m => m.Id).ToList();
 
-        var HallCapacities = await _db.Seats
+        var hallCapacities = await _db.Seats
             .AsNoTracking()
             .GroupBy(s => s.HallId)
             .Select(g => new { HallId = g.Key, Capacity = g.Count() })
@@ -76,7 +88,7 @@ public class GetAdminMoviesStatsQuery(CinemaDbContext db) : IGetAdminMoviesStats
                     s.StartDateTime,
                     s.Format,
                     s.TicketCount,
-                    HallCapacity = HallCapacities.GetValueOrDefault(s.HallId, 0)
+                    HallCapacity = hallCapacities.GetValueOrDefault(s.HallId, 0)
                 })
                 .ToList();
 
@@ -91,8 +103,6 @@ public class GetAdminMoviesStatsQuery(CinemaDbContext db) : IGetAdminMoviesStats
                 movieSessions.Select(s => new SessionDto(s.Id.Id, s.StartDateTime, s.Format)).ToList()
             );
         }).ToList();
-
-        var nextCursor = items.Count == query.PageSize ? items.Last().Id : (Guid?)null;
 
         return new GetAdminMovieStatsResponse(items, nextCursor);
     }
