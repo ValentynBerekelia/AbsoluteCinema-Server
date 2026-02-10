@@ -4,15 +4,22 @@ using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Application.Features.Persons.Queries;
 using AbsoluteCinema.Infrastructure;
 using AbsoluteCinema.Infrastructure.EFQueries;
-using AbsoluteCinema.Infrastructure.Persistence;
 using Mapster;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.OpenApi.Models;
+using System.Globalization;
 using System.Reflection;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var defaultCulture = new CultureInfo("en-US");
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(defaultCulture),
+    SupportedCultures = new List<CultureInfo> {defaultCulture},
+    SupportedUICultures = new List<CultureInfo> {defaultCulture}
+};
 
 builder.Services
     .AddApplication()
@@ -108,6 +115,8 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 
 app.UseCors("AllowViteFrontend");
+
+app.UseRequestLocalization(localizationOptions);
 
 app.MapControllers();
 

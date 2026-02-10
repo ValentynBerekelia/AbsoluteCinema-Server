@@ -27,7 +27,7 @@ public static class Permissions
         HallsRead, HallsManage,
         MoviesRead, MoviesManage,
         GenresRead, GenresManage,
-        TicketsCreate, TicketsReadAll,
+        TicketsCreate, TicketsReadAll, TicketsManage,
         UsersManage
     };
 }
