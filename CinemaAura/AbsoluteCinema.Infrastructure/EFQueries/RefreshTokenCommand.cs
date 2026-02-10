@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace AbsoluteCinema.Infrastructure.EFQueries;
 
-public class RefreshTokenCommandHandler(
+public class RefreshTokenCommand(
     CinemaDbContext db,
     ITokenProvider tokenProvider,
     IRequestContext requestContext) : IRefreshTokenCommand
@@ -17,7 +17,7 @@ public class RefreshTokenCommandHandler(
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly IRequestContext _requestContext = requestContext;
 
-    public async Task<RefreshTokenResponse> ExecuteAsync(RefreshTokenCommand command, CancellationToken ct)
+    public async Task<RefreshTokenResponse> ExecuteAsync(Application.Features.Auth.Command.RefreshToken.RefreshTokenCommand command, CancellationToken ct)
     {
         var tokenHash = _tokenProvider.HashRefreshToken(command.RefreshToken);
 

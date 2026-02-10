@@ -247,20 +247,25 @@ public static class InitialDataSeeder
         // 1. Permissions
         var allPermissions = new List<Permission>
         {
-            Permission.Create(PermissionCode.Create("movies.create")),
             Permission.Create(PermissionCode.Create("movies.read")),
-            Permission.Create(PermissionCode.Create("movies.update")),
-            Permission.Create(PermissionCode.Create("movies.delete")),
+            Permission.Create(PermissionCode.Create("movies.manage")),
 
-            Permission.Create(PermissionCode.Create("sessions.create")),
             Permission.Create(PermissionCode.Create("sessions.read")),
-            Permission.Create(PermissionCode.Create("sessions.update")),
-            Permission.Create(PermissionCode.Create("sessions.delete")),
+            Permission.Create(PermissionCode.Create("sessions.manage")),
 
-            Permission.Create(PermissionCode.Create("halls.create")),
             Permission.Create(PermissionCode.Create("halls.read")),
-            Permission.Create(PermissionCode.Create("halls.update")),
-            Permission.Create(PermissionCode.Create("halls.delete"))
+            Permission.Create(PermissionCode.Create("halls.manage")),
+
+            Permission.Create(PermissionCode.Create("genres.read")),
+            Permission.Create(PermissionCode.Create("genres.manage")),
+
+            Permission.Create(PermissionCode.Create("tickets.create")),
+            Permission.Create(PermissionCode.Create("tickets.read_all")),
+            Permission.Create(PermissionCode.Create("tickets.manage")),
+
+            Permission.Create(PermissionCode.Create("users.manage")),
+
+
         };
 
         if (!context.Permissions.Any())
@@ -282,6 +287,7 @@ public static class InitialDataSeeder
         foreach (var p in allPermissions)
         {
             if (p.Code.Value.Contains(".read")) userRole.Grant(p);
+            if (p.Code.Value.Contains("tickets.create")) userRole.Grant(p);
         }
 
         context.Roles.AddRange(adminRole, userRole);
