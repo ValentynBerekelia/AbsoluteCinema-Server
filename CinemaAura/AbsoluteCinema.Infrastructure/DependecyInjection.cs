@@ -20,7 +20,6 @@ using AbsoluteCinema.Infrastructure.Persistence;
 using AbsoluteCinema.Infrastructure.Repositories;
 using AbsoluteCinema.Infrastructure.Security;
 using AbsoluteCinema.Infrastructure.Storage;
-using AbsoluteCinema.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,7 +31,6 @@ namespace AbsoluteCinema.Infrastructure;
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(
-    public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         IConfiguration configuration
     ) =>
@@ -41,7 +39,6 @@ public static class DependencyInjection
             .AddAuthenticationInternal()
             .AddTokenProvider()
             .AddRepositories()
-            .AddStorages()
             .AddStorages()
             .AddQueries();
 
@@ -61,8 +58,6 @@ public static class DependencyInjection
             {
                 builder.MigrationsAssembly(typeof(CinemaDbContext).Assembly.FullName);
             });
-        });
-
         });
 
         return services;
@@ -92,7 +87,6 @@ public static class DependencyInjection
         return services;
     }
 
-
     private static IServiceCollection AddQueries(this IServiceCollection services)
     {
         services.AddScoped<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
@@ -104,27 +98,16 @@ public static class DependencyInjection
         services.AddScoped<IGetFeaturedMoviesDtoQuery, GetFeaturedMoviesDtoQuery>();
         services.AddScoped<IGetTicketQueryHandler, GetTicketDetailsQuery>();
         services.AddScoped<IGetGenresQuery, GetGenreDtoQuery>();
-        services.AddScoped<IGetGenresQuery, GetGenreDtoQuery>();
         services.AddScoped<IGetSeatTypesQuery, GetSeatTypeDtoQuery>();
         services.AddScoped<ICreateUserCommand, RegisterUserCommand>();
         services.AddScoped<ILoginUserCommand, LogInUserCommand>();
         services.AddScoped<IRefreshTokenCommand, RefreshTokenCommandHandlerInfra>();
-        services.AddScoped<ILogoutCommand, AbsoluteCinema.Infrastructure.EFQueries.LogoutCommand>();
         services.AddScoped<ILogoutCommand, EFQueries.LogoutCommand>();
         services.AddScoped<IRevokeAllRefreshTokensCommand, RevokeAllRefreshTokensCommandHandlerInfra>();
-        services.AddScoped<IGetCurrentUserQuery, AbsoluteCinema.Infrastructure.EFQueries.GetCurrentUserQueryInfra>();
-
         services.AddScoped<IGetCurrentUserQuery, GetCurrentUserQueryInfra>();
 
         services.AddScoped<IGetTicketsFromSessionDtoQuery, GetTicketsFromSessionDtoQuery>();
         services.AddScoped<IGetTicketShortQuery, GetTicketShortDtoQuery>();
-        return services;
-    }
-
-    private static IServiceCollection AddStorages(this IServiceCollection services)
-    {
-        services.AddScoped<IStorageService, SupabaseStorageService>();
-
         return services;
     }
 

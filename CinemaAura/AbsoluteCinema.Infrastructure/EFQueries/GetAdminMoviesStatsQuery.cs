@@ -25,7 +25,7 @@ public class GetAdminMoviesStatsQuery(CinemaDbContext db) : IGetAdminMoviesStats
         if (query.LastMovieId.HasValue)
         {
             var lastId = new MovieId(query.LastMovieId.Value);
-            baseQuery = baseQuery.Where(m => m.Id.Id < lastId.Id);
+            baseQuery = baseQuery.Where(m => m.Id.Id.CompareTo(lastId.Id) < 0);
         }
 
         var moviesData = await baseQuery
@@ -46,7 +46,13 @@ public class GetAdminMoviesStatsQuery(CinemaDbContext db) : IGetAdminMoviesStats
 
         var movieIds = moviesData.Select(m => m.Id).ToList();
 
-        var allSessions = await _db.Sessions
+        var HallCapacities = await _db.Seats
+            .AsNoTracking()
+            .GroupBy(s => s.HallId)
+            .Select(g => new { HallId = g.Key, Capacity = g.Count() })
+            .ToDictionaryAsync(x => x.HallId, x => x.Capacity, ct);
+
+        var sessionsFromDb = await _db.Sessions
             .AsNoTracking()
             .Where(s => movieIds.Contains(s.MovieId) && s.StartDateTime >= today)
             .Select(s => new
@@ -55,14 +61,24 @@ public class GetAdminMoviesStatsQuery(CinemaDbContext db) : IGetAdminMoviesStats
                 s.Id,
                 s.StartDateTime,
                 s.Format,
-                TicketCount = s.Tickets.Count(),
-                HallCapacity = _db.Seats.Count(seat => seat.HallId == s.HallId)
+                s.HallId,
+                TicketCount = s.Tickets.Count()
             })
             .ToListAsync(ct);
 
         var items = moviesData.Select(m =>
         {
-            var movieSessions = allSessions.Where(s => s.MovieId == m.Id).ToList();
+            var movieSessions = sessionsFromDb
+                .Where(s => s.MovieId == m.Id)
+                .Select(s => new
+                {
+                    s.Id,
+                    s.StartDateTime,
+                    s.Format,
+                    s.TicketCount,
+                    HallCapacity = HallCapacities.GetValueOrDefault(s.HallId, 0)
+                })
+                .ToList();
 
             return new AdminMovieStatsDto(
                 m.Id.Id,
