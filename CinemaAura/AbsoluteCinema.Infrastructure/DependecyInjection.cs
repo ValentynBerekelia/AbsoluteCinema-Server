@@ -83,6 +83,7 @@ public static class DependencyInjection
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<ISeatRepository, SeatRepository>();
         services.AddScoped<ISeatTypeRepository, SeatTypeRepository>();
+        services.AddScoped<IStatisticsRepository, StatisticsRepository>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork<CinemaDbContext>>();
         return services;
     }
