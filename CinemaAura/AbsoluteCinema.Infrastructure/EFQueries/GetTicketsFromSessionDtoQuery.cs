@@ -17,7 +17,7 @@ namespace AbsoluteCinema.Infrastructure.EFQueries
                 .Where(t => t.SessionId == query.SessionId)
                 .Select(t => new GetTicketDetailsResponse(
                     t.Id,
-
+                     t.Status.ToString(),
                     t.UserId == null
                         ? null
                         : new UserShortDto(t.User!.Id, t.User.Email),

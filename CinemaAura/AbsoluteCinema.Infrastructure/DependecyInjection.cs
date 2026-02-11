@@ -1,5 +1,6 @@
 using AbsoluteCinema.Application.Abstractions;
 using AbsoluteCinema.Application.DTOs.Hall;
+using AbsoluteCinema.Application.EFQueries;
 using AbsoluteCinema.Application.Features.Auth;
 using AbsoluteCinema.Application.Features.Auth.Command.LoginUser;
 using AbsoluteCinema.Application.Features.Auth.Command.Logout;
@@ -110,6 +111,8 @@ public static class DependencyInjection
 
         services.AddScoped<IGetTicketsFromSessionDtoQuery, GetTicketsFromSessionDtoQuery>();
         services.AddScoped<IGetTicketShortQuery, GetTicketShortDtoQuery>();
+        services.AddScoped<IGetTicketsByUserDtoQuery, GetTicketsByUserDtoQuery>();
+
         return services;
     }
 
