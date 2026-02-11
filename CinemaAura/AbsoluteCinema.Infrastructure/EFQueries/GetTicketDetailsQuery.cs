@@ -2,6 +2,7 @@
 using AbsoluteCinema.Application.Features.Tickets.Queries;
 using AbsoluteCinema.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace AbsoluteCinema.Infrastructure.EFQueries
 {
@@ -16,7 +17,7 @@ namespace AbsoluteCinema.Infrastructure.EFQueries
                 .Where(t => t.Id == query.TicketId)
                 .Select(t => new GetTicketDetailsResponse(
                     t.Id,
-
+                    t.Status.ToString(),
                     t.UserId == null
                         ? null
                         : new UserShortDto(t.User!.Id, t.User.Email),
