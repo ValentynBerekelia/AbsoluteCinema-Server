@@ -1,5 +1,6 @@
 using AbsoluteCinema.Application.Features.Users.Queries;
 using AbsoluteCinema.Infrastructure.Security;
+using AbsoluteCinema.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace AbsoluteCinema.Presentation;
 [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 public class UserController(IMediator mediator) : ControllerBase
 {
-    IMediator _mediator = mediator;
+    private readonly IMediator _mediator = mediator;
 
     [Authorize(Policy = Permissions.UsersManage)]
     [HttpGet]

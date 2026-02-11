@@ -9,7 +9,7 @@ namespace AbsoluteCinema.Infrastructure.EFQueries;
 
 public class GetUsersWithTicketsCountQueryDto(CinemaDbContext db) : IGetUsersWithTicketsCountQueryDto
 {
-    public readonly CinemaDbContext _db = db;
+    private readonly CinemaDbContext _db = db;
 
     public async Task<GetUsersWithTicketsCountResponse> ExecuteAsync(GetUsersWithTicketsCountQuery query, CancellationToken ct)
     {
