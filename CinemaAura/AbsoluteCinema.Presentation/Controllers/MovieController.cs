@@ -78,9 +78,12 @@ public class MovieController(IMediator mediator, IMapper mapper) : ControllerBas
     [AllowAnonymous]
     [HttpGet]
     [Route("movie/{id:guid}/recommendations")]
-    public async Task<IActionResult> GetMovieRecommendations(Guid id, CancellationToken ct)
+    public async Task<IActionResult> GetMovieRecommendations(
+        [FromRoute] Guid id,
+        [FromQuery] int limit = 10, 
+        CancellationToken ct = default)
     {
-        var query = new GetMovieRecommendationQuery(id);
+        var query = new GetMovieRecommendationQuery(id, limit);
 
         var response = await _mediator.Send(query,ct);
         return Ok(response);
