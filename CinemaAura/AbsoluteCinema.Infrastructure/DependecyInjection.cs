@@ -83,6 +83,7 @@ public static class DependencyInjection
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<ISeatRepository, SeatRepository>();
         services.AddScoped<ISeatTypeRepository, SeatTypeRepository>();
+        services.AddScoped<IStatisticsRepository, StatisticsRepository>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork<CinemaDbContext>>();
         return services;
     }
@@ -92,6 +93,7 @@ public static class DependencyInjection
         services.AddScoped<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
         services.AddScoped<IGetMovieDetailsQuery, GetMovieDetailsQuery>();
         services.AddScoped<IGetAdminMoviesStatsQuery, GetAdminMoviesStatsQuery>();
+        services.AddScoped<IGetMovieRecommendationDtoQuery, GetMovieRecommendationDtoQuery>();
         services.AddScoped<ICreateGenreCommend, CreateGenreCommand>();
         services.AddScoped<IGetHallsDtoQuery, GetHallsDtoQuery>();
         services.AddScoped<IGetHallQueryHandler, GetHallDetailsQuery>();
