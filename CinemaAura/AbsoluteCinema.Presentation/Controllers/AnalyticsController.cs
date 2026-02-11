@@ -1,5 +1,6 @@
 ﻿using AbsoluteCinema.Application.DTOs.Statistics;
 using AbsoluteCinema.Application.Features.Statistics.Queries;
+using AbsoluteCinema.Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ namespace AbsoluteCinema.Presentation.Controllers.Admin;
 
 [ApiController]
 [Route("api/admin/analytics")]
+[Authorize(Policy = Permissions.TicketsManage)]
 public sealed class AnalyticsController : ControllerBase
 {
     private readonly IMediator _mediator;
