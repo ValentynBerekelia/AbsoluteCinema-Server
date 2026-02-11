@@ -1,3 +1,4 @@
+using AbsoluteCinema.Application.Abstractions;
 using AbsoluteCinema.Domain.Entities;
 using AbsoluteCinema.Domain.Enums;
 using AbsoluteCinema.Domain.Primitives;
@@ -8,7 +9,7 @@ namespace AbsoluteCinema.Infrastructure.Persistence;
 
 public static class InitialDataSeeder
 {
-    public static void Seed(CinemaDbContext context)
+    public static void Seed(CinemaDbContext context, IPasswordHasher passwordHasher)
     {
         // 1. Content: Genres, Halls, Persons, Movies (with Posters, Trailers, and Screenshots)
         SeedContent(context);
@@ -17,7 +18,7 @@ public static class InitialDataSeeder
         SeedSessionsAndPrices(context);
 
         // 3. Security: Permissions, Roles, and Users
-        SeedSecurity(context);
+        SeedSecurity(context, passwordHasher);
     }
 
     // ==========================================
@@ -240,7 +241,7 @@ public static class InitialDataSeeder
     // ==========================================
     // PART 3: SECURITY (ROLES, PERMISSIONS, USERS)
     // ==========================================
-    private static void SeedSecurity(CinemaDbContext context)
+    private static void SeedSecurity(CinemaDbContext context, IPasswordHasher passwordHasher)
     {
         if (context.Roles.Any()) return;
 
@@ -301,7 +302,7 @@ public static class InitialDataSeeder
             // Admin User
             var adminUser = User.Create(
                 "admin",
-                PasswordHash.Create("hashed_admin_password_123"),
+                passwordHasher.Hash("admin123"),
                 "admin@absolutecinema.com"
             );
             adminUser.AddRole(adminRole);
@@ -309,7 +310,7 @@ public static class InitialDataSeeder
             // Standard User
             var simpleUser = User.Create(
                 "user",
-                PasswordHash.Create("hashed_user_password_123"),
+                passwordHasher.Hash("user123"),
                 "user@absolutecinema.com"
             );
             simpleUser.AddRole(userRole);

@@ -14,6 +14,7 @@ using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Application.Features.SeatTypes.Queries;
 using AbsoluteCinema.Application.Features.Sessions.Queries;
 using AbsoluteCinema.Application.Features.Tickets.Queries;
+using AbsoluteCinema.Application.Features.Users.Queries;
 using AbsoluteCinema.Application.Repository;
 using AbsoluteCinema.Infrastructure.Authentication;
 using AbsoluteCinema.Infrastructure.EFQueries;
@@ -111,6 +112,8 @@ public static class DependencyInjection
 
         services.AddScoped<IGetTicketsFromSessionDtoQuery, GetTicketsFromSessionDtoQuery>();
         services.AddScoped<IGetTicketShortQuery, GetTicketShortDtoQuery>();
+
+        services.AddScoped<IGetUsersWithTicketsCountQueryDto, GetUsersWithTicketsCountQueryDto>();
         services.AddScoped<IGetTicketsByUserDtoQuery, GetTicketsByUserDtoQuery>();
 
         return services;
