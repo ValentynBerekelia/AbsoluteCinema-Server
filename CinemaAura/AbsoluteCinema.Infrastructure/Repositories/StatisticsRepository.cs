@@ -15,47 +15,135 @@ public class StatisticsRepository : IStatisticsRepository
         _context = context;
     }
 
-    public async Task<DashboardStatsResponse> GetDashboardStatisticsAsync(DateTime from, DateTime to, CancellationToken ct = default)
+    public async Task<DashboardStatsResponse> GetDashboardStatisticsAsync(
+        DateTime from,
+        DateTime to,
+        CancellationToken ct = default)
     {
-        // 1. Basic query (tickets per period)
+        var soldStatus = TicketStatus.Pending;
+
+        var fromInclusive = from;
+        var toInclusive = to;
+
+        if (toInclusive.TimeOfDay == TimeSpan.Zero)
+        {
+            toInclusive = toInclusive.Date.AddDays(1).AddTicks(-1);
+        }
+
         var ticketsQuery = _context.Tickets
             .AsNoTracking()
-            .Include(t => t.Session)
-            .ThenInclude(s => s.Movie)
-            .ThenInclude(m => m.Genres)
-            .Where(t => t.Status == TicketStatus.Confirmed &&
-                        t.Session.StartDateTime >= from &&
-                        t.Session.StartDateTime <= to);
+            .Where(t =>
+                t.Status == soldStatus &&
+                t.Session.StartDateTime >= fromInclusive &&
+                t.Session.StartDateTime <= toInclusive
+            );
 
-        // 2. Top movies
-        var topMovies = await ticketsQuery
-            .GroupBy(t => t.Session.Movie.Name)
-            .Select(g => new MoviePopularityDto(g.Key, g.Count(), 0))
+        var topMovieAggregates = await ticketsQuery
+            .Select(t => new
+            {
+                MovieId = t.Session.MovieId,
+                t.SessionId,
+                SeatTypeId = t.Seat.SeatTypeId
+            })
+            .GroupBy(x => x.MovieId)
+            .Select(g => new
+            {
+                MovieId = g.Key,
+                TicketsSold = g.Count(),
+                Revenue = g.Sum(x =>
+                    _context.TypePrices
+                        .Where(tp =>
+                            tp.SessionId == x.SessionId &&
+                            tp.SeatTypeId == x.SeatTypeId
+                        )
+                        .Select(tp => tp.Price)
+                        .FirstOrDefault()
+                )
+            })
             .OrderByDescending(x => x.TicketsSold)
             .Take(10)
             .ToListAsync(ct);
 
-        // 3. Hall occupancy
+        var topMovieIds = topMovieAggregates
+            .Select(x => x.MovieId)
+            .ToList();
+
+        var movies = await _context.Movies
+            .AsNoTracking()
+            .Where(m => topMovieIds.Contains(m.Id))
+            .Select(m => new { m.Id, m.Name })
+            .ToListAsync(ct);
+
+        var topMovies = topMovieAggregates
+            .Select(x =>
+            {
+                var movie = movies.FirstOrDefault(m => m.Id.Equals(x.MovieId));
+                var name = movie is null ? string.Empty : movie.Name.ToString();
+
+                return new MoviePopularityDto(
+                    name,
+                    x.TicketsSold,
+                    x.Revenue
+                );
+            })
+            .ToList();
+
         var sessionsData = await _context.Sessions
             .AsNoTracking()
-            .Include(s => s.Hall)
-            .Where(s => s.StartDateTime >= from && s.StartDateTime <= to)
+            .Where(s => s.StartDateTime >= fromInclusive && s.StartDateTime <= toInclusive)
             .Select(s => new
             {
-                HallName = s.Hall.HallName,
-                Capacity = s.Hall.SeatIds.Count,
-                SoldTickets = s.Tickets.Count(t => t.Status == TicketStatus.Confirmed)
+                s.Id,
+                HallId = s.Hall.Id,
+                HallName = s.Hall.HallName
+            })
+            .ToListAsync(ct);
+
+        var sessionIds = sessionsData
+            .Select(x => x.Id)
+            .ToList();
+
+        var soldTicketsPerSession = await _context.Tickets
+            .AsNoTracking()
+            .Where(t => sessionIds.Contains(t.SessionId) && t.Status == soldStatus)
+            .GroupBy(t => t.SessionId)
+            .Select(g => new
+            {
+                SessionId = g.Key,
+                SoldTickets = g.Count()
+            })
+            .ToListAsync(ct);
+
+        var hallCapacities = await _context.Seats
+            .AsNoTracking()
+            .GroupBy(s => s.HallId)
+            .Select(g => new
+            {
+                HallId = g.Key,
+                Capacity = g.Count()
             })
             .ToListAsync(ct);
 
         var hallStats = sessionsData
-            .GroupBy(s => s.HallName)
+            .GroupBy(x => new { x.HallId, x.HallName })
             .Select(g =>
             {
-                var totalCapacity = g.Sum(x => x.Capacity);
-                var totalSold = g.Sum(x => x.SoldTickets);
+                var capacity = hallCapacities
+                    .Where(x => x.HallId == g.Key.HallId)
+                    .Select(x => x.Capacity)
+                    .FirstOrDefault();
+
+                var totalSold = g.Sum(s =>
+                    soldTicketsPerSession
+                        .Where(x => x.SessionId == s.Id)
+                        .Select(x => x.SoldTickets)
+                        .FirstOrDefault()
+                );
+
+                var totalCapacity = capacity * g.Count();
+
                 return new HallOccupancyDto(
-                    g.Key,
+                    g.Key.HallName,
                     totalCapacity == 0 ? 0 : Math.Round((double)totalSold / totalCapacity * 100, 1),
                     totalCapacity,
                     totalSold
@@ -63,22 +151,29 @@ public class StatisticsRepository : IStatisticsRepository
             })
             .ToList();
 
-        // 4. Peak hours
         var peakHours = await ticketsQuery
-            .GroupBy(t => new { Day = t.Session.StartDateTime.DayOfWeek, Hour = t.Session.StartDateTime.Hour })
-            .Select(g => new PeakHourDto(g.Key.Day, g.Key.Hour, g.Count()))
+            .GroupBy(t => new
+            {
+                Day = t.Session.StartDateTime.DayOfWeek,
+                Hour = t.Session.StartDateTime.Hour
+            })
+            .Select(g => new PeakHourDto(
+                g.Key.Day,
+                g.Key.Hour,
+                g.Count()
+            ))
             .ToListAsync(ct);
 
-        // 5. Genres
         var allSoldGenres = await ticketsQuery
             .SelectMany(t => t.Session.Movie.Genres.Select(g => g.Name))
             .ToListAsync(ct);
 
         var totalGenreCount = allSoldGenres.Count;
+
         var genreStats = allSoldGenres
             .GroupBy(g => g)
             .Select(g => new GenreStatDto(
-                g.Key,
+                g.Key.ToString(),
                 g.Count(),
                 totalGenreCount == 0 ? 0 : Math.Round((double)g.Count() / totalGenreCount * 100, 1)
             ))
