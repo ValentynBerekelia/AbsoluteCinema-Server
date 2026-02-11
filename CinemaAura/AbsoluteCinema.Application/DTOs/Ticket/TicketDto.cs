@@ -9,6 +9,7 @@ namespace AbsoluteCinema.Application.DTOs.Ticket
 {
     public record GetTicketDetailsResponse(
         TicketId Id,
+        string Status,
         UserShortDto? User,
         SessionForTicketDto Session,
         SeatForTicketDto Seat,
