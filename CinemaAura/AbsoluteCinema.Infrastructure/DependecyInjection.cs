@@ -92,6 +92,7 @@ public static class DependencyInjection
         services.AddScoped<IGetMoviesDtoQuery, GetMoviesDtoQuery>();
         services.AddScoped<IGetMovieDetailsQuery, GetMovieDetailsQuery>();
         services.AddScoped<IGetAdminMoviesStatsQuery, GetAdminMoviesStatsQuery>();
+        services.AddScoped<IGetMovieRecommendationDtoQuery, GetMovieRecommendationDtoQuery>();
         services.AddScoped<ICreateGenreCommend, CreateGenreCommand>();
         services.AddScoped<IGetHallsDtoQuery, GetHallsDtoQuery>();
         services.AddScoped<IGetHallQueryHandler, GetHallDetailsQuery>();
