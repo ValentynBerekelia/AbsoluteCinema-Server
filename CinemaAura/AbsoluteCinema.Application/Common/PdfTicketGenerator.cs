@@ -18,36 +18,38 @@ public class PdfTicketGenerator
         {
             container.Page(page =>
             {
-                page.Size(PageSizes.A5.Landscape());
-                page.Margin(1, Unit.Centimetre);
+                page.Size(12, 8, Unit.Centimetre);
+                page.Margin(0.5f, Unit.Centimetre);
                 page.PageColor(Colors.White);
-                page.DefaultTextStyle(x => x.FontSize(12));
+                page.DefaultTextStyle(x => x.FontSize(10));
 
                 page.Header()
                     .Text("Absolute Cinema Ticket")
-                    .SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
+                    .SemiBold().FontSize(16).FontColor(Colors.Blue.Medium);
 
                 page.Content()
-                    .PaddingVertical(1, Unit.Centimetre)
-                    .Row(row =>
+                    .PaddingVertical(0.5f, Unit.Centimetre)
+                    .Row(r =>
                     {
-                        row.RelativeItem().Column(column =>
+                        r.RelativeItem().Column(column =>
                         {
-                            column.Item().Text($"Фільм: {movieName}").FontSize(16).Bold();
-                            column.Item().Text($"Дата: {date:dd.MM.yyyy HH:mm}").FontSize(14);
+                            column.Item().Text($"Фільм: {movieName}").FontSize(14).Bold();
+                            column.Item().Text($"Дата: {date:dd.MM.yyyy HH:mm}").FontSize(12);
                             column.Item().Text($"Зал: {hallName}");
-                            column.Item().Text($"Ряд: {row} | Місце: {seat}").FontSize(14).Bold().FontColor(Colors.Red.Medium);
+
+                            column.Item().PaddingTop(5).Text($"Ряд: {row} | Місце: {seat}")
+                                .FontSize(13).Bold().FontColor(Colors.Red.Medium);
                         });
 
-                        row.ConstantItem(100).Image(qrCodeBytes);
+                        r.ConstantItem(80).Image(qrCodeBytes);
                     });
 
                 page.Footer()
                     .AlignCenter()
                     .Text(x =>
                     {
-                        x.Span("ID квитка: ");
-                        x.Span(ticketId.ToString()).Italic();
+                        x.Span("ID: ").FontSize(8);
+                        x.Span(ticketId.ToString()).FontSize(8).Italic();
                     });
             });
         });
