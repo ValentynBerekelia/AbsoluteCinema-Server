@@ -1,4 +1,5 @@
-﻿using AbsoluteCinema.Application.DTOs.Ticket;
+﻿using System.Security.Claims;
+using AbsoluteCinema.Application.DTOs.Ticket;
 using AbsoluteCinema.Application.Features.Halls.Queries;
 using AbsoluteCinema.Application.Features.Sessions.Queries;
 using AbsoluteCinema.Application.Features.Tickets.Commands;
@@ -76,9 +77,9 @@ namespace AbsoluteCinema.Controllers
         [Route("sessions/{sessionId:guid}/tickets/short")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetTicketsShort([FromRoute] Guid sessionId,CancellationToken ct)
+        public async Task<IActionResult> GetTicketsShort([FromRoute] Guid sessionId, CancellationToken ct)
         {
-            var result = await _mediator.Send(new GetTicketsQuery(new SessionId(sessionId)),ct);
+            var result = await _mediator.Send(new GetTicketsQuery(new SessionId(sessionId)), ct);
             return Ok(result);
         }
         [AllowAnonymous]
@@ -120,6 +121,34 @@ namespace AbsoluteCinema.Controllers
             {
                 return BadRequest(new { error = ex.Message });
             }
+        }
+
+        [Authorize]
+        [HttpPatch]
+        [Route("/ticket/{ticketId:guid}/status")]
+        public async Task<IActionResult> ChangeTicketStatus(
+            [FromRoute] Guid ticketId,
+            [FromBody] UpdateTicketStatusRequest request,
+            CancellationToken ct
+        )
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var isAdmin = User.IsInRole("Admin");
+
+            var command = new UpdateTicketStatusCommand(
+                new TicketId(ticketId),
+                request.Status,
+                new UserId(userId),
+                isAdmin
+            );
+
+            var resultId = await _mediator.Send(command, ct);
+            return Ok(resultId);
         }
     }
 }
