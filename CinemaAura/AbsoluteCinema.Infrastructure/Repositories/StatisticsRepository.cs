@@ -16,20 +16,26 @@ public class StatisticsRepository : IStatisticsRepository
     }
 
     public async Task<DashboardStatsResponse> GetDashboardStatisticsAsync(
-        DateTime from,
-        DateTime to,
-        CancellationToken ct = default)
+    DateTime to = default,
+    DateTime from = default,
+
+
+    CancellationToken ct = default)
     {
-        var soldStatus = TicketStatus.Confirmed;
+        var nowUtc = DateTime.UtcNow;
 
-        var fromInclusive = DateTime.SpecifyKind(from, DateTimeKind.Utc);
-        var toInclusive = DateTime.SpecifyKind(to, DateTimeKind.Utc);
-
-        if (toInclusive.TimeOfDay == TimeSpan.Zero)
+        if (from == default)
         {
-            toInclusive = toInclusive.Date.AddDays(1).AddTicks(-1);
-            toInclusive = DateTime.SpecifyKind(toInclusive, DateTimeKind.Utc);
+            from = DateTime.UtcNow.AddMonths(-1).Date;
         }
+        if (to == default)
+        {
+            to = DateTime.UtcNow.Date;
+        }
+        var toInclusive = to;
+        var fromInclusive = from;
+
+        var soldStatus = TicketStatus.Confirmed;
 
         var ticketsQuery = _context.Tickets
             .AsNoTracking()
@@ -183,4 +189,15 @@ public class StatisticsRepository : IStatisticsRepository
 
         return new DashboardStatsResponse(topMovies, hallStats, peakHours, genreStats);
     }
+    private static DateTime ToUtc(DateTime dt)
+    {
+        return dt.Kind switch
+        {
+            DateTimeKind.Utc => dt,
+            DateTimeKind.Local => dt.ToUniversalTime(),
+            DateTimeKind.Unspecified => DateTime.SpecifyKind(dt, DateTimeKind.Utc),
+            _ => DateTime.SpecifyKind(dt, DateTimeKind.Utc)
+        };
+    }
+
 }

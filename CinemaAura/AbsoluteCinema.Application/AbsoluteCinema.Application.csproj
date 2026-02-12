@@ -36,7 +36,7 @@
       <PackageReference Include="Mapster" Version="7.4.0" />
       <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
-      <PackageReference Include="QRCoder" Version="1.7.0" />
+      <PackageReference Include="QRCoder" Version="1.6.0" />
       <PackageReference Include="QuestPDF" Version="2025.12.4" />
     </ItemGroup>
 
