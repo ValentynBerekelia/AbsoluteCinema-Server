@@ -20,14 +20,15 @@ public class StatisticsRepository : IStatisticsRepository
         DateTime to,
         CancellationToken ct = default)
     {
-        var soldStatus = TicketStatus.Pending;
+        var soldStatus = TicketStatus.Confirmed;
 
-        var fromInclusive = from;
-        var toInclusive = to;
+        var fromInclusive = DateTime.SpecifyKind(from, DateTimeKind.Utc);
+        var toInclusive = DateTime.SpecifyKind(to, DateTimeKind.Utc);
 
         if (toInclusive.TimeOfDay == TimeSpan.Zero)
         {
             toInclusive = toInclusive.Date.AddDays(1).AddTicks(-1);
+            toInclusive = DateTime.SpecifyKind(toInclusive, DateTimeKind.Utc);
         }
 
         var ticketsQuery = _context.Tickets
