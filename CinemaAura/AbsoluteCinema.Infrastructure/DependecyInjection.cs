@@ -1,4 +1,6 @@
 using AbsoluteCinema.Application.Abstractions;
+using AbsoluteCinema.Application.Abstractions;
+using AbsoluteCinema.Infrastructure.Services;
 using AbsoluteCinema.Application.DTOs.Hall;
 using AbsoluteCinema.Application.EFQueries;
 using AbsoluteCinema.Application.Features.Auth;
@@ -42,7 +44,8 @@ public static class DependencyInjection
             .AddTokenProvider()
             .AddRepositories()
             .AddStorages()
-            .AddQueries();
+            .AddQueries()
+            .AddServices();
 
     private static IServiceCollection AddAuthenticationInternal(this IServiceCollection services)
     {
@@ -122,6 +125,13 @@ public static class DependencyInjection
     private static IServiceCollection AddStorages(this IServiceCollection services)
     {
         services.AddScoped<IStorageService, SupabaseStorageService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddTransient<IEmailService, EmailService>();
 
         return services;
     }
