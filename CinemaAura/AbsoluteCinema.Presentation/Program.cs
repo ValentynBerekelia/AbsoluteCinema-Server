@@ -1,11 +1,14 @@
 using AbsoluteCinema;
 using AbsoluteCinema.Application;
+using AbsoluteCinema.Application.Abstractions;
 using AbsoluteCinema.Application.Features.Movies.Queries;
 using AbsoluteCinema.Application.Features.Persons.Queries;
 using AbsoluteCinema.Infrastructure;
 using AbsoluteCinema.Infrastructure.EFQueries;
+using AbsoluteCinema.Infrastructure.Persistence;
 using Mapster;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Globalization;
 using System.Reflection;
@@ -98,8 +101,10 @@ var app = builder.Build();
 // using (var scope = app.Services.CreateScope())
 // {
 //     var dbContext = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();
+//     var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+    
 //     await dbContext.Database.MigrateAsync();
-//     InitialDataSeeder.Seed(dbContext);
+//     InitialDataSeeder.Seed(dbContext, passwordHasher);
 // }
 
 // Configure the HTTP request pipeline.
