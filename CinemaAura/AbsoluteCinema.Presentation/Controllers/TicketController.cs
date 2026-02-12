@@ -125,7 +125,7 @@ namespace AbsoluteCinema.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("/ticket/{ticketId:guid}/status")]
+        [Route("ticket/{ticketId:guid}/status")]
         public async Task<IActionResult> ChangeTicketStatus(
             [FromRoute] Guid ticketId,
             [FromBody] UpdateTicketStatusRequest request,

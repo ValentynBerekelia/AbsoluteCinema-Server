@@ -21,7 +21,7 @@ public class UpdateTicketStatusCommandHandler(
 
     public async Task<Guid> Handle(UpdateTicketStatusCommand request, CancellationToken cancellationToken)
     {
-        var ticket = await _tickets.GetByIdAsync(request.Id, cancellationToken)
+        var ticket = await _tickets.GetByIdForUpdateAsync(request.Id, cancellationToken)
             ?? throw new Exception("Ticket not found");
 
         if (!request.IsAdmin && ticket.UserId != request.UserId)
