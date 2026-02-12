@@ -1,4 +1,5 @@
-﻿using AbsoluteCinema.Application.Features.Halls.Queries;
+﻿using AbsoluteCinema.Application.DTOs.Ticket;
+using AbsoluteCinema.Application.Features.Halls.Queries;
 using AbsoluteCinema.Application.Features.Sessions.Queries;
 using AbsoluteCinema.Application.Features.Tickets.Commands;
 using AbsoluteCinema.Application.Features.Tickets.Queries;
@@ -11,6 +12,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static AbsoluteCinema.Application.Features.Tickets.Commands.CreateTicketCommandHandler;
+using static AbsoluteCinema.Application.Features.Tickets.Queries.GetTicketsByUserQueryHandler;
 namespace AbsoluteCinema.Controllers
 {
     [ApiController]
@@ -77,6 +79,14 @@ namespace AbsoluteCinema.Controllers
         public async Task<IActionResult> GetTicketsShort([FromRoute] Guid sessionId,CancellationToken ct)
         {
             var result = await _mediator.Send(new GetTicketsQuery(new SessionId(sessionId)),ct);
+            return Ok(result);
+        }
+        [AllowAnonymous]
+        [HttpGet("tickets/user/{id:guid}")]
+        [ProducesResponseType(typeof(List<GetTicketDetailsResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetTicketsByUser([FromRoute] Guid id, CancellationToken ct)
+        {
+            var result = await _mediator.Send(new GetTicketsByUserQuery(new UserId(id)), ct);
             return Ok(result);
         }
 
