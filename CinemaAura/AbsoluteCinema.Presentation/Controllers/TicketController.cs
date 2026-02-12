@@ -22,13 +22,14 @@ namespace AbsoluteCinema.Controllers
         private readonly IMediator _mediator = mediator;
         [Authorize]
         [HttpGet]
-        [Route("ticket{ticketId:guid}")]
+        [Route("ticket/{ticketId:guid}")]
         public async Task<IActionResult> GetTicket(Guid ticketId, CancellationToken ct)
         {
             var query = new GetTicketQuery(new TicketId(ticketId));
             var response = await _mediator.Send(query, ct);
             return Ok(response);
         }
+
         [Authorize(Policy = Permissions.TicketsCreate)]
         [HttpPost]
         [Route("ticket")]
@@ -89,5 +90,36 @@ namespace AbsoluteCinema.Controllers
             return Ok(result);
         }
 
+        [Authorize]
+        [HttpPost]
+        [Route("ticket/{ticketId:guid}/confirm")]
+        public async Task<IActionResult> ConfirmTicket([FromRoute] Guid ticketId)
+        {
+            await _mediator.Send(new ConfirmTicketCommand(ticketId));
+            return Ok(new { message = "Payment successful! Ticket confirmed." });
+        }
+
+        [Authorize]
+        [HttpDelete]
+        [Route("ticket/{ticketId:guid}/cancel")]
+        public async Task<IActionResult> CancelTicket([FromRoute] Guid ticketId)
+        {
+            var userIdString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (!Guid.TryParse(userIdString, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                await _mediator.Send(new CancelTicketCommand(ticketId, userId));
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }
