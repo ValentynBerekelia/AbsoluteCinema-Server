@@ -5,7 +5,9 @@ public sealed record GetTicketForUserResponse(
     string Status,
     decimal Price,
     UserSessionDto Session,
-    SeatPositionDto Seat
+    SeatPositionDto Seat,
+    SeatTypeDto SeatType,
+    MovieDto Movie
 );
 
 public sealed record UserSessionDto(
@@ -22,4 +24,13 @@ public sealed record HallDto(
 public sealed record SeatPositionDto(
     short Row,
     short Number
+);
+public sealed record MovieDto(
+    Guid Id,
+    string Name
+);
+
+public sealed record SeatTypeDto(
+    Guid Id,
+    string Name
 );

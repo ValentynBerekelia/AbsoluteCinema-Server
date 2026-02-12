@@ -38,6 +38,16 @@ public sealed class GetTicketsByUserDtoQuery(CinemaDbContext db) : IGetTicketsBy
                 new SeatPositionDto(
                     t.Seat.Row,
                     t.Seat.Number
+                ),
+
+                new SeatTypeDto(
+                    t.Seat.SeatTypeId.Id,
+                    t.Seat.SeatType.TypeName
+                ),
+
+                new MovieDto(
+                    t.Session.Movie.Id.Id,
+                    t.Session.Movie.Name
                 )
             ))
             .ToListAsync(ct);
