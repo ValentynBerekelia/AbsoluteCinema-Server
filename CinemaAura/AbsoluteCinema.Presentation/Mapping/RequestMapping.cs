@@ -3,7 +3,7 @@ using Mapster;
 
 namespace AbsoluteCinema.Mapping;
 
-public class RequestMapping 
+public class RequestMapping
 {
     public static void RegisterMappings()
     {
@@ -24,6 +24,19 @@ public class RequestMapping
 
         TypeAdapterConfig<Guid, HallId>.NewConfig()
             .MapWith(src => new HallId(src));
+
+        TypeAdapterConfig<TicketId, Guid>.NewConfig()
+            .MapWith(src => src.Id);
+
+        TypeAdapterConfig<Guid, TicketId>.NewConfig()
+            .MapWith(src => new TicketId(src));
+
+        TypeAdapterConfig<UserId, Guid>.NewConfig()
+            .MapWith(src => src.Id);
+
+        TypeAdapterConfig<Guid, UserId>.NewConfig()
+            .MapWith(src => new UserId(src));
+
     }
 
 
